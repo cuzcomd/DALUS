@@ -1,4 +1,4 @@
-### Changelog
+### Changelog ###
 
 ## 1.1.1 (14.07.2017) ##
 * Feature: Änderung des Benutzernamens und Passworts im Hauptmenü
