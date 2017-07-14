@@ -451,57 +451,14 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 				</div>
 				<div class="modal-footer">
 					<div class="row">
-						<div class="col-sm-4"><a data-toggle="modal" data-target="#modal_changelog">Version: 2.1.1</a></div>
-						<div class="col-sm-4"><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons Lizenzvertrag" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a></div>
-						<div class="col-sm-4"><a href="mailto:kontakt@cuzcomd.de">kontakt@cuzcomd.de</a></div>
+						<div class="col-xs-4">Version: 2.1.1</div>
+						<div class="col-xs-4"><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons Lizenzvertrag" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a></div>
+						<div class="col-xs-4"><a href="mailto:kontakt@cuzcomd.de">kontakt@cuzcomd.de</a></div>
 					</div>
 				</div>
 			</div><!-- Ende modal-content -->
 		</div><!-- Ende modal-dialog -->
 	</div> <!-- Ende modal fade -->
-
-	<div class="modal fade" id="modal_changelog" tabindex="-1" role="dialog" aria-labelledby="Changelog">
-		<div class="modal-dialog" role="document" style="max-height:500px; overflow-y:auto;">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title" id="myModalLabel">Changelog</h4>
-				</div>
-				<div class="modal-body">
-					<div class="panel panel-primary">
-						<div class="panel-heading"><h3 class="panel-title">v2.1.1 [14.07.2017]</h3></div>
-						<div class="panel-body">
-							<ul>
-								<li>Feature: Änderung des Benutzernamens und Passworts im Hauptmenü</li>
-								<li>Style: Überarbeitung des Anmeldebildschirms</li>
-								<li>Bugfix: Öffnen des MET-modal in iOS und Safari ist nicht möglich</li>
-								<li>Bugfix: Beim Klick auf eine Geomtrie oder Karte wird die bisher aktive Geometrie nicht abgewählt</li>
-							</ul>
-						</div>
-					</div> <!-- Ende panel -->
-					<div class="panel panel-primary">
-						<div class="panel-heading"><h3 class="panel-title">v2.1.0 [13.07.2017]</h3></div>
-						<div class="panel-body">
-							<ul>
-								<li>Feature: MET-Freisetzungsort kann manuell gesetzt werden</li>
-								<li>Feature: Speicherung von Kreisen, Polygonen und Pfaden in der Datenbank ist jetzt möglich </li>
-								<li>Style: Überarbeitung der Benutzeroberfläche</li>
-								<li>Bugfix: Diverse Fehler beim Zurücksetzen der Kartengeometrie behoben</li>
-							</ul>
-						</div>
-					</div> <!-- Ende panel -->
-					<div class="panel panel-primary">
-						<div class="panel-heading"><h3 class="panel-title">v2.0.0 [04.07.2017]</h3></div>
-						<div class="panel-body">
-							<ul>
-								<li>Umstrukturierung der App auf datenbankgestützte Projektverwaltung</li>
-							</ul>
-						</div>
-					</div> <!-- Ende panel -->
-				</div><!-- Ende modal-body -->
-			</div><!-- Ende modal-content -->
-		</div><!-- Ende modal-dialog -->
-	</div><!-- Ende Modal changelog -->
 
 	<div class="modal fade" id="modal_new_project" tabindex="-1" role="dialog" aria-labelledby="Neues Projekt">
 		<div class="modal-dialog" role="document">
