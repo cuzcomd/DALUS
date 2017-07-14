@@ -1,0 +1,109 @@
+{
+  "type": "FeatureCollection",
+  "features": [ 
+{"type": "Feature", "properties": {"nummer": "01-00","name": "Ulrichplatz", "adresse": "Ulrichplatz 10, 39104 Magdeburg","odl": "0","ips": "0"},"geometry": {"type": "Point", "coordinates": [11.632938,52.130976] }} , 
+{"type": "Feature", "properties": {"nummer": "01-01","name": "Allee Center", "adresse": "Ernst-Reuter-Allee 11, 39104 Magdeburg","odl": "0","ips": "0"},"geometry": {"type": "Point", "coordinates": [11.638096,52.129924] }} , 
+{"type": "Feature", "properties": {"nummer": "01-02","name": "Rathausplatz","adresse": "Bei der Hauptwache 2, 39104 Magdeburg","odl": "0","ips": "0"},"geometry": {"type": "Point", "coordinates": [11.640998, 52.131990]}},
+{"type": "Feature", "properties": {"nummer": "01-03","name": "Hauptbahnhof - Ostseite","adresse": "Bahnhofstraße 68, 39104 Magdeburg","odl": "0","ips": "0"},"geometry": {"type": "Point","coordinates": [11.628396, 52.128934]}},
+{"type": "Feature", "properties": {"nummer": "01-04","name": "Elbeschwimmhalle", "adresse": "Virchowstraße 9, 39104 Magdeburg", "odl": "0","ips": "0"},"geometry": {"type": "Point", "coordinates": [11.633417, 52.135252]}},
+{"type": "Feature", "properties": {"nummer": "01-05","name": "Domplatz", "adresse": "Domplatz, 39104 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.633355, 52.124575]}},
+{"type": "Feature", "properties": {"nummer": "01-06","name": "Domgymnasium - Dienstsitz Ministerpräsident", "adresse": "Hegelstraße 17-42, 39104 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.632597, 52.122179]}},
+{"type": "Feature", "properties": {"nummer": "01-07","name": "Hasselbachplatz", "adresse": "Hallische Straße 3, 39104 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.625397, 52.120303]}},
+{"type": "Feature", "properties": {"nummer": "01-08","name": "Hegelgymnasium", "adresse": "Geißlerstraße 4, 39104 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.628938, 52.117277]}},
+{"type": "Feature", "properties": {"nummer": "01-09","name": "AMO Kongresszentrum", "adresse": "Erich-Weinert-Straße 27, 39104 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.627147, 52.114041]}},
+
+{"type": "Feature", "properties": {"nummer": "02-01","name": "Renafan Pflegeheim", "adresse": "Mittelstraße 12-13, 39114 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.651174, 52.130422]}},
+{"type": "Feature", "properties": {"nummer": "02-02","name": "Stadthalle", "adresse": "Heinrich-Heine-Weg 1, 39114 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.640357, 52.119596]}},
+{"type": "Feature", "properties": {"nummer": "02-03","name": "Messeplatz", "adresse": "Kleiner Stadtmarsch 5, 39114 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.642011, 52.126329]}},
+
+{"type": "Feature", "properties": {"nummer": "04-00","name": "Feuerwache Nord", "adresse": "Peter-Paul-Straße 12, 39106 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.655026, 52.144013]}},
+{"type": "Feature", "properties": {"nummer": "04-01","name": "Universität - Hörsaal 1", "adresse": "Pfälzer Straße 2, 39106 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.645476, 52.139376]}},
+{"type": "Feature", "properties": {"nummer": "04-02","name": "Bahnhof Neustadt", "adresse": "Gröperstraße 2, 39106 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.641327, 52.147927]}},
+
+{"type": "Feature", "properties": {"nummer": "06-01","name": "Zoo Magdeburg", "adresse": "Schöppensteg / Am Vogelgesang, 39124 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.648114, 52.164601]}},
+
+{"type": "Feature", "properties": {"nummer": "08-01","name": "Cable Island - Badestrand", "adresse": "Barleber Straße, 39130 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.637482, 52.175820]}},
+{"type": "Feature", "properties": {"nummer": "08-02","name": "AWO Alten- und Pflegeheim", "adresse": "Krähenstieg 7c, 39126 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.631766, 52.175972]}},
+
+{"type": "Feature", "properties": {"nummer": "10-01","name": "Grundschule Kannenstieg", "adresse": "Pablo-Picasso-Straße 20, 39128 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.619149, 52.171053]}},
+{"type": "Feature", "properties": {"nummer": "10-01","name": "AWO Seniorenzentrum", "adresse": "Neuer Sülzeweg 76, 39128 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.617842, 52.172180]}},
+{"type": "Feature", "properties": {"nummer": "10-01","name": "Lebenshilfe Magdeburg", "adresse": "Sülzeanger 1, 39128 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.619649, 52.173812]}},
+
+{"type": "Feature", "properties": {"nummer": "14-01","name": "Am Pfahlberg", "adresse": "Am Pfahlberg, 39128 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.619332, 52.182634]}},
+{"type": "Feature", "properties": {"nummer": "14-02","name": "Am Pfahlberg", "adresse": "Am Pfahlberg, 39128 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.614770, 52.182461]}},
+{"type": "Feature", "properties": {"nummer": "14-03","name": "Am Pfahlberg", "adresse": "Am Pfahlberg, 39128 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.614864, 52.179622]}},
+{"type": "Feature", "properties": {"nummer": "14-04","name": "Am Pfahlberg", "adresse": "Am Pfahlberg, 39128 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.619305, 52.179744]}},
+{"type": "Feature", "properties": {"nummer": "14-05","name": "Am Pfahlberg", "adresse": "Am Pfahlberg, 39128 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.617073, 52.181091]}},
+
+{"type": "Feature", "properties": {"nummer": "16-01","name": "Florapark", "adresse": "Am Florapark, 39128 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.607316, 52.162517]}},
+{"type": "Feature", "properties": {"nummer": "16-02","name": "Florapark", "adresse": "Am Florapark, 39128 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.601836, 52.161733]}},
+{"type": "Feature", "properties": {"nummer": "16-03","name": "Florapark", "adresse": "Am Florapark, 39128 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.602947, 52.158467]}},
+{"type": "Feature", "properties": {"nummer": "16-04","name": "Florapark", "adresse": "Am Florapark, 39128 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.607952, 52.158674]}},
+{"type": "Feature", "properties": {"nummer": "16-05","name": "Florapark", "adresse": "Am Florapark, 39128 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.606594, 52.160571]}},
+
+{"type": "Feature", "properties": {"nummer": "22-00","name": "Gerätehaus FF Olvenstedt", "adresse": "Olvenstedter Grund 20, 39130 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.573326, 52.149977]}},
+{"type": "Feature", "properties": {"nummer": "22-01","name": "Albert-Einstein-Gymnasium", "adresse": "Hans-Grade-Straße 120, 39128 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.594997, 52.156383]}},
+{"type": "Feature", "properties": {"nummer": "22-02","name": "Krankenhaus Klinikum Olvenstedt - Süd-Ost Seite", "adresse": "Birkenallee 34, 39130 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.584373, 52.157037]}},
+
+{"type": "Feature", "properties": {"nummer": "24-00","name": "Schellheimer Platz", "adresse": "Annastraße 33B, 39108 Magdeburg", "odl": "120", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.609625, 52.126843]}},
+{"type": "Feature", "properties": {"nummer": "24-01","name": "Landesfrauenklinik", "adresse": "Gerhart-Hauptmann-Straße 35, 39108 Magdeburg", "odl": "39", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.617164, 52.129139]}},
+{"type": "Feature", "properties": {"nummer": "24-02","name": "Olvenstedter Platz", "adresse": "Wilhelm-Klees-Straße / Harsdorfer Straße, 39108 Magdeburg", "odl": "41", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.606320, 52.135805]}},
+
+{"type": "Feature", "properties": {"nummer": "26-00","name": "Beimsplatz", "adresse": "Beimsplatz, 39110 Magdeburg", "odl": "42", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.596289, 52.128413]}},
+{"type": "Feature", "properties": {"nummer": "26-01","name": "Krankenhaus St. Marienstift", "adresse": "Harsdorfer Straße 34, 39110 Magdeburg", "odl": "38", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.600542, 52.136181]}},
+{"type": "Feature", "properties": {"nummer": "26-02","name": "Schwimmhalle Diesdorf", "adresse": "Große Diesdorfer Straße 106, 39110 Magdeburg", "odl": "35", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.580389, 52.129218]}},
+{"type": "Feature", "properties": {"nummer": "26-03","name": "Lebenshilfe Magdeburg", "adresse": "Westring 36, 39110 Magdeburg", "odl": "36", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.605885, 52.124616]}},
+
+{"type": "Feature", "properties": {"nummer": "28-00","name": "Gerätehaus FF Diesdorf", "adresse": "Alt Diesdorf 4, 39110 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.565341, 52.130601]}},
+
+{"type": "Feature", "properties": {"nummer": "30-01","name": "Carl-Miller-Bad", "adresse": "Carl-Miller-Straße/ Hellerstraße, 39112 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.622113, 52.116852]}},
+{"type": "Feature", "properties": {"nummer": "30-02","name": "Landgericht Magdeburg", "adresse": "Halberstädter Straße 8, 39112 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.617973, 52.117475]}},
+{"type": "Feature", "properties": {"nummer": "30-03-01","name": "Kulturwerk Fichte", "adresse": "Fichtestraße 29A, 39112 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.594244, 52.118163]}},
+{"type": "Feature", "properties": {"nummer": "30-03-02","name": "Kulturwerk Fichte", "adresse": "Fichtestraße 29A, 39112 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.595963, 52.117536]}},
+
+{"type": "Feature", "properties": {"nummer": "32-00","name": "Gerätehaus FF Ottersleben", "adresse": "Schwarzer Weg 30, 39116 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.572872, 52.092189]}},
+{"type": "Feature", "properties": {"nummer": "32-01","name": "Sekundarschule Ernst Wille", "adresse": "Frankefelde 32, 39116 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.573498, 52.091015]}},
+
+{"type": "Feature", "properties": {"nummer": "36-01","name": "Universitätsklinikum Magdeburg", "adresse": "Leipziger Straße 44, 39120 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.620399, 52.101579]}},
+
+{"type": "Feature", "properties": {"nummer": "38-01","name": "Bördepark", "adresse": "Salbker Chaussee 67, 39118 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.601987, 52.082829]}},
+{"type": "Feature", "properties": {"nummer": "38-02","name": "Bördepark", "adresse": "Salbker Chaussee 67, 39118 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.601983, 52.084657]}},
+{"type": "Feature", "properties": {"nummer": "38-03","name": "Bördepark", "adresse": "Salbker Chaussee 67, 39118 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.594727, 52.084055]}},
+{"type": "Feature", "properties": {"nummer": "38-04","name": "Bördepark", "adresse": "Salbker Chaussee 67, 39118 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.596246, 52.082305]}},
+
+{"type": "Feature", "properties": {"nummer": "40-01","name": "Median-Klinik", "adresse": "Gustav-Ricker-Straße 4, 39120 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.639240, 52.086149]}},
+
+{"type": "Feature", "properties": {"nummer": "44-01","name": "Bahnhof Buckau", "adresse": "Warschauer Straße 21, 39104 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.631044, 52.109466]}},
+{"type": "Feature", "properties": {"nummer": "44-02","name": "Gaststätte Mückenwirt", "adresse": "An der Buckauer Fähre, 39118 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.643326, 52.106348]}},
+
+{"type": "Feature", "properties": {"nummer": "46-01","name": "Salbker See", "adresse": "Elbweg 1c, 39122 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.662129, 52.094875]}},
+
+{"type": "Feature", "properties": {"nummer": "50-00","name": "Gerätehaus FF Südost", "adresse": "Zackmünder Str. 1A, 39122 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.675291, 52.063495]}},
+
+{"type": "Feature", "properties": {"nummer": "52-01","name": "GETEC Arena", "adresse": "Berliner Chaussee 32, 39114 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.665064, 52.127725]}},
+
+{"type": "Feature", "properties": {"nummer": "56-01","name": "Krankenhaus Pfeiffersche Stiftungen", "adresse": "Pfeifferstraße 10, 39114 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.664707, 52.116843]}},
+{"type": "Feature", "properties": {"nummer": "56-02","name": "MDCC Arena", "adresse": "Heinz-Krügel-Platz 1, 39114 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.667657, 52.126046]}},
+
+{"type": "Feature", "properties": {"nummer": "58-00","name": "Gerätehaus FF Prester", "adresse": "Alt Prester 68, 39114 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.674662, 52.105320]}},
+
+{"type": "Feature", "properties": {"nummer": "64-01","name": "Hochschule Magdeburg-Stendal", "adresse": "Breitscheidstraße 2, 39114 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.679786, 52.140720]}},
+{"type": "Feature", "properties": {"nummer": "64-02","name": "Pferderennbahn", "adresse": "Herrenkrug 4, 39114 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.681602, 52.151750]}},
+{"type": "Feature", "properties": {"nummer": "64-03","name": "Bahnhof Herrenkrug", "adresse": "Herrenkrugstraße, 39114 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.675442, 52.145355]}},
+{"type": "Feature", "properties": {"nummer": "64-04","name": "Elbauenpark", "adresse": "Herrenkrugstraße, 39114 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.668356, 52.141670]}},
+{"type": "Feature", "properties": {"nummer": "64-05","name": "Messegelände", "adresse": "Tessenowstraße 5, 39114 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.668120, 52.134014]}},
+
+{"type": "Feature", "properties": {"nummer": "66-00","name": "Gerätehaus FF Rothensee", "adresse": "Forsthausstarße 36, 39126 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.664544, 52.180329]}},
+
+{"type": "Feature", "properties": {"nummer": "68-01","name": "Industriehafen", "adresse": "Industriestraße 4, 39126 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.674288, 52.165361]}},
+
+{"type": "Feature", "properties": {"nummer": "70-01","name": "Rückseite Enercon", "adresse": "Industriestraße 4, 39126 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.681700, 52.198683]}},
+
+{"type": "Feature", "properties": {"nummer": "72-01","name": "Campingplatz Barleber See", "adresse": "Wiedersdorfer Straße 30, 39126 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.659232, 52.219109]}},
+
+{"type": "Feature", "properties": {"nummer": "74-00","name": "Gerätehaus FF Pechau", "adresse": "Breite Straße 18, 39114 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.716526, 52.088918]}},
+
+{"type": "Feature", "properties": {"nummer": "76-00","name": "Gerätehaus FF Randau", "adresse": "Zur Kreuzhorst 4, 39114 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.724316, 52.059383]}},
+
+{"type": "Feature", "properties": {"nummer": "78-00","name": "Gerätehaus FF Beyendorf-Sohlen", "adresse": "Kreisstraße 30, 39114 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.632999, 52.052862]}}
+]}
