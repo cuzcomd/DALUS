@@ -812,7 +812,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 	<div class="windrose"><img src="images/arrow.png" alt="Windrose" id="arrow"/></div> <!-- Ende Windrose -->
 	<div id="map"></div>
 
-	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyABx82S4RteOeTHKqB-yuw9FkdTIrEmHuE&libraries=geometry,drawing&callback=initMap" async defer></script> <!-- GooleAPI laden. Hier muss der API-Schlüssel eingetragen werden. -->
+	<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=geometry,drawing&callback=initMap" async defer></script> <!-- GooleAPI laden. Hier muss der API-Schlüssel eingetragen werden. -->
 	<script src="js/bootstrap.min.js"></script> <!-- Bootstrap.js laden -->
 	<script src="js/html2canvas.min.js"></script>
 	<script src="js/usng.js" defer></script> <!-- Script für Umwandlung von Geokoordinaten in UTM-Ref Koordinaten -->
