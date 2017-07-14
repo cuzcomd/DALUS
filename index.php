@@ -1,6 +1,6 @@
 <?php 
 session_start();
-require('config.php');
+require('php/config.php');
  
 if(isset($_GET['login'])) {
  $benutzername = $_POST['benutzername'];
