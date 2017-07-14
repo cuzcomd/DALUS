@@ -1,0 +1,120 @@
+html, body {
+	height: 100%;
+	width:100%;
+	margin: 0;
+	padding: 0;
+	}
+      
+#map {
+    height: 100%;
+	display:relative;
+	}
+	
+.tab-content {
+	padding-top:10px;
+	}
+	
+.floating-panel {
+	width:320px;
+	height:100%;
+	position: absolute;
+    left: 0px;
+	top: 0px;
+	z-index: 5;
+	background-color: rgb(51, 68, 85);
+	border: 1px solid #999;
+	text-align: left;
+	font-family: 'Roboto','sans-serif';
+}
+
+.currentProject{
+	color:#eee;
+	word-wrap:break-word;
+}
+
+a{
+	text-decoration:none;
+	color:#eee;
+}
+
+.modal a{
+	color:#27A04F;
+}
+
+#form_winkelrechner{
+	padding-bottom:15px;
+}
+
+#messpunktdiv{
+	display:none;
+}
+
+.werkzeuge{
+	padding-bottom:10px;
+}
+
+.windrose{
+	position:absolute;
+	bottom:20px;
+	left:20px;
+	background: url('../images/windrose.png') rgba(51, 68, 85, 0.8);
+	border-radius:200px;
+	width:240px;
+	height:240px;
+	text-align:center;
+	line-height:240px;
+	z-index:9999;
+	display:none;
+}
+
+#arrow{
+	vertical-align:middle;
+	width;80px;
+}
+
+@media print {
+  img {
+    max-width: none !important;
+  }
+}
+
+.nav>li>a {
+	margin:0;
+}
+
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover{
+	color:#eee;
+	background-color:#345;
+}
+
+.input-group-addon:first-child, .input-group-addon:last-child{
+	min-width:50px;
+}
+
+.btn-met{
+	box-shadow: none !important;
+	padding:0;
+}
+
+.dropdown-menu>li>a{
+	padding:10px 20px;
+}
+@media only screen 
+  and (max-device-width: 1024px){
+.floating-panel {
+	width:100%;
+	height:auto;
+	}
+
+	.tab-content{
+		margin: 0 auto;
+	}
+
+  } 
+  
+ #wrapper_winkelrechner{
+ 	display:flex;
+ 	flex-wrap:wrap;
+ }
+
+ .fa-toggle-on{color:rgb(39, 160, 79);}
