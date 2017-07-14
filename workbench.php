@@ -1,4 +1,4 @@
-<?php require('session.php'); ?>
+<?php require('php/session.php'); ?>
 <!DOCTYPE html>
 <!-- Dieses Projekt wurde von cuzcoMD [www.cuzcomd.de] entwickelt. Es ist vom Autor lizenziert unter einer Creative Commons Namennennung - Nicht-kommerziell - Weitergabe unter gleichen Bedingungen 4.0 International Lizenz.
 Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf, solange es sich um eine nicht kommerzielle Nutzung handelt und der ursprüngliche Autor genannt wird. Zudem muss die Weitergabe unter der gleichen Lizenz erfolgen. -->
@@ -35,7 +35,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 		$.ajax({
 			type: "POST",
 			dataType: "json",
-			url: "projects.php",
+			url: "php/projects.php",
 			data: data,
 			success: function(data) {
 				$("#activeUser").html('&nbsp; '+data["vorname"] +' '+ data["nachname"]+'&nbsp;'); //Zeigt den Namen im Optionsmenü an
@@ -57,7 +57,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 		$.ajax({
 			type: "POST",
 			dataType: "json",
-			url: "projects.php",
+			url: "php/projects.php",
 			data: data,
 			success: function(data) {
 				$.each(data, function (key, value) {
@@ -81,7 +81,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 		$.ajax({
 			type: "POST",
 			dataType: "json",
-			url: "projects.php",
+			url: "php/projects.php",
 			data: data,
 			success: function(data) {
 				$.each(data, function (key, value) {
@@ -105,7 +105,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 		$.ajax({
 			type: "POST",
 			dataType: "json",
-			url: "projects.php",
+			url: "php/projects.php",
 			data: data,
 			success: function(data) {
 				$.each(data, function (key, value) {
@@ -1099,7 +1099,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 		$.ajax({
 			type: "POST",
 			dataType: "json",
-			url: "geometry.php",
+			url: "php/geometry.php",
 			data: data,
 			success: function(data) {
 				drawObjects(data);
@@ -1357,7 +1357,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 		$.ajax({
 			type: "POST",
 			dataType: "json",
-			url: "projects.php",
+			url: "php/projects.php",
 			data: data,
 			success: function(data) {
 				$("#activeProject").html("&nbsp; Kein Projekt geöffnet");
@@ -1416,7 +1416,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 				$.ajax({
 					type: "POST",
 					dataType: "json",
-					url: "projects.php",
+					url: "php/projects.php",
 					data: data,
 					success: function(data) {
 					toastr.success('Neues Projekt angelegt.');
@@ -1451,7 +1451,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 				$.ajax({
 					type: "POST",
 					dataType: "json",
-					url: "projects.php",
+					url: "php/projects.php",
 					data: data,
 					success: function(data) {
 					toastr.success('Projekt geändert.');
@@ -1479,7 +1479,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 			$.ajax({
 				type: "POST",
 				dataType: "json",
-				url: "projects.php",
+				url: "php/projects.php",
 				data: data,
 				success: function(data) {
 					toastr.success('Projekt geladen.');
@@ -1514,7 +1514,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 				$.ajax({
 					type: "POST",
 					dataType: "json",
-					url: "projects.php",
+					url: "php/projects.php",
 					data: data,
 					success: function(data) {
 					switch(data){
@@ -1574,7 +1574,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 			$.ajax({
 				type: "POST",
 				dataType: "json",
-				url: "geometry.php",
+				url: "php/geometry.php",
 				data:data,
 				success: function(data) {
 				},
@@ -1594,7 +1594,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 			$.ajax({
 				type: "POST",
 				dataType: "json",
-				url: "geometry.php",
+				url: "php/geometry.php",
 				data:data,
 				success: function(data) {
 				},
