@@ -451,7 +451,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 				</div>
 				<div class="modal-footer">
 					<div class="row">
-						<div class="col-xs-4">Version: 2.1.1</div>
+						<div class="col-xs-4">Version: 1.0.1</div>
 						<div class="col-xs-4"><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons Lizenzvertrag" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a></div>
 						<div class="col-xs-4"><a href="mailto:kontakt@cuzcomd.de">kontakt@cuzcomd.de</a></div>
 					</div>
