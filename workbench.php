@@ -1,4 +1,4 @@
-<?php require('session.php'); ?>
+<?php require('php/session.php'); ?>
 <!DOCTYPE html>
 <!-- Dieses Projekt wurde von cuzcoMD [www.cuzcomd.de] entwickelt. Es ist vom Autor lizenziert unter einer Creative Commons Namennennung - Nicht-kommerziell - Weitergabe unter gleichen Bedingungen 4.0 International Lizenz.
 Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf, solange es sich um eine nicht kommerzielle Nutzung handelt und der ursprüngliche Autor genannt wird. Zudem muss die Weitergabe unter der gleichen Lizenz erfolgen. -->
@@ -35,7 +35,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 		$.ajax({
 			type: "POST",
 			dataType: "json",
-			url: "projects.php",
+			url: "php/projects.php",
 			data: data,
 			success: function(data) {
 				$("#activeUser").html('&nbsp; '+data["vorname"] +' '+ data["nachname"]+'&nbsp;'); //Zeigt den Namen im Optionsmenü an
@@ -57,7 +57,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 		$.ajax({
 			type: "POST",
 			dataType: "json",
-			url: "projects.php",
+			url: "php/projects.php",
 			data: data,
 			success: function(data) {
 				$.each(data, function (key, value) {
@@ -81,7 +81,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 		$.ajax({
 			type: "POST",
 			dataType: "json",
-			url: "projects.php",
+			url: "php/projects.php",
 			data: data,
 			success: function(data) {
 				$.each(data, function (key, value) {
@@ -105,7 +105,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 		$.ajax({
 			type: "POST",
 			dataType: "json",
-			url: "projects.php",
+			url: "php/projects.php",
 			data: data,
 			success: function(data) {
 				$.each(data, function (key, value) {
@@ -451,57 +451,14 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 				</div>
 				<div class="modal-footer">
 					<div class="row">
-						<div class="col-sm-4"><a data-toggle="modal" data-target="#modal_changelog">Version: 2.1.1</a></div>
-						<div class="col-sm-4"><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons Lizenzvertrag" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a></div>
-						<div class="col-sm-4"><a href="mailto:kontakt@cuzcomd.de">kontakt@cuzcomd.de</a></div>
+						<div class="col-xs-4">Version: 1.0.1</div>
+						<div class="col-xs-4"><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons Lizenzvertrag" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a></div>
+						<div class="col-xs-4"><a href="mailto:kontakt@cuzcomd.de">kontakt@cuzcomd.de</a></div>
 					</div>
 				</div>
 			</div><!-- Ende modal-content -->
 		</div><!-- Ende modal-dialog -->
 	</div> <!-- Ende modal fade -->
-
-	<div class="modal fade" id="modal_changelog" tabindex="-1" role="dialog" aria-labelledby="Changelog">
-		<div class="modal-dialog" role="document" style="max-height:500px; overflow-y:auto;">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title" id="myModalLabel">Changelog</h4>
-				</div>
-				<div class="modal-body">
-					<div class="panel panel-primary">
-						<div class="panel-heading"><h3 class="panel-title">v2.1.1 [14.07.2017]</h3></div>
-						<div class="panel-body">
-							<ul>
-								<li>Feature: Änderung des Benutzernamens und Passworts im Hauptmenü</li>
-								<li>Style: Überarbeitung des Anmeldebildschirms</li>
-								<li>Bugfix: Öffnen des MET-modal in iOS und Safari ist nicht möglich</li>
-								<li>Bugfix: Beim Klick auf eine Geomtrie oder Karte wird die bisher aktive Geometrie nicht abgewählt</li>
-							</ul>
-						</div>
-					</div> <!-- Ende panel -->
-					<div class="panel panel-primary">
-						<div class="panel-heading"><h3 class="panel-title">v2.1.0 [13.07.2017]</h3></div>
-						<div class="panel-body">
-							<ul>
-								<li>Feature: MET-Freisetzungsort kann manuell gesetzt werden</li>
-								<li>Feature: Speicherung von Kreisen, Polygonen und Pfaden in der Datenbank ist jetzt möglich </li>
-								<li>Style: Überarbeitung der Benutzeroberfläche</li>
-								<li>Bugfix: Diverse Fehler beim Zurücksetzen der Kartengeometrie behoben</li>
-							</ul>
-						</div>
-					</div> <!-- Ende panel -->
-					<div class="panel panel-primary">
-						<div class="panel-heading"><h3 class="panel-title">v2.0.0 [04.07.2017]</h3></div>
-						<div class="panel-body">
-							<ul>
-								<li>Umstrukturierung der App auf datenbankgestützte Projektverwaltung</li>
-							</ul>
-						</div>
-					</div> <!-- Ende panel -->
-				</div><!-- Ende modal-body -->
-			</div><!-- Ende modal-content -->
-		</div><!-- Ende modal-dialog -->
-	</div><!-- Ende Modal changelog -->
 
 	<div class="modal fade" id="modal_new_project" tabindex="-1" role="dialog" aria-labelledby="Neues Projekt">
 		<div class="modal-dialog" role="document">
@@ -1142,7 +1099,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 		$.ajax({
 			type: "POST",
 			dataType: "json",
-			url: "geometry.php",
+			url: "php/geometry.php",
 			data: data,
 			success: function(data) {
 				drawObjects(data);
@@ -1400,7 +1357,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 		$.ajax({
 			type: "POST",
 			dataType: "json",
-			url: "projects.php",
+			url: "php/projects.php",
 			data: data,
 			success: function(data) {
 				$("#activeProject").html("&nbsp; Kein Projekt geöffnet");
@@ -1459,7 +1416,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 				$.ajax({
 					type: "POST",
 					dataType: "json",
-					url: "projects.php",
+					url: "php/projects.php",
 					data: data,
 					success: function(data) {
 					toastr.success('Neues Projekt angelegt.');
@@ -1494,7 +1451,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 				$.ajax({
 					type: "POST",
 					dataType: "json",
-					url: "projects.php",
+					url: "php/projects.php",
 					data: data,
 					success: function(data) {
 					toastr.success('Projekt geändert.');
@@ -1522,7 +1479,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 			$.ajax({
 				type: "POST",
 				dataType: "json",
-				url: "projects.php",
+				url: "php/projects.php",
 				data: data,
 				success: function(data) {
 					toastr.success('Projekt geladen.');
@@ -1557,7 +1514,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 				$.ajax({
 					type: "POST",
 					dataType: "json",
-					url: "projects.php",
+					url: "php/projects.php",
 					data: data,
 					success: function(data) {
 					switch(data){
@@ -1617,7 +1574,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 			$.ajax({
 				type: "POST",
 				dataType: "json",
-				url: "geometry.php",
+				url: "php/geometry.php",
 				data:data,
 				success: function(data) {
 				},
@@ -1637,7 +1594,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 			$.ajax({
 				type: "POST",
 				dataType: "json",
-				url: "geometry.php",
+				url: "php/geometry.php",
 				data:data,
 				success: function(data) {
 				},
