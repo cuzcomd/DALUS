@@ -267,6 +267,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 
   		document.getElementById('deleteActiveObject').addEventListener('click', function() {
 	  		deleteObject();
+			deleteSelectedShape();
   		});
 		
 		google.maps.event.addListener(drawingManager, 'overlaycomplete', function(event) { //Funktionen, die nach dem Zeichnen eines Geometrieobjekts aufgerufen werden
