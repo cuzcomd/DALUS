@@ -137,7 +137,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 	updateProjects(); //Verfügbare Projekte aktualisieren
 	updateSharedProjects(); //Verfügbare geteilte Projekte aktualisieren
 	isSharedWith(); //Aktualisieren, mit wem das Projekt geteilt wird
-	messpunktNummer = 1; //Initialisierung
+	messpunktnummer = 1; //Initialisierung
 	objectNummer = 1;
 	metCounter = 1; //Zähler für die Anzahl an Freisetzungsmarkern
 	objectArray = new Array(); //Array für temporär erzeugte Objekte
@@ -181,7 +181,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 	</script> <!-- Initialfunktion -->
 	<script > // Google DrawingManager laden
 	function startDrawingManager(map){
-		var marker_color = "yellow"; //Marker standardmäßig als gelbe Marker zeichnen
+		var marker_color = "white"; //Marker standardmäßig als gelbe Marker zeichnen
 		var drawingManager = new google.maps.drawing.DrawingManager({
 			drawingMode: google.maps.drawing.OverlayType.null,
 			drawingControl: false,
@@ -211,28 +211,46 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 			});
 		});
 		
-		document.getElementById('setMark').addEventListener('click', function() {
+		document.getElementById('setMarkWhite').addEventListener('click', function() {
 			drawingManager.setOptions({
 				drawingMode: google.maps.drawing.OverlayType.MARKER,
-				markerOptions: {icon: {url:'images/beachflag.png',anchor: new google.maps.Point(0, 32)}, draggable:true}
+				markerOptions: {icon: {url:'images/white.png',anchor: new google.maps.Point(16, 16)}, draggable:true}
 			});
-			marker_color = "yellow";
+			marker_color = "white";
 			marker_typ = 'messpunkt';
 		});
 		
 		document.getElementById('setMarkGreen').addEventListener('click', function() {
 			drawingManager.setOptions({
 				drawingMode: google.maps.drawing.OverlayType.MARKER,
-				markerOptions: {icon: {url:'images/greenflag.png',anchor: new google.maps.Point(0, 32)}, draggable:true}
+				markerOptions: {icon: {url:'images/green.png',anchor: new google.maps.Point(16,16)}, draggable:true}
 			});
 			marker_color = "green";
+			marker_typ = 'messpunkt';
+		});
+
+		document.getElementById('setMarkBlue').addEventListener('click', function() {
+			drawingManager.setOptions({
+				drawingMode: google.maps.drawing.OverlayType.MARKER,
+				markerOptions: {icon: {url:'images/blue.png',anchor: new google.maps.Point(16,16)}, draggable:true}
+			});
+			marker_color = "blue";
+			marker_typ = 'messpunkt';
+		});
+
+		document.getElementById('setMarkYellow').addEventListener('click', function() {
+			drawingManager.setOptions({
+				drawingMode: google.maps.drawing.OverlayType.MARKER,
+				markerOptions: {icon: {url:'images/yellow.png',anchor: new google.maps.Point(16,16)}, draggable:true}
+			});
+			marker_color = "yellow";
 			marker_typ = 'messpunkt';
 		});
 	
 		document.getElementById('setMarkRed').addEventListener('click', function() {
 			drawingManager.setOptions({
 		  		drawingMode: google.maps.drawing.OverlayType.MARKER,
-		 		markerOptions: {icon: {url:'images/redflag.png',anchor: new google.maps.Point(0, 32)}, draggable:true}
+		 		markerOptions: {icon: {url:'images/red.png',anchor: new google.maps.Point(16,16)}, draggable:true}
 	  		});
 			marker_color = "red";
 			marker_typ = 'messpunkt';
@@ -242,9 +260,10 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
   			$('#modal_MET').modal('hide');
 			drawingManager.setOptions({
 		  		drawingMode: google.maps.drawing.OverlayType.MARKER,
+		  		markerOptions: {icon: {url:'images/fakeMarker.png',anchor: new google.maps.Point(0,0)}, draggable:true}
 	  		});
 			marker_typ = "metManual";
-			marker_color = "red";
+			marker_color = "black";
   		});
 	
 		document.getElementById('setCirc').addEventListener('click', function() {
@@ -266,8 +285,8 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
   		});
 
   		document.getElementById('deleteActiveObject').addEventListener('click', function() {
-	  		deleteObject();
-			deleteSelectedShape();
+	  		deleteObject(); //Löschfunktion für geladene Objekte
+	  		deleteSelectedShape(); //Löschfunktion für neu erzeugte Objekte
   		});
 		
 		google.maps.event.addListener(drawingManager, 'overlaycomplete', function(event) { //Funktionen, die nach dem Zeichnen eines Geometrieobjekts aufgerufen werden
@@ -282,7 +301,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 					obj_typ: 'polyline'
 					});
 				objectArray.push(newObject);
-				objectNummer += 1;
+				objectNummer++;
 			}
 
 			if (event.type == google.maps.drawing.OverlayType.POLYGON) {
@@ -293,7 +312,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 					obj_typ: 'polygon'
 					});
 				objectArray.push(newObject);
-				objectNummer += 1;
+				objectNummer++;
 			}
 
 			if (event.type == google.maps.drawing.OverlayType.CIRCLE) {
@@ -306,7 +325,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 					obj_typ: 'circle'
 					});
 				objectArray.push(newObject);
-				objectNummer += 1;
+				objectNummer++;
 			}
 
 			if (event.type == google.maps.drawing.OverlayType.MARKER && marker_typ == 'metManual') {
@@ -319,7 +338,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 			if (event.type == google.maps.drawing.OverlayType.MARKER && marker_typ == 'messpunkt') {
 				var newMarker = event.overlay;
 				newMarker.setValues({
-					obj_nummer: messpunktNummer,
+					obj_nummer: messpunktnummer,
 					obj_lat: newMarker.getPosition().lat().toFixed(6),
 					obj_lon: newMarker.getPosition().lng().toFixed(6),
 					obj_farbe: marker_color,
@@ -329,7 +348,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 					});
 				newMarker.content = '';
 				objectArray.push(newMarker);
-				messpunktNummer += 1; // Messpunktnummer inkrementieren
+				messpunktnummer++; // Messpunktnummer inkrementieren
 
 				google.maps.event.addListener(newMarker,'click',function(){ // Öffnet Infowindow bei Klick auf Marker
 					activeObject = this; // Setzt den aktuell ausgewählten marker als aktiv
@@ -465,7 +484,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 				</div>
 				<div class="modal-footer">
 					<div class="row">
-						<div class="col-xs-4 text-center">Version: 1.0.1</div>
+						<div class="col-xs-4 text-center">Version: 1.0.2</div>
 						<div class="col-xs-4"><a href="https://github.com/cuzcomd/DALUS" target="_blank"><i class="fa fa-github" aria-hidden="true"></i> GitHub Repository</a></div>
 						<div class="col-xs-4"><a href="mailto:kontakt@cuzcomd.de">kontakt@cuzcomd.de</a></div>
 					</div>
@@ -800,9 +819,11 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 		    				<a class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-flag-o"></i>
 		    				<span class="caret"></span></a>
 		    				<ul class="dropdown-menu">
-								<li id="setMark"><a data-toggle="tab"><img src="images/beachflag.png"> Unbekannt</a></li>
-								<li id="setMarkGreen"><a data-toggle="tab"><img src="images/greenflag.png"> In Ordnung</a></li>
-								<li id="setMarkRed"><a data-toggle="tab"><img src="images/redflag.png"> Überschritten </a></li>
+								<li id="setMarkWhite"><a data-toggle="tab"><img src="images/white.png"> Vorgeplanter Messpunkt</a></li>
+								<li id="setMarkGreen"><a data-toggle="tab"><img src="images/green.png"> Messung negativ - kein Geruch/Niederschlag</a></li>
+								<li id="setMarkBlue"><a data-toggle="tab"><img src="images/blue.png"> Messung negativ - mit Geruch/Niederschlag</a></li>
+								<li id="setMarkYellow"><a data-toggle="tab"><img src="images/yellow.png"> Messung positiv - Beurteilungswert unterschritten</a></li>
+								<li id="setMarkRed"><a data-toggle="tab"><img src="images/red.png"> Messung positiv - Beurteilungswert überschritten </a></li>
 							</ul>
 						</li>
 					</ul>
@@ -813,7 +834,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 	<div class="windrose"><img src="images/arrow.png" alt="Windrose" id="arrow"/></div> <!-- Ende Windrose -->
 	<div id="map"></div>
 
-	<script src="https://maps.googleapis.com/maps/api/js?libraries=geometry,drawing&callback=initMap" async defer></script> <!-- GooleAPI laden. Hier muss der API-Schlüssel eingetragen werden. -->
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyABx82S4RteOeTHKqB-yuw9FkdTIrEmHuE&libraries=geometry,drawing&callback=initMap" async defer></script> <!-- GooleAPI laden. Hier muss der API-Schlüssel eingetragen werden. -->
 	<script src="js/bootstrap.min.js"></script> <!-- Bootstrap.js laden -->
 	<script src="js/html2canvas.min.js"></script>
 	<script src="js/usng.js" defer></script> <!-- Script für Umwandlung von Geokoordinaten in UTM-Ref Koordinaten -->
@@ -856,6 +877,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 
 	<script defer> // Polygon berechnen und Freisetzungsort-Marker setzen
 	function drawPolygon(map, lat, lon, geoAdresse, winkel, richtung, innen, aussen, counter){
+		marker_color ="black";
 		$('#modal_MET').modal('hide');
 		if (winkel !== undefined) {
 			var ausbreitungswinkel = winkel;
@@ -990,11 +1012,13 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 		// Marker am Freisetzungsort erstellen 
 		var marker = new google.maps.Marker({
 			position: new google.maps.LatLng(lat, lon),
+			icon:{url:'images/black.png', anchor: new google.maps.Point(16,16)},
 			obj_lat: lat,
 			obj_lon: lon,
 			obj_parameter: metParameter,
 			obj_typ: 'met',
 			obj_nummer: metCounter,
+			obj_farbe: 'black',
   			map: map,
   			title: 'Freisetzungsort',
   			draggable:false,
@@ -1004,7 +1028,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 		});
 
 			objectArray.push(marker);
-			metCounter += 1;
+			metCounter ++;
 
 		marker.addListener('click', function() {//Informationsfenster bei Klick auf Marker öffnen
 		activeObject = this; // Setzt den aktuell ausgewählten marker als aktiv
@@ -1128,20 +1152,33 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 	function drawObjects(theArray){
 		for (const value of theArray) {
 			switch(value.obj_farbe) {
-				case 'yellow':
-				var icon_type = 'images/beachflag.png';
+				case 'white':
+				var icon_type = 'images/white.png';
 				break;
 
 				case 'green':
-				var icon_type = 'images/greenflag.png';
+				var icon_type = 'images/green.png';
 				break;
 
+				case 'blue':
+				var icon_type = 'images/blue.png';
+				break;
+
+				case 'yellow':
+				var icon_type = 'images/yellow.png';
+				break;
+
+				
 				case 'red':
-				var icon_type = 'images/redflag.png';
+				var icon_type = 'images/red.png';
+				break;
+
+				case 'black':
+				var icon_type = 'images/black.png';
 				break;
 
 				default:
-				var icon_type = 'images/redflag.png';
+				var icon_type = 'images/white.png';
 			}
 
 			switch(value.obj_typ) {
@@ -1151,7 +1188,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 				position: {lat:Number(value.obj_lat), lng:Number(value.obj_lon)},
 				obj_lat: Number(value.obj_lat),
 				obj_lon: Number(value.obj_lon),
-				icon:{url:icon_type, anchor: new google.maps.Point(0, 32)},
+				icon:{url:icon_type, anchor: new google.maps.Point(16,16)},
 				obj_nummer: Number(value.obj_nummer),
 				obj_farbe: value.obj_farbe,
 				obj_messwert: Number(value.obj_messwert),
@@ -1215,7 +1252,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 				break;
 
 				case 'circle':
-				let circleObj = new google.maps.Circle({
+				var circleObj = new google.maps.Circle({
 					map:map,
 					center: {lat:Number(value.obj_lat), lng:Number(value.obj_lon)},
 					obj_lat: Number(value.obj_lat),
@@ -1343,18 +1380,28 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 	function changeColor(markerNummer, color){
 		var index = objectArray.findIndex(x => x.obj_nummer == activeObject.obj_nummer && x.obj_typ == activeObject.obj_typ);  //ermittelt Array-Index des aktuellen Markers
 		switch(color){
-			case 1:
-			activeObject.setIcon({url:'images/beachflag.png', anchor: new google.maps.Point(0, 32)});
-			objectArray[index].obj_farbe = "yellow";
+			case 'white':
+			activeObject.setIcon({url:'images/white.png', anchor: new google.maps.Point(16,16)});
+			objectArray[index].obj_farbe = "white";
 			break;
 
-			case 2:
-			activeObject.setIcon({url:'images/greenflag.png', anchor: new google.maps.Point(0, 32)});
+			case 'green':
+			activeObject.setIcon({url:'images/green.png', anchor: new google.maps.Point(16,16)});
 			objectArray[index].obj_farbe = "green";
 			break;
 
-			case 3:
-			activeObject.setIcon({url:'images/redflag.png', anchor: new google.maps.Point(0, 32)});
+			case 'blue':
+			activeObject.setIcon({url:'images/blue.png', anchor: new google.maps.Point(16,16)});
+			objectArray[index].obj_farbe = "blue";
+			break;
+
+			case 'yellow':
+			activeObject.setIcon({url:'images/yellow.png', anchor: new google.maps.Point(16,16)});
+			objectArray[index].obj_farbe = "yellow";
+			break;
+
+			case 'red':
+			activeObject.setIcon({url:'images/red.png', anchor: new google.maps.Point(16,16)});
 			objectArray[index].obj_farbe = "red";
 			break;
 
@@ -1499,7 +1546,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 					toastr.success('Projekt geladen.');
 					$("#activeProject").html("&nbsp; "+data["projektName"]); //Projekttitel anzeigen
 					prj_id = parseInt(data["projektID"]); // In Datenbak erzeugte Projekt ID einlesen
-					messpunktNummer = parseInt(data["maxNum"])+1;
+					messpunktnummer = parseInt(data["maxNum"])+1;
 					$('#editProject').show(); // Menüpunkt 'Projekt bearbeiten' anzeigen
 					$('#saveProject').show(); // Menüpunkt 'Projekt speichern' anzeigen
 					$('#deleteProject').show(); // Menüpunkt 'Projekt speichern' anzeigen
