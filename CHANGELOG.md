@@ -1,5 +1,10 @@
 ## Changelog
 
+### 1.1.2 (19.07.2017)
+* Feature: Einbindung der Lagedarstellung entsprechend des Messzugkonzepts NRW
+* Bugfix: Das Löschen von neu gezeichneten Objekte ist nicht möglich
+* Bugfix: Das manuelle Setzen des Freisetzungsortes erzeugt einen zusätzlichen Marker
+
 ### 1.1.1 (14.07.2017)
 * Feature: Änderung des Benutzernamens und Passworts im Hauptmenü
 * Style: Überarbeitung des Anmeldebildschirms

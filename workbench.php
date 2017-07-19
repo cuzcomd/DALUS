@@ -137,7 +137,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 	updateProjects(); //Verfügbare Projekte aktualisieren
 	updateSharedProjects(); //Verfügbare geteilte Projekte aktualisieren
 	isSharedWith(); //Aktualisieren, mit wem das Projekt geteilt wird
-	messpunktnummer = 1; //Initialisierung
+	messpunktNummer = 1; //Initialisierung
 	objectNummer = 1;
 	metCounter = 1; //Zähler für die Anzahl an Freisetzungsmarkern
 	objectArray = new Array(); //Array für temporär erzeugte Objekte
@@ -301,7 +301,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 					obj_typ: 'polyline'
 					});
 				objectArray.push(newObject);
-				objectNummer++;
+				objectNummer +=1;
 			}
 
 			if (event.type == google.maps.drawing.OverlayType.POLYGON) {
@@ -312,7 +312,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 					obj_typ: 'polygon'
 					});
 				objectArray.push(newObject);
-				objectNummer++;
+				objectNummer +=1;
 			}
 
 			if (event.type == google.maps.drawing.OverlayType.CIRCLE) {
@@ -325,7 +325,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 					obj_typ: 'circle'
 					});
 				objectArray.push(newObject);
-				objectNummer++;
+				objectNummer +=1;
 			}
 
 			if (event.type == google.maps.drawing.OverlayType.MARKER && marker_typ == 'metManual') {
@@ -338,7 +338,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 			if (event.type == google.maps.drawing.OverlayType.MARKER && marker_typ == 'messpunkt') {
 				var newMarker = event.overlay;
 				newMarker.setValues({
-					obj_nummer: messpunktnummer,
+					obj_nummer: messpunktNummer,
 					obj_lat: newMarker.getPosition().lat().toFixed(6),
 					obj_lon: newMarker.getPosition().lng().toFixed(6),
 					obj_farbe: marker_color,
@@ -348,7 +348,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 					});
 				newMarker.content = '';
 				objectArray.push(newMarker);
-				messpunktnummer++; // Messpunktnummer inkrementieren
+				messpunktNummer += 1; // Messpunktnummer inkrementieren
 
 				google.maps.event.addListener(newMarker,'click',function(){ // Öffnet Infowindow bei Klick auf Marker
 					activeObject = this; // Setzt den aktuell ausgewählten marker als aktiv
@@ -484,7 +484,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 				</div>
 				<div class="modal-footer">
 					<div class="row">
-						<div class="col-xs-4 text-center">Version: 1.0.2</div>
+						<div class="col-xs-4 text-center">Version: 1.1.2</div>
 						<div class="col-xs-4"><a href="https://github.com/cuzcomd/DALUS" target="_blank"><i class="fa fa-github" aria-hidden="true"></i> GitHub Repository</a></div>
 						<div class="col-xs-4"><a href="mailto:kontakt@cuzcomd.de">kontakt@cuzcomd.de</a></div>
 					</div>
@@ -834,7 +834,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 	<div class="windrose"><img src="images/arrow.png" alt="Windrose" id="arrow"/></div> <!-- Ende Windrose -->
 	<div id="map"></div>
 
-	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyABx82S4RteOeTHKqB-yuw9FkdTIrEmHuE&libraries=geometry,drawing&callback=initMap" async defer></script> <!-- GooleAPI laden. Hier muss der API-Schlüssel eingetragen werden. -->
+	<script src="https://maps.googleapis.com/maps/api/js?libraries=geometry,drawing&callback=initMap" async defer></script> <!-- GooleAPI laden. Hier muss der API-Schlüssel eingetragen werden. -->
 	<script src="js/bootstrap.min.js"></script> <!-- Bootstrap.js laden -->
 	<script src="js/html2canvas.min.js"></script>
 	<script src="js/usng.js" defer></script> <!-- Script für Umwandlung von Geokoordinaten in UTM-Ref Koordinaten -->
@@ -1028,7 +1028,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 		});
 
 			objectArray.push(marker);
-			metCounter ++;
+			metCounter += 1;
 
 		marker.addListener('click', function() {//Informationsfenster bei Klick auf Marker öffnen
 		activeObject = this; // Setzt den aktuell ausgewählten marker als aktiv
@@ -1546,7 +1546,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 					toastr.success('Projekt geladen.');
 					$("#activeProject").html("&nbsp; "+data["projektName"]); //Projekttitel anzeigen
 					prj_id = parseInt(data["projektID"]); // In Datenbak erzeugte Projekt ID einlesen
-					messpunktnummer = parseInt(data["maxNum"])+1;
+					messpunktNummer = parseInt(data["maxNum"])+1;
 					$('#editProject').show(); // Menüpunkt 'Projekt bearbeiten' anzeigen
 					$('#saveProject').show(); // Menüpunkt 'Projekt speichern' anzeigen
 					$('#deleteProject').show(); // Menüpunkt 'Projekt speichern' anzeigen
