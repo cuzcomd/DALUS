@@ -556,7 +556,7 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 						</div>
 						<div class="form-group">
 							<label for="newProjektShared" class="col-form-label">Freigeben für</label>
-							<select multiple class="form-control listOfAllUsersExceptMe" type="text" id="newProjektShared" name="shared[]">
+							<select multiple class="form-control listOfAllUsersExceptMe" type="text" id="newProjektShared" name="shared[]" size="10">
 							</select>
 						</div>
 						<div class="text-center">
@@ -579,7 +579,7 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 					<h5>Meine Projekte </h5>
 					<form action='' class="ajax_load_project" method='POST' role='form'>
 						<div class="form-group">
-							<select class="form-control" type="text" id="projectOpen" name="project_open">
+							<select class="form-control" type="text" id="projectOpen" name="project_open"  size="10">
 							</select>
 						</div>
 						<div class="text-center">
@@ -589,7 +589,7 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 					<h5>Für mich freigegebene Projekte</h5>
 					<form action='' class="ajax_load_project" method='POST' role='form'>
 						<div class="form-group">
-							<select class="form-control" id="projectOpenShared" name="project_open">
+							<select class="form-control" id="projectOpenShared" name="project_open"  size="10">
 							</select>
 						</div>
 						<div class="text-center">
@@ -618,7 +618,7 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 						</div>
 						<div class="form-group">
 							<label for="projektShared" class="col-form-label">Freigeben für</label>
-							<select multiple class="form-control" type="text" id="projektShared" name="shared[]">
+							<select multiple class="form-control" type="text" id="projektShared" name="shared[]"  size="10">
 								<!-- Hier erscheinen die Benutzernamen, für die das Projekt freigegeben wurde -->
 							</select>
 						</div>
