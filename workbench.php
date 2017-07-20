@@ -387,6 +387,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 				});
 
 				google.maps.event.addListener(newMarker,'dragstart', function(){
+					activeObject = this;
 					infoWindow.setMap(null);
 				});
 				
@@ -1249,6 +1250,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 				});
 
 				google.maps.event.addListener(geom_obj,'dragstart', function(){
+					activeObject = this;
 					this.info.close();
 				});
 				break;
