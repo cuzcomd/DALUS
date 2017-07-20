@@ -14,6 +14,7 @@ if(isset($_GET['login'])) {
  //Überprüfung des Passworts
  if ($user !== false && password_verify($passwort, $user['passwort'])) {
  $_SESSION['userid'] = $user['id'];
+  $_SESSION['accessLevel'] = $user['level'];
  $stmt2 = $pdo->prepare("UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = :id");
  $stmt2->bindParam(':id', $user['id'], PDO::PARAM_INT);
  $stmt2->execute();

@@ -1,5 +1,10 @@
 ## Changelog
 
+### 1.2.0 (20.07.2017)
+* Feature: Einführung von Benutzerrechten(Access Levels) Administrator und Benutzer
+* Feature: Administratoren haben Zugriff auf die Benutzerverwaltung und können neue Nutzer anlegen und Bestehende löschen
+* Bugfix: Der Menüpunkt "Abmelden" hat zu einer falschen Adresse geführt und dei Sitzun nicht korrekt beendet
+
 ### 1.1.2 (19.07.2017)
 * Feature: Einbindung der Lagedarstellung entsprechend des Messzugkonzepts NRW
 * Bugfix: Das Löschen von neu gezeichneten Objekte ist nicht möglich

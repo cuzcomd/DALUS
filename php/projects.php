@@ -8,10 +8,13 @@ if (is_ajax()) {
 		case "delete": deleteProject(); break;
 		case "loadUser": loadUser(); break;
 		case "editUser": editUser(); break;
+		case "createUser": createUser(); break;
+		case "deleteUser": deleteUser(); break;
 		case "load": loadProject(); break;
 		case "updateProjects": updateProjects(); break;
 		case "updateSharedProjects": updateSharedProjects(); break;
 		case "isSharedWith": isSharedWith(); break;
+		case "updateAllUsers": updateAllUsers(); break;
     }
   }
 }
@@ -73,22 +76,43 @@ function deleteProject(){
 }
 
 function loadUser(){
-require('session.php');
-include("config.php");
+	require('session.php');
+	include("config.php");
 
-$stmt = $pdo->prepare("SELECT * FROM users WHERE id = :userID");
-$stmt->bindParam(':userID', $userid, PDO::PARAM_INT);
-$stmt->execute();
+	$stmt = $pdo->prepare("SELECT * FROM users WHERE id = :userID");
+	$stmt->bindParam(':userID', $userid, PDO::PARAM_INT);
+	$stmt->execute();
 
-$benutzer = $stmt->fetch(PDO::FETCH_OBJ);//Daten des angemeldeten Benutzers abfragen
-$benutzerID = $userid;
-$benutzername = $benutzer->benutzername;
-$vorname = $benutzer->vorname;
-$nachname = $benutzer->nachname;
+	$benutzer = $stmt->fetch(PDO::FETCH_OBJ);//Daten des angemeldeten Benutzers abfragen
+	$benutzerID = $userid;
+	$benutzername = $benutzer->benutzername;
+	$vorname = $benutzer->vorname;
+	$nachname = $benutzer->nachname;
 
-$returnvalues = array('benutzerID' => $benutzerID,'benutzername' => $benutzername, 'vorname' => $vorname, 'nachname' => $nachname);
-  	echo json_encode($returnvalues);
+	$returnvalues = array('benutzerID' => $benutzerID,'benutzername' => $benutzername, 'vorname' => $vorname, 'nachname' => $nachname, 'accessLevel' => $accessLevel);
+	  	echo json_encode($returnvalues);
 }
+
+function deleteUser(){
+	require('session.php');
+	include("config.php");
+	$users = (!empty($_POST['users']) ? $_POST['users'] :'');
+
+	if ($accessLevel == "admin")
+	{
+		$stmt = $pdo->prepare("DELETE FROM users WHERE id = :userID");
+		foreach ($users as $value) {
+			$stmt->bindParam(':userID', $value, PDO::PARAM_INT);
+			$stmt->execute();
+		}
+		$return = "ok";
+	}
+	else {
+		$return = "noAdmin";
+	}
+	echo json_encode($return);
+}
+
 
 function loadProject(){
 include("config.php");
@@ -132,6 +156,16 @@ function updateSharedProjects(){
 
 	$projekte = $stmt->fetchAll();
 	echo json_encode($projekte);
+}
+
+function updateAllUsers(){
+	require('session.php');
+	include("config.php");
+	$stmt = $pdo->prepare("SELECT id, benutzername FROM users");
+	$stmt->execute();
+
+	$benutzer = $stmt->fetchAll();
+	echo json_encode($benutzer);
 }
 
 function isSharedWith(){
@@ -210,4 +244,38 @@ function editUser(){
 	else{$return = 'WrongPassword';}
 	echo json_encode($return);
 }
+
+function createUser(){
+	include("config.php");
+	require("session.php");
+	$benutzername = (!empty($_POST['benutzername']) ? $_POST['benutzername']:'');
+	$vorname = (!empty($_POST['vorname']) ? $_POST['vorname']:'');
+	$nachname = (!empty($_POST['nachname']) ? $_POST['nachname']:'');
+	$passwort = password_hash((!empty($_POST['benutzername']) ? $_POST['benutzername']:''), PASSWORD_DEFAULT);
+	$level = (!empty($_POST['level']) ? $_POST['level']:'');
+	
+	if ($accessLevel == "admin")
+	{
+		$stmt = $pdo->prepare("INSERT IGNORE INTO users (benutzername, passwort, level, vorname, nachname, created_at) VALUES (:benutzername, :passwort, :level, :vorname, :nachname, CURRENT_TIMESTAMP)");
+		$stmt->bindParam(':benutzername', $benutzername, PDO::PARAM_STR, 12);
+		$stmt->bindParam(':vorname', $vorname, PDO::PARAM_STR, 12);
+		$stmt->bindParam(':nachname', $nachname, PDO::PARAM_STR, 12);
+		$stmt->bindParam(':passwort', $passwort, PDO::PARAM_STR, 12);
+		$stmt->bindParam(':level', $level, PDO::PARAM_STR, 12);
+		$stmt->execute();
+
+		if($stmt->rowCount() > 0)
+		{
+			$return = 'yes';
+		}
+		else
+		{
+			$return = 'no';
+		}
+	}
+	else{
+	  $return = 'noAdmin';
+	}
+	echo json_encode($return);
+  }
 ?>

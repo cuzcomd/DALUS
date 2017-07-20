@@ -41,7 +41,8 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 				$("#activeUser").html('&nbsp; '+data["vorname"] +' '+ data["nachname"]+'&nbsp;'); //Zeigt den Namen im Optionsmenü an
 				$(".activeUserID").val(data["benutzerID"]); //Setzt die ID des Benutzers als Feldwert
 				$("#username").val(data["benutzername"]);
-				userID = data["benutzerID"]; //Speichert dei Benutzer-ID in einer globalen Variablen
+				userID = data["benutzerID"]; //Speichert die Benutzer-ID in einer globalen Variablen
+				userAL = data["accessLevel"]; //Speichert die Zugriffsberechtigung des Benutzers in einer globalen Variablen
 			},
 			error: function(xhr, desc, err) {
 				console.log(xhr);
@@ -73,6 +74,39 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 			}
 		});//Ende Ajax
 	}//Ende Funktion updateProjects
+
+function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den angemeldeten Benutzer sichtbar sind
+		$('.listOfAllUsers').children('option').remove(); // Leert die Liste aller verfügbaren Optionen
+		var data = {"action": "updateAllUsers"};
+		data = $(this).serialize() + "&" + $.param(data);
+		$.ajax({
+			type: "POST",
+			dataType: "json",
+			url: "php/projects.php",
+			data: data,
+			success: function(data) {
+				$('.listOfAllUsers').children('option').remove();
+				$('.listOfAllUsersExceptMe').children('option').remove();
+				$.each(data, function (key, value) {
+					$('.listOfAllUsers')// Fügt eine neue Option hinzu
+					.append($('<option></option>') 
+				 	.attr('value', value.id)
+				 	.text(value.benutzername));
+
+				 	if (value.id != userID){
+				 		$('.listOfAllUsersExceptMe')// Fügt eine neue Option hinzu
+						.append($('<option></option>') 
+				 		.attr('value', value.id)
+				 		.text(value.benutzername));
+				 	}
+				});
+			},
+			error: function(xhr, desc, err) {
+				console.log(xhr);
+				console.log("Details: " + desc + "\nError:" + err);
+			}
+		});//Ende Ajax
+	}//Ende Funktion updateSharedProjects
 
 	function updateSharedProjects(){ //Aktualisiert die Liste der Projekte, die für den angemeldeten Benutzer sichtbar sind
 		$('#projectOpenShared').children('option').remove(); // Leert die Liste aller verfügbaren Optionen
@@ -137,6 +171,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 	updateProjects(); //Verfügbare Projekte aktualisieren
 	updateSharedProjects(); //Verfügbare geteilte Projekte aktualisieren
 	isSharedWith(); //Aktualisieren, mit wem das Projekt geteilt wird
+	updateAllUsers() //Aktulisiert alle verfügbaren Benutzer
 	messpunktNummer = 1; //Initialisierung
 	objectNummer = 1;
 	metCounter = 1; //Zähler für die Anzahl an Freisetzungsmarkern
@@ -496,7 +531,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 				</div>
 				<div class="modal-footer">
 					<div class="row">
-						<div class="col-xs-4 text-center">Version: 1.1.2</div>
+						<div class="col-xs-4 text-center">Version: 1.2.0</div>
 						<div class="col-xs-4"><a href="https://github.com/cuzcomd/DALUS" target="_blank"><i class="fa fa-github" aria-hidden="true"></i> GitHub Repository</a></div>
 						<div class="col-xs-4"><a href="mailto:kontakt@cuzcomd.de">kontakt@cuzcomd.de</a></div>
 					</div>
@@ -521,11 +556,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 						</div>
 						<div class="form-group">
 							<label for="newProjektShared" class="col-form-label">Freigeben für</label>
-							<select multiple class="form-control" type="text" id="newProjektShared" name="shared[]">
-								<?php 
-								foreach ($pdo->query("SELECT * FROM users WHERE id != $userid") as $row) { // Gibt alle Benutzernamen, außer dem Eigenen, in einer List aus
-								echo "<option value='".$row['id']."''>".$row['benutzername']."</option>";
-								} ?>
+							<select multiple class="form-control listOfAllUsersExceptMe" type="text" id="newProjektShared" name="shared[]">
 							</select>
 						</div>
 						<div class="text-center">
@@ -805,6 +836,90 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 		</div><!-- Ende modal-dialog -->
 	</div><!-- Ende Modal_edit_project -->
 
+	<div class="modal fade" id="modalNutzerverwaltung" tabindex="-1" role="dialog" aria-labelledby="Nutzerverwaltung">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">Nutzerverwaltung</h4>
+				</div>
+				<div class="modal-body">
+					<div class="panel-group" id="accordion">
+						<div class="panel panel-default">
+						    <div class="panel-heading">
+						    	<h4 class="panel-title">
+						        <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
+						        Neuen Benutzer anlegen</a>
+						      	</h4>
+						    </div>
+						    <div id="collapse1" class="panel-collapse collapse in">
+						      	<div class="panel-body">
+						      		<form id ="addNewUser" action='' method='POST' class='ajax_create_user form-horizontal' role='form'>
+										<div class="form-group">
+											<label for="newBenutzername" class="col-xs-4 control-label">Benutzername:</label>
+											<div class="col-xs-8">
+										    	<input type="text" class="form-control" id="newBenutzername" name="benutzername" required>
+										    </div>
+										</div>
+										<div class="form-group">
+										    <label for="newVorname" class="col-xs-4 control-label">Vorname:</label>
+										    <div class="col-xs-8">
+										    	<input type="test" class="form-control" id="newVorname" name="vorname" required>
+										    </div>
+										</div>
+										<div class="form-group">
+											<label for="newNachname" class="col-xs-4 control-label">Nachname:</label>
+											<div class="col-xs-8">
+										    	<input type="text" class="form-control" id="newNachname" name="nachname" required>
+										    </div>
+										</div>
+										<div class="form-group">
+										    <label for="newPasswort" class="col-xs-4 control-label">Passwort:</label>
+										    <div class="col-xs-8">
+										    	<input type="password" class="form-control" id="newPasswort" name="passwort" required>
+										    </div>
+										</div>
+										<div class="radio">
+										 	<label>
+										 	<input type="radio" name="level" id="levelAdmin" value="admin" required>
+										 	Administrator
+										 	</label>
+										</div>
+										<div class="radio">
+										 	<label>
+										 	<input type="radio" name="level" id="levelUser" value="user" checked required>
+										 	Benutzer
+										 	</label>
+										</div>
+										<button type="submit" class="btn btn-primary"><span class='fa fa-user-plus'></span> Neuen Benutzer anlegen</button>
+									</form>
+							    </div>
+							</div>
+						</div>
+						<div class="panel panel-default">
+						    <div class="panel-heading">
+						      	<h4 class="panel-title">
+						        <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">
+						        Benutzer löschen</a>
+						      	</h4>
+						    </div>
+						    <div id="collapse2" class="panel-collapse collapse">
+						     	<div class="panel-body">
+							     	<form id ="deleteUser" action='' method='POST' class='ajax_delete_user form-horizontal' role='form'>
+							     		<select multiple class="form-control listOfAllUsers" type="text" id="deleteUsers" name="users[]" size="10">
+										<!-- Liste aller Nutzernamen -->
+										</select>
+										<button type="submit" class="btn btn-primary"><span class='fa fa-user-times'></span> Ausgewählte Benutzer löschen</button>
+									</form>
+							    </div>
+						    </div>
+						</div>
+					</div>
+				</div><!-- Ende modal-body -->
+			</div><!-- Ende modal-content -->
+		</div><!-- Ende modal-dialog -->
+	</div><!-- Ende Modal_UserSettings -->
+
 	<div class="hidden-print col-xs-3 floating-panel" id="Wrapper_menue">
 		<div class="currentProject">
 			<h5><span class="fa fa-folder-open" aria-hidden="true"></span> <span id="activeProject">&nbsp; Kein Projekt geöffnet</span></h5>
@@ -821,8 +936,13 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 					<li id="saveProject" role="button" style="display:none;"><a><i class="fa fa-floppy-o" aria-hidden="true"></i> Projekt speichern</a></li>
 					<li id="deleteProject" role="button" style="display:none;"><a><i class="fa fa-floppy-o" aria-hidden="true"></i> Projekt löschen</a></li>
 					<li id="printMap" role="button" onclick="printMap();"><a><i class="fa fa-print" aria-hidden="true"></i> Ansicht drucken</a></li>
-					<li role="button" onclick="location.href='logout'"><a><i class="fa fa-sign-out" aria-hidden="true"></i> Abmelden</a></li>
+					<li role="button" onclick="location.href='php/logout'"><a><i class="fa fa-sign-out" aria-hidden="true"></i> Abmelden</a></li>
 					<li role="button" ><a data-toggle="modal" data-target="#modal_license"><i class="fa fa-info-circle" aria-hidden="true"></i> Informationen</a></li>
+					<?php
+					if ($accessLevel == "admin"){
+						echo '<li id="nutzerverwaltung" data-placement="bottom" title="Nutzerverwaltung" role="button"><a data-toggle="modal" data-target="#modalNutzerverwaltung"><i class="fa fa-users"></i> Nutzerverwaltung</a></li>';
+					}
+					?>					
 				</ul>
 			</li>
 			<li class="dropdown" id ="parameter" role="presentation" data-toggle="tooltip" data-placement="bottom" title="Parameter">
@@ -1471,6 +1591,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 				updateProjects();
 				updateSharedProjects();
 				isSharedWith();
+				updateAllUsers()
 			},
 			error: function(xhr, desc, err) {
 				console.log(xhr);
@@ -1536,6 +1657,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 					updateSharedProjects();
 					isSharedWith();
 					loadProjectObjects();
+					updateAllUsers()
 					},
 					error: function(xhr, desc, err) {
 						console.log(xhr);
@@ -1563,6 +1685,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 					updateProjects();
 					updateSharedProjects();
 					isSharedWith();
+					updateAllUsers()
 					},
 					error: function(xhr, desc, err) {
 						console.log(xhr);
@@ -1599,6 +1722,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 					updateProjects(); //Verfügbare Projekte aktualiseren
 					updateSharedProjects(); //Verfügbare mit dem Benutzer geteilte Projekte aktualiseren
 					isSharedWith(); //Aktualisieren, mit wem das geöffnete Projekt geteilt ist
+					updateAllUsers()
 				},
 				error: function(xhr, desc, err) {
 					console.log(xhr);
@@ -1608,16 +1732,16 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 			return false;
 		});
 		$(".ajax_edit_user").submit(function(){
-				var data = {
-					"action": "editUser"
-				};
-				data = $(this).serialize() + "&" + $.param(data);
-				$.ajax({
-					type: "POST",
-					dataType: "json",
-					url: "php/projects.php",
-					data: data,
-					success: function(data) {
+			var data = {
+				"action": "editUser"
+			};
+			data = $(this).serialize() + "&" + $.param(data);
+			$.ajax({
+				type: "POST",
+				dataType: "json",
+				url: "php/projects.php",
+				data: data,
+				success: function(data) {
 					switch(data){
 						case 'Success':
 							$('#modalUserSettings').modal('hide'); //Modal schließen
@@ -1626,6 +1750,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 							updateProjects(); //Verfügbare Projekte aktualiseren
 							updateSharedProjects(); //Verfügbare mit dem Benutzer geteilte Projekte aktualiseren
 							isSharedWith(); //Aktualisieren, mit wem das geöffnete Projekt geteilt ist
+							updateAllUsers()
 							break;
 						case 'PasswordsDontMatch':
 							toastr.warning('Die Passwörter stimmen nicht überein.');
@@ -1638,7 +1763,49 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 							break;
 
 					}
-					
+				},
+				error: function(xhr, desc, err) {
+					console.log(xhr);
+					console.log("Details: " + desc + "\nError:" + err);
+				}
+			});
+			return false;
+		});
+
+		$(".ajax_create_user").submit(function(){
+				var data = {
+					"action": "createUser"
+				};
+				data = $(this).serialize() + "&" + $.param(data);
+				$.ajax({
+					type: "POST",
+					dataType: "json",
+					url: "php/projects.php",
+					data: data,
+					success: function(data) {
+						switch(data){
+							case 'yes':
+								$('#modalUserSettings').modal('hide'); //Modal schließen
+								toastr.success('Neuen Benutzer angelegt.');
+								updateProjects();
+								updateSharedProjects();
+								isSharedWith();
+								updateAllUsers()
+								break;
+
+							case 'no':
+								toastr.warning('Dieser Benutzername ist schon vorhanden .');
+								break;
+
+							case 'noAdmin':
+							toastr.warning('Sie verfügen nicht über die notwendigen Rechte, um diese Aktion auszuführen. Wenden Sie sich an einen Administrator.');
+							break;
+
+							default:
+							toastr.warning('Fehler aufgetreten.');
+							break;
+						}
+
 					},
 					error: function(xhr, desc, err) {
 						console.log(xhr);
@@ -1647,6 +1814,46 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 				});
 				return false;
 			});
+
+		$(".ajax_delete_user").submit(function(){
+			var data = {
+				"action": "deleteUser"
+			};
+			data = $(this).serialize() + "&" + $.param(data);
+			$.ajax({
+				type: "POST",
+				dataType: "json",
+				url: "php/projects.php",
+				data: data,
+				success: function(data) {
+					switch(data){
+						case 'ok':
+						toastr.success('Nutzer gelöscht.');
+						loadUser(); //Lädt neue Nutzerdaten
+						updateProjects(); //Verfügbare Projekte aktualiseren
+						updateSharedProjects(); //Verfügbare mit dem Benutzer geteilte Projekte aktualiseren
+						isSharedWith(); //Aktualisieren, mit wem das geöffnete Projekt geteilt ist
+						updateAllUsers()
+						break;
+
+						case 'noAdmin':
+						toastr.warning('Sie verfügen nicht über die notwendigen Rechte, um diese Aktion auszuführen. Wenden Sie sich an einen Administrator.');
+						break;
+
+						default:
+						toastr.warning('Fehler aufgetreten.');
+						break;
+
+					}
+				},
+				error: function(xhr, desc, err) {
+					console.log(xhr);
+					console.log("Details: " + desc + "\nError:" + err);
+				}
+			});
+			return false;
+		});
+
 	</script>
 	<script type="text/javascript" defer> // Ajax für Speichern und Löschen von Objekten
 	function saveProjectStatus(){ // Erzeugt neue Messpunkte oder aktualisiert Vorhandene in der Datenbank
