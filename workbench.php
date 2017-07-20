@@ -91,7 +91,7 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 					$('.listOfAllUsers')// Fügt eine neue Option hinzu
 					.append($('<option></option>') 
 				 	.attr('value', value.id)
-				 	.text(value.benutzername));
+				 	.text(value.vorname+' '+value.nachname+' ('+value.benutzername+')'));
 
 				 	if (value.id != userID){
 				 		$('.listOfAllUsersExceptMe')// Fügt eine neue Option hinzu

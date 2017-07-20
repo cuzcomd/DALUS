@@ -161,7 +161,7 @@ function updateSharedProjects(){
 function updateAllUsers(){
 	require('session.php');
 	include("config.php");
-	$stmt = $pdo->prepare("SELECT id, benutzername FROM users");
+	$stmt = $pdo->prepare("SELECT * FROM users");
 	$stmt->execute();
 
 	$benutzer = $stmt->fetchAll();
