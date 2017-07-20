@@ -359,9 +359,11 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 						'<div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis('+objectArray[index].obj_nummer+', this.value);" rows="5">'+objectArray[index].obj_hinweis+'</textarea></div></form>'+
 						'<div class="btn-group" role="group" aria-label="Optionen">'+
 						'<button type="button" class="btn btn-default btn-danger" style="height:46px;" id="deleteButton" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button>'+
-						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',1);"><img src="images/beachflag.png"></button>'+
-						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',2);"><img src="images/greenflag.png"></button>'+
-						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',3);"><img src="images/redflag.png"></button></div>');
+						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',1);"><img src="images/white.png"></button>'+
+						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',2);"><img src="images/green.png"></button>'+
+						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',3);"><img src="images/blue.png"></button>'+
+						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',4);"><img src="images/yellow.png"></button>'+
+						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',5);"><img src="images/red.png"></button></div>');
 					infoWindow.open(map,this);
 				});//Ende eventlistener
 				
@@ -374,9 +376,11 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 						'<div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis('+objectArray[index].obj_nummer+', this.value);" rows="5">'+objectArray[index].obj_hinweis+'</textarea></div></form>'+
 						'<div class="btn-group" role="group" aria-label="Optionen">'+
 						'<button type="button" class="btn btn-default btn-danger" style="height:46px;" id="deleteButton" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button>'+
-						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',1);"><img src="images/beachflag.png"></button>'+
-						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',2);"><img src="images/greenflag.png"></button>'+
-						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',3);"><img src="images/redflag.png"></button></div>');
+						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',1);"><img src="images/white.png"></button>'+
+						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',2);"><img src="images/green.png"></button>'+
+						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',3);"><img src="images/blue.png"></button>'+
+						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',4);"><img src="images/yellow.png"></button>'+
+						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',5);"><img src="images/red.png"></button></div>');
 				});
 				
 				// Add an event listener that selects the newly-drawn shape when the user
@@ -1212,9 +1216,11 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 						'<div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis('+objectArray[index].obj_nummer+', this.value);" rows="5">'+objectArray[index].obj_hinweis+'</textarea></div></form>'+
 						'<div class="btn-group" role="group" aria-label="Optionen">'+
 						'<button type="button" class="btn btn-default btn-danger" style="height:46px;" id="deleteButton" onclick="deleteObject();"><i class="fa fa-trash-o"></i></button>'+
-						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',1);"><img src="images/beachflag.png"></button>'+
-						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',2);"><img src="images/greenflag.png"></button>'+
-						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',3);"><img src="images/redflag.png"></button></div>');
+						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',1);"><img src="images/white.png"></button>'+
+						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',2);"><img src="images/green.png"></button>'+
+						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',3);"><img src="images/blue.png"></button>'+
+						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',4);"><img src="images/yellow.png"></button>'+
+						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',5);"><img src="images/red.png"></button></div>');
 					this.info.open(map,this);
 				}); // Ende des Eventlisteners
 
@@ -1227,9 +1233,11 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 						'<div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis('+objectArray[index].obj_nummer+', this.value);" rows="5">'+objectArray[index].obj_hinweis+'</textarea></div></form>'+
 						'<div class="btn-group" role="group" aria-label="Optionen">'+
 						'<button type="button" class="btn btn-default btn-danger" style="height:46px;" id="deleteButton" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button>'+
-						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',1);"><img src="images/beachflag.png"></button>'+
-						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',2);"><img src="images/greenflag.png"></button>'+
-						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',3);"><img src="images/redflag.png"></button></div>');
+						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',1);"><img src="images/white.png"></button>'+
+						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',2);"><img src="images/green.png"></button>'+
+						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',3);"><img src="images/blue.png"></button>'+
+						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',4);"><img src="images/yellow.png"></button>'+
+						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',5);"><img src="images/red.png"></button></div>');
 				});
 				break;
 
@@ -1380,27 +1388,27 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 	function changeColor(markerNummer, color){
 		var index = objectArray.findIndex(x => x.obj_nummer == activeObject.obj_nummer && x.obj_typ == activeObject.obj_typ);  //ermittelt Array-Index des aktuellen Markers
 		switch(color){
-			case 'white':
+			case 1:
 			activeObject.setIcon({url:'images/white.png', anchor: new google.maps.Point(16,16)});
 			objectArray[index].obj_farbe = "white";
 			break;
 
-			case 'green':
+			case 2:
 			activeObject.setIcon({url:'images/green.png', anchor: new google.maps.Point(16,16)});
 			objectArray[index].obj_farbe = "green";
 			break;
 
-			case 'blue':
+			case 3:
 			activeObject.setIcon({url:'images/blue.png', anchor: new google.maps.Point(16,16)});
 			objectArray[index].obj_farbe = "blue";
 			break;
 
-			case 'yellow':
+			case 4:
 			activeObject.setIcon({url:'images/yellow.png', anchor: new google.maps.Point(16,16)});
 			objectArray[index].obj_farbe = "yellow";
 			break;
 
-			case 'red':
+			case 5:
 			activeObject.setIcon({url:'images/red.png', anchor: new google.maps.Point(16,16)});
 			objectArray[index].obj_farbe = "red";
 			break;
