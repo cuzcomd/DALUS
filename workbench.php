@@ -653,12 +653,13 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 								<button type="button" class="btn btn-primary" id="calcMET" data-toggle="tooltip" title="MET-Freisetzungsort aus Adressfeld lesen" style="margin-bottom:5px;"><i class="fa fa-crosshairs"></i> Zeichnen (Adresse)</button>
 								<button type="button" class="btn btn-primary" id="calcMETmanual" data-toggle="tooltip" title="MET Freisetzungsort manuell festlegen" style="margin-bottom:5px;"><i class="fa fa-crosshairs"></i> Zeichnen (Manuell)</button>
 								<span data-toggle="tooltip" title="MET Ausbreitungswinkel berechnen">
-								<button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#winkelrechner" style="margin-bottom:5px;"><i class="fa fa-arrows-h"></i> Winkel bestimmen</button>
+									<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalWinkel" style="margin-bottom:5px;"><i class="fa fa-arrows-h"></i> Winkel bestimmen</button>
 								</span>
 							</div>
 							<form id="input-form" class="form-horizontal" role="form">
 								<div class="form-group" data-toggle="tooltip" title="Freisetzungsort">
-									<div class="col-xs-12">
+									<label class="control-label col-xs-4" for="addresse">Scha&shy;dens&shy;ort</label>
+									<div class="col-xs-8">
 										<div class="input-group">
 											<span class="input-group-addon"><i class="fa fa-home"></i></span>
 											<input id="addresse" type="textbox" value="Alt Diesdorf 4, Magdeburg" class="form-control">
@@ -667,7 +668,8 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 								</div>
 		
 								<div class="form-group" data-toggle="tooltip" title="Ausbreitungswinkel">
-									<div class="col-xs-12">
+									<label class="control-label col-xs-4" for="winkel">Aus&shy;brei&shy;tungs&shy;winkel</label>
+									<div class="col-xs-8">
 										<div class="input-group">
 											<span class="input-group-addon"><i class="fa fa-arrows-h"></i></span>
 											<select id="winkel" name="winkel" class="form-control">
@@ -681,7 +683,8 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 								</div>
 		
 								<div class="form-group" data-toggle="tooltip" title="Windrichtung">
-									<div class="col-xs-12">
+									<label class="control-label col-xs-4" for="windrichtung">Wind&shy;richtung</label>
+									<div class="col-xs-8">
 										<div class="input-group">
 											<span class="input-group-addon"><i class="fa fa-location-arrow"></i></span>
 											<input id="windrichtung" type="number" value="280" class="form-control" onchange="document.getElementById('arrow').style.transform = 'rotate('+(this.value-90)+'deg)';">
@@ -690,8 +693,9 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 									</div>
 								</div>
 		
-								<div class="form-group" data-toggle="tooltip" title="Gef&auml;hrdung f&uuml;r Personen im Geb&auml;ude">
-									<div class="col-xs-12">
+								<div class="form-group" data-toggle="tooltip" title="Gefährdung für Personen im Gebäude">
+									<label class="control-label col-xs-4" for="distanz 1">Gefährdung für Personen im Gebäude</label>
+									<div class="col-xs-8">
 										<div class="input-group">
 											<span class="input-group-addon"><i class="fa fa-exclamation"></i> <i class="fa fa-home"></i></span>
 											<input id="distanz1" type="number" value="600" class="form-control">
@@ -700,8 +704,9 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 									</div>
 								</div>
 									
-								<div class="form-group" data-toggle="tooltip" title="Gef&auml;hrdung f&uuml;r Personen im Freien">
-									<div class="col-xs-12">
+								<div class="form-group" data-toggle="tooltip" title="Gefährdung für Personen im Freien">
+									<label class="control-label col-xs-4" for="distanz 1">Geährdung für Personen im Freien</label>
+									<div class="col-xs-8">
 										<div class="input-group">
 											<span class="input-group-addon"><i class="fa fa-exclamation"></i> <i class="fa fa-street-view"></i></span>
 											<input id="distanz2" type="number" value="1300"  class="form-control">
@@ -711,7 +716,21 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 								</div>
 							</form>
 						</div> <!-- Ende div Geocoder -->
-						<div id="winkelrechner" class="collapse panel panel-default">
+					</div> <!-- Ende Wrapper_Winkelrechner -->
+				</div><!-- Ende modal-body -->
+			</div><!-- Ende modal-content -->
+		</div><!-- Ende modal-dialog -->
+	</div><!-- Ende Modal_edit_project -->
+
+	<div class="modal fade" id="modalWinkel" tabindex="-1" role="dialog" aria-labelledby="MET Ausbreitungswinkel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">MET Ausbreitungswinkel</h4>
+				</div>
+				<div class="modal-body">
+					<div id="winkelrechner" class="panel panel-default">
 							<div class="panel-body">
 								<form id="form_winkelrechner" class="form-horizontal">
 									<div class="form-group">
@@ -725,7 +744,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 									</div>
 	
 									<div class="form-group">	
-										<label for="windgeschwindigkeit" class="col-xs-4 form-control-label">Windgeschwindigkeit</label>
+										<label for="windgeschwindigkeit" class="col-xs-4 form-control-label">Wind&shy;ge&shy;schwin&shy;dig&shy;keit</label>
 										<div class="col-xs-8">
 											<select id="windgeschwindigkeit" name="windgeschwindigkeit" class="form-control" onchange="computeAngle();">
 												<option value="high" label="gr&ouml;&szlig;er 5 m/s (18 km/h)">gr&ouml;&szlig;er 5 m/s (18 km/h)</option>
@@ -781,7 +800,6 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 								<strong>Hinweis:</strong><br/>Der Winkel wird automatisch aktualisiert.
 							</div>
 						</div> <!-- Ende Winkelrechner -->
-					</div> <!-- Ende Wrapper_Winkelrechner -->
 				</div><!-- Ende modal-body -->
 			</div><!-- Ende modal-content -->
 		</div><!-- Ende modal-dialog -->
