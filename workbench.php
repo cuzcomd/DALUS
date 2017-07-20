@@ -381,6 +381,13 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',3);"><img src="images/blue.png"></button>'+
 						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',4);"><img src="images/yellow.png"></button>'+
 						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',5);"><img src="images/red.png"></button></div>');
+					infoWindow.setPosition(new google.maps.LatLng(newMarker.obj_lat , newMarker.obj_lon));
+					infoWindow.setOptions({pixelOffset: new google.maps.Size(0,-16)});
+					infoWindow.open(map,this);
+				});
+
+				google.maps.event.addListener(newMarker,'dragstart', function(){
+					infoWindow.setMap(null);
 				});
 				
 				// Add an event listener that selects the newly-drawn shape when the user
@@ -1120,7 +1127,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 				'<br/><br/><div class="fa fa-map-marker"></div> ' + mpLatitude +' , ' + mpLongitude +' (' + LLtoUSNG(mpLatitude, mpLongitude, 5) +
 				')<br/><br/> Ortsdosisleistung: ' + mpODL + ' nSv/h <br/>Nullrate: ' + mpIPS + ' Imp/s</div>');
 				infoWindow.setPosition(event.feature.getGeometry().get());
-				infoWindow.setOptions({pixelOffset: new google.maps.Size(0,-30)});
+				infoWindow.setOptions({pixelOffset: new google.maps.Size(0,-16)});
 				infoWindow.open(map);
 			});
 		} //Ende else
@@ -1238,6 +1245,11 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',3);"><img src="images/blue.png"></button>'+
 						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',4);"><img src="images/yellow.png"></button>'+
 						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',5);"><img src="images/red.png"></button></div>');
+					this.info.open(map,this);
+				});
+
+				google.maps.event.addListener(geom_obj,'dragstart', function(){
+					this.info.close();
 				});
 				break;
 
