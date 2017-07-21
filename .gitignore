@@ -1,3 +1,5 @@
+files/*.kml
+
 # Logs
 logs
 *.log
