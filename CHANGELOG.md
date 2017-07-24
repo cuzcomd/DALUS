@@ -1,5 +1,10 @@
 ## Changelog
 
+### 1.3.1 (24.07.2017)
+* Bugfix: Öffnen des Messpunkt-Zeichenwerkzeugs ist in iOS und Safari jetzt möglich
+* Bugfix: Exportierte kml-Dateien tragen automatisch den aktuellen Projektnamen
+* Style: Einige CSS-Parameter sind jetzt in eine externe CSS-Datei verschoben
+
 ### 1.3.0 (21.07.2017)
 * Feature: Export der Projektgeometrie als kml-Datei
 
