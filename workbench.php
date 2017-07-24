@@ -987,265 +987,12 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 	<div class="windrose"><img src="images/arrow.png" alt="Windrose" id="arrow"/></div> <!-- Ende Windrose -->
 	<div id="map"></div>
 
-	<script src="https://maps.googleapis.com/maps/api/js?libraries=geometry,drawing&callback=initMap" async defer></script> <!-- GooleAPI laden. Hier muss der API-Schlüssel eingetragen werden. -->
-	<script src="js/bootstrap.min.js"></script> <!-- Bootstrap.js laden -->
-	<script src="js/html2canvas.min.js"></script>
-	<script src="js/usng.min.js" defer></script> <!-- Script für Umwandlung von Geokoordinaten in UTM-Ref Koordinaten -->
-	<script defer> // Ádresse des MET-Modells durch Eingabemaske oder manuelle Festlegung bestimmen
-	function generateMET(resultsMap, manualLat, manualLon) {
-		if (manualLat !== undefined && manualLon !== undefined) { //Überprüfen, ob MET-Freisetzungsort manuell festgelegt wurde
-			var latitude = manualLat;
-			var longitude = manualLon;
-			var latlng = {lat: Number(latitude), lng: Number(longitude)};
-			new google.maps.Geocoder().geocode({'location': latlng}, function(results, status) {
-				if (status === google.maps.GeocoderStatus.OK) {
-					resultsMap.setCenter(results[0].geometry.location);
-					var adresse = results[1].formatted_address;
-					drawPolygon(resultsMap, latitude, longitude, adresse);
-				} 
-				else 
-				{
-					alert('Die Adresse konnte nicht ermittelt werden. Grund: ' + status);
-					
-				}
-			}); //Ende reverse geocoder
-		} // Ende if(manualLat !== undefined)
-		else{ //Überprüfen, ob MET-Freisetzungsort im Eingabefeld festgelegt wurde
-			var adresse = document.getElementById('addresse').value;
-			new google.maps.Geocoder().geocode({'address': adresse}, function(results, status) {
-				if (status === google.maps.GeocoderStatus.OK) {
-					resultsMap.setCenter(results[0].geometry.location);
-					var latitude = resultsMap.getCenter().lat();
-					var longitude = resultsMap.getCenter().lng();
-					drawPolygon(resultsMap, latitude, longitude, adresse);
-				} 
-				else 
-				{
-					alert('Die Adresse konnte nicht ermittelt werden. Grund: ' + status);
-				}
-			}); //Ende geocoder
-		} //Ende if(manualLat !== undefined)
-	}// Ende function generateMET()
-	</script><!-- MET-Modell generieren -->
-
-	<script defer> // Polygon berechnen und Freisetzungsort-Marker setzen
-	function drawPolygon(map, lat, lon, geoAdresse, winkel, richtung, innen, aussen, counter){
-		marker_color ="black";
-		$('#modal_MET').modal('hide');
-		if (winkel !== undefined) {
-			var ausbreitungswinkel = winkel;
-		} 
-		else {
-			var ausbreitungswinkel = parseInt(document.getElementById('winkel').value);
-		}
-
-		if (richtung !== undefined) {
-			var windrichtung_initial = richtung; // Eingegebene Windrichtung speichern
-			var windrichtung = richtung-180;
-		} 
-		else {
-			var windrichtung = parseInt(document.getElementById('windrichtung').value);
-			var windrichtung_initial = windrichtung; // Eingegebene Windrichtung speichern
-			windrichtung = windrichtung-180; // Google rechnet mit Windzugrichtung, daher muss Winkel um 180 Grad gedreht werden
-		}
-		document.getElementById('arrow').style.transform = 'rotate('+(windrichtung+90)+'deg)';
-		
-		if (innen !== undefined) {
-			var distanz_innen = innen;
-		} 
-		else {
-			var distanz_innen = parseInt(document.getElementById('distanz1').value);
-		}	
-
-		if (aussen !== undefined) {
-			var distanz_aussen = aussen;
-		}
-		else {
-			var distanz_aussen = parseInt(document.getElementById('distanz2').value);
-		}
-
-		if (geoAdresse !== undefined) {
-			var adresse = geoAdresse;
-		}
-		else {
-			var adresse = document.getElementById('addresse').value;
-		}
-
-		if (counter !== undefined) {
-			metCounter = parseInt(counter);
-		} 
-		else {
-		}
-		
-		var metParameter = {ausbreitungswinkel: ausbreitungswinkel,
-							windrichtung: windrichtung_initial,
-							distanz_innen: distanz_innen,
-							distanz_aussen: distanz_aussen,
-							adresse: adresse
-							};
-		var halbwinkel = ausbreitungswinkel / 2; // Winkelhalbierende berechnen
-		var utm_koord = LLtoUSNG(lat, lon, 5); // UTM-Ref Koordinaten berechnen
-		var ursprung = new google.maps.LatLng(lat, lon);
-		var p11 = new google.maps.geometry.spherical.computeOffset(ursprung, distanz_innen, windrichtung+halbwinkel); // Eckpunkt 1 für Polygon 1 berechnen
-		var p12 = new google.maps.geometry.spherical.computeOffset(ursprung, distanz_innen, windrichtung-halbwinkel); // Eckpunkt 2 für Polygon 1 berechnen
-		var p21 = new google.maps.geometry.spherical.computeOffset(ursprung, distanz_aussen, windrichtung+halbwinkel); // Eckpunkt 1 für Polygon 2 berechnen
-		var p22 = new google.maps.geometry.spherical.computeOffset(ursprung, distanz_aussen, windrichtung-halbwinkel); // Eckpunkt 2 für Polygon 2 berechnen
-		
-		// Polygon 2 (Gefährdung im Freien) zeichnen
-		var punkte2 = new Array();
-		var i = windrichtung-halbwinkel;
-		if(ausbreitungswinkel != 360){
-			for(var i; (i <= windrichtung+halbwinkel); i++) {
-				punkte2.push(new google.maps.geometry.spherical.computeOffset(ursprung, distanz_innen, i));
-			}
-			punkte2.push(p11);
-		}
-		
-		var i = windrichtung+halbwinkel;
-		for(var i; (i >= windrichtung-halbwinkel); i--) {
-			punkte2.push(new google.maps.geometry.spherical.computeOffset(ursprung, distanz_aussen, i));
-		}
-		
-		if(ausbreitungswinkel != 360){
-			punkte2.push(p12);
-		}
-		
-		var polygon2 = new google.maps.Polygon({
-			map: map,
-			paths: [punkte2],
-			strokeColor: '#FF9933',
-			strokeOpacity: 0.8,
-			strokeWeight: 3,
-			fillColor: '#FF9933',
-			fillOpacity: 0.1,
-			geodesic: true,
-			obj_nummer : metCounter,
-			obj_typ : 'polygon2'
-		});
-		objectArray.push(polygon2);
-
-		var punkte = new Array();
-		var i =windrichtung-halbwinkel;
-
-		if(ausbreitungswinkel != 360){
-			punkte.push(ursprung);
-		}
-
-		for(var i; (i <= windrichtung+halbwinkel); i++) {
-			punkte.push(new google.maps.geometry.spherical.computeOffset(ursprung, distanz_innen, i));
-		}		
-		// Polygon 1 (Gefährdung im Gebäude) zeichnen
-		var polygon1 = new google.maps.Polygon({
-			map: map,
-			paths: [punkte],
-			strokeColor: '#FF3333',
-			strokeOpacity: 0.8,
-			strokeWeight: 3,
-			fillColor: '#FF9999',
-			fillOpacity: 0.1,
-			geodesic: true,
-			obj_nummer : metCounter,
-			obj_typ : 'polygon1'
-		});
-		objectArray.push(polygon1);
-		
-		if(ausbreitungswinkel != 360){
-			var mitte = new google.maps.geometry.spherical.computeOffset(ursprung, distanz_aussen, windrichtung);
-			var line = new google.maps.Polyline({
-				path: [ursprung, mitte],
-				strokeOpacity: 0.8,
-				strokeColor: '#333333',
-				strokeWeight: 2,
-				map: map,
-				geodesic:true,
-				obj_nummer : metCounter,
-				obj_typ : 'polygonCenter'
-			});
-			objectArray.push(line);
-		}
-
-		// Marker am Freisetzungsort erstellen 
-		var marker = new google.maps.Marker({
-			position: new google.maps.LatLng(lat, lon),
-			icon:{url:'images/black.png', anchor: new google.maps.Point(16,16)},
-			obj_lat: lat,
-			obj_lon: lon,
-			obj_parameter: metParameter,
-			obj_typ: 'met',
-			obj_nummer: metCounter,
-			obj_farbe: 'black',
-  			map: map,
-  			title: 'Freisetzungsort',
-  			draggable:false,
-  			poly1: polygon1,
-  			poly2: polygon2,
-  			centerLine:line
-		});
-
-			objectArray.push(marker);
-			metCounter += 1;
-
-		marker.addListener('click', function() {//Informationsfenster bei Klick auf Marker öffnen
-		activeObject = this; // Setzt den aktuell ausgewählten marker als aktiv
-		infoWindow.setContent('<h5>Freisetzungsort</h5>'+
-			'<div class="fa fa-home"></div> '+adresse+'<br/><hr>' +
-			'<div class="fa fa-map-marker"></div> ' + this.obj_lat +' , ' + this.obj_lon +'<br/> (' + utm_koord + ')<br/><br/>'+
-			'Gef&auml;hrdung im Geb&auml;ude: ' + distanz_innen + ' m<br/>' +
-			'Gef&auml;hrdung im Freien: ' + distanz_aussen + ' m<br/><br/>' +
-			'Windrichtung: ' + windrichtung_initial + '&deg;' + '<br/>' +
-			'Ausbreitungswinkel: ' + ausbreitungswinkel + ' &deg;'  + '<br/><br/>'+
-			'<div class="btn-group" role="group" aria-label="Optionen">'+
-			'<button type="button" class="btn btn-default btn-danger" style="height:46px;" id="deleteButton" onclick="deleteObject();"><i class="fa fa-trash-o"></i></button>')
-		infoWindow.open(map,marker);
-		});
-	} //Ende function drawPolygon()
-	</script><!-- Polygon berechnen und Marker setzen -->
-	<script defer> // Ausbreitungswinkel berechnen
-	function computeAngle(){
-		var nebel = document.getElementById('nebel').value;
-		var wind = document.getElementById('windgeschwindigkeit').value;
-		var himmel = document.getElementById('himmel').value;
-		var tageszeit = document.getElementById('tageszeit').value;
-		var monat = document.getElementById('monat').value;
-		var brand = document.getElementById('brand').value;
-		if(nebel=="true")
-			met_winkel=45;
-		else if(wind == "high")
-			met_winkel=60;
-		else if(himmel=="true")
-			met_winkel=60;
-		else if(tageszeit=="night")
-		{
-			if(wind!="high")
-			{
-				if(brand=="true")
-					met_winkel=60;
-				else
-					met_winkel=45;
-			}
-			else 
-				met_winkel=45;
-		}
-		else if(wind=="low")
-		{
-			if(monat=="om")
-			{
-				if(brand=="true")
-					met_winkel=90;
-				else
-					met_winkel=60;
-			}
-			else
-				met_winkel=90;
-		}
-		else if(brand=="true")
-			met_winkel=90;
-		else
-			met_winkel=60;
-		
-		document.getElementById("winkel").value=met_winkel; // Berechneten Winkel in MET-Auswahlfeld eintragen	
-	}
-	</script><!-- Ausbreitungswinkel berechnen -->
+	<script src = "https://maps.googleapis.com/maps/api/js?libraries=geometry,drawing&callback=initMap" async defer></script> <!-- GooleAPI laden. Hier muss der API-Schlüssel eingetragen werden. -->
+	<script src = "js/bootstrap.min.js"></script> <!-- Bootstrap.js laden -->
+	<script src = "js/html2canvas.min.js" defer></script>
+	<script src = "js/usng.min.js" defer></script> <!-- Script für Umwandlung von Geokoordinaten in UTM-Ref Koordinaten -->
+	<script src = "js/MET.js" defer></script> <!-- Adresse des MET-Modells durch Eingabemaske oder manuelle Festlegung bestimmen -->
+	
 	<script defer> // Fixpunkte aus Datei laden
 	function loadFixpoints(switchMesspunkte){
 		switchMesspunkte.find('i').toggleClass("fa-toggle-off fa-toggle-on"); // Damit Menüpunkt farblich hinterlegt wird
@@ -1277,7 +1024,7 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 		} //Ende else
 	}//Ende function loadFixpoint
 	</script><!-- Fixpunkte laden -->
-	<script type="text/javascript" defer> // Projektgeometrie aus Datenbank laden
+	<script defer> // Projektgeometrie aus Datenbank laden
 	function loadProjectObjects(){
 		for (var i = 0; i < objectArray.length; i++ ) {
 			objectArray[i].setMap(null);
@@ -1633,717 +1380,109 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 	} //Ende Funktion clearMap()
 	</script><!-- Projektgeometrie laden -->
 
-	<script type="text/javascript" defer> // Ajax aufruf für Projekte
-		$("document").ready(function(){
-			$(".ajax_create_project").submit(function(){
+	<script src = "js/ajaxCalls.js" defer> // Ajax aufruf für Projekte </script>
+	<script defer> // Ajax für Speichern und Löschen von Objekten
+		function saveProjectStatus(){ // Erzeugt neue Messpunkte oder aktualisiert Vorhandene in der Datenbank
+			objectArray.forEach(function(entry) {
+				var obj_farbe = entry.obj_farbe;
+				var obj_lat = entry.obj_lat;
+				var obj_lon = entry.obj_lon;
+				var obj_typ = entry.obj_typ;
+				var obj_nummer = entry.obj_nummer;
+				var obj_hinweis = entry.obj_hinweis;
+				var obj_messwert = entry.obj_messwert;
+				var obj_parameter =JSON.stringify(entry.obj_parameter);
 				var data = {
-					"action": "create"
+					"task" : "save",
+					"obj_prj_id" : prj_id,
+					"obj_color" : obj_farbe,
+					"obj_lat" : obj_lat,
+					"obj_lon" : obj_lon,
+					"obj_nummer" : obj_nummer,
+					"obj_hinweis" : obj_hinweis,
+					"obj_messwert" : obj_messwert,
+					"obj_parameter" : obj_parameter,
+					"obj_typ" : obj_typ
 				};
 				data = $(this).serialize() + "&" + $.param(data);
 				$.ajax({
 					type: "POST",
 					dataType: "json",
-					url: "php/projects.php",
-					data: data,
+					url: "php/geometry.php",
+					data:data,
 					success: function(data) {
-					toastr.success('Neues Projekt angelegt.');
-					$("#activeProject").html("&nbsp; "+data["projekttitel"]);
-					$('.activeProjectName').attr("value",data["projekttitel"]);
-					$('.activeProjectID').val(data["projekt_id"]);
-					$('.activeUserID').val(userID);
-					prj_id = data["projekt_id"]; // In Datenbak erzeugte Projekt ID einlesen
-					$('#editProject').show(); // Menüpunkt 'Projekt bearbeiten' anzeigen
-					$('#saveProject').show(); // Menüpunkt 'Projekt speichern' anzeigen
-					$('#deleteProject').show(); // Menüpunkt 'Projekt speichern' anzeigen
-					$('#modal_new_project').modal('hide');
-					$("#projekt_titel_new").val(""); //Leert den Projekttitel im Inputfeld für ein neues Projekt
-					clearMap();
-					updateProjects();
-					updateSharedProjects();
-					isSharedWith();
-					loadProjectObjects();
-					updateAllUsers()
 					},
 					error: function(xhr, desc, err) {
 						console.log(xhr);
 						console.log("Details: " + desc + "\nError:" + err);
 					}
-				});
+				}); //Ende ajax
 				return false;
-			});
-			$(".ajax_edit_project").submit(function(){
-				var data = {
-					"action": "edit"
-				};
+			});//Ende forEach()
+
+			deleteArray.forEach(function(entry) {
+				var obj_typ = entry.typ;
+				var obj_nummer = entry.nummer;
+				data = {"task" : "delete", "objekt_nummer": obj_nummer, "projekt_id": prj_id , "objekt_typ": obj_typ};
 				data = $(this).serialize() + "&" + $.param(data);
 				$.ajax({
 					type: "POST",
 					dataType: "json",
-					url: "php/projects.php",
-					data: data,
+					url: "php/geometry.php",
+					data:data,
 					success: function(data) {
-					toastr.success('Projekt geändert.');
-					$("#activeProject").html("&nbsp; "+data["projekttitel"]);
-					$('.activeProjectName').attr("value",data["projekttitel"]);
-					
-					$('#modal_edit_project').modal('hide');
-					updateProjects();
-					updateSharedProjects();
-					isSharedWith();
-					updateAllUsers()
 					},
 					error: function(xhr, desc, err) {
 						console.log(xhr);
 						console.log("Details: " + desc + "\nError:" + err);
 					}
-				});
+				});//Ende ajax
 				return false;
-			});
-		});
-		$(".ajax_load_project").submit(function(){
-			var data = {
-				"action": "load"
-			};
-			data = $(this).serialize() + "&" + $.param(data);
-			$.ajax({
-				type: "POST",
-				dataType: "json",
-				url: "php/projects.php",
-				data: data,
-				success: function(data) {
-					toastr.success('Projekt geladen.');
-					$("#activeProject").html("&nbsp; "+data["projektName"]); //Projekttitel anzeigen
-					prj_id = parseInt(data["projektID"]); // In Datenbak erzeugte Projekt ID einlesen
-					messpunktNummer = parseInt(data["maxNum"])+1;
-					$('#editProject').show(); // Menüpunkt 'Projekt bearbeiten' anzeigen
-					$('#saveProject').show(); // Menüpunkt 'Projekt speichern' anzeigen
-					$('#deleteProject').show(); // Menüpunkt 'Projekt speichern' anzeigen
-					$('#modal_open_project').modal('hide'); //Modal schließen
-					$('.activeProjectName').attr("value",data["projektName"]);
-					$('.activeProjectID').val(data["projektID"]);
-					$('.activeUserID').val(userID);
-					clearMap();
-					loadProjectObjects(); //Objekte einlesen
-					updateProjects(); //Verfügbare Projekte aktualiseren
-					updateSharedProjects(); //Verfügbare mit dem Benutzer geteilte Projekte aktualiseren
-					isSharedWith(); //Aktualisieren, mit wem das geöffnete Projekt geteilt ist
-					updateAllUsers()
-				},
-				error: function(xhr, desc, err) {
-					console.log(xhr);
-					console.log("Details: " + desc + "\nError:" + err);
-				}
-			});
-			return false;
-		});
-		$(".ajax_edit_user").submit(function(){
-			var data = {
-				"action": "editUser"
-			};
-			data = $(this).serialize() + "&" + $.param(data);
-			$.ajax({
-				type: "POST",
-				dataType: "json",
-				url: "php/projects.php",
-				data: data,
-				success: function(data) {
-					switch(data){
-						case 'Success':
-							$('#modalUserSettings').modal('hide'); //Modal schließen
-							toastr.success('Daten geändert.');
-							loadUser(); //Lädt neue Nutzerdaten
-							updateProjects(); //Verfügbare Projekte aktualiseren
-							updateSharedProjects(); //Verfügbare mit dem Benutzer geteilte Projekte aktualiseren
-							isSharedWith(); //Aktualisieren, mit wem das geöffnete Projekt geteilt ist
-							updateAllUsers()
-							break;
-						case 'PasswordsDontMatch':
-							toastr.warning('Die Passwörter stimmen nicht überein.');
-							break;
-						case 'WrongPassword':
-							toastr.warning('Das aktuelle Passwort ist nicht korrekt.');
-							break;
-						default:
-						toastr.warning('Fehler aufgetreten.');
-							break;
-
-					}
-				},
-				error: function(xhr, desc, err) {
-					console.log(xhr);
-					console.log("Details: " + desc + "\nError:" + err);
-				}
-			});
-			return false;
-		});
-
-		$(".ajax_create_user").submit(function(){
-				var data = {
-					"action": "createUser"
-				};
-				data = $(this).serialize() + "&" + $.param(data);
-				$.ajax({
-					type: "POST",
-					dataType: "json",
-					url: "php/projects.php",
-					data: data,
-					success: function(data) {
-						switch(data){
-							case 'yes':
-								$('#modalUserSettings').modal('hide'); //Modal schließen
-								toastr.success('Neuen Benutzer angelegt.');
-								updateProjects();
-								updateSharedProjects();
-								isSharedWith();
-								updateAllUsers()
-								break;
-
-							case 'no':
-								toastr.warning('Dieser Benutzername ist schon vorhanden .');
-								break;
-
-							case 'noAdmin':
-							toastr.warning('Sie verfügen nicht über die notwendigen Rechte, um diese Aktion auszuführen. Wenden Sie sich an einen Administrator.');
-							break;
-
-							default:
-							toastr.warning('Fehler aufgetreten.');
-							break;
-						}
-
-					},
-					error: function(xhr, desc, err) {
-						console.log(xhr);
-						console.log("Details: " + desc + "\nError:" + err);
-					}
-				});
-				return false;
-			});
-
-		$(".ajax_delete_user").submit(function(){
-			var data = {
-				"action": "deleteUser"
-			};
-			data = $(this).serialize() + "&" + $.param(data);
-			$.ajax({
-				type: "POST",
-				dataType: "json",
-				url: "php/projects.php",
-				data: data,
-				success: function(data) {
-					switch(data){
-						case 'ok':
-						toastr.success('Nutzer gelöscht.');
-						loadUser(); //Lädt neue Nutzerdaten
-						updateProjects(); //Verfügbare Projekte aktualiseren
-						updateSharedProjects(); //Verfügbare mit dem Benutzer geteilte Projekte aktualiseren
-						isSharedWith(); //Aktualisieren, mit wem das geöffnete Projekt geteilt ist
-						updateAllUsers()
-						break;
-
-						case 'noAdmin':
-						toastr.warning('Sie verfügen nicht über die notwendigen Rechte, um diese Aktion auszuführen. Wenden Sie sich an einen Administrator.');
-						break;
-
-						default:
-						toastr.warning('Fehler aufgetreten.');
-						break;
-
-					}
-				},
-				error: function(xhr, desc, err) {
-					console.log(xhr);
-					console.log("Details: " + desc + "\nError:" + err);
-				}
-			});
-			return false;
-		});
-
+			});//Ende forEach()
+			setTimeout(function() {
+	  			toastr.success('Projekt gespeichert. <span class="label label-info"><span class="fa fa-pencil" aria-hidden="true"></span> '+ objectArray.length+'</span> <span class="label label-danger"><span class="fa fa-trash" aria-hidden="true"></span> '+ deleteArray.length+'</span>'); //Zeigt an, wie viele Objekte gespeichert und gelöscht wurden
+	  			deleteArray.length = 0; // Leert den Array der zu löschenden Elemente nach dem Speichern des Projekts
+			}, 100);//Ende setTimeout
+		}// Ende Funktiobn saveProjectStatus
 	</script>
-	<script type="text/javascript" defer> // Ajax für Speichern und Löschen von Objekten
-	function saveProjectStatus(){ // Erzeugt neue Messpunkte oder aktualisiert Vorhandene in der Datenbank
-		objectArray.forEach(function(entry) {
-			var obj_farbe = entry.obj_farbe;
-			var obj_lat = entry.obj_lat;
-			var obj_lon = entry.obj_lon;
-			var obj_typ = entry.obj_typ;
-			var obj_nummer = entry.obj_nummer;
-			var obj_hinweis = entry.obj_hinweis;
-			var obj_messwert = entry.obj_messwert;
-			var obj_parameter =JSON.stringify(entry.obj_parameter);
-			var data = {
-				"task" : "save",
-				"obj_prj_id" : prj_id,
-				"obj_color" : obj_farbe,
-				"obj_lat" : obj_lat,
-				"obj_lon" : obj_lon,
-				"obj_nummer" : obj_nummer,
-				"obj_hinweis" : obj_hinweis,
-				"obj_messwert" : obj_messwert,
-				"obj_parameter" : obj_parameter,
-				"obj_typ" : obj_typ
-			};
-			data = $(this).serialize() + "&" + $.param(data);
-			$.ajax({
-				type: "POST",
-				dataType: "json",
-				url: "php/geometry.php",
-				data:data,
-				success: function(data) {
+	<script defer> // OSM Layer laden
+		function loadOSMLayer(){
+			var mapTypeIds = [];
+			for(var type in google.maps.MapTypeId) {
+				mapTypeIds.push(google.maps.MapTypeId[type]);
+			}
+			mapTypeIds.push("OSM");
+			map = new google.maps.Map(document.getElementById('map'), {
+				zoom: 14,
+				mapTypeId: "OSM",
+				mapTypeControlOptions: {
+					mapTypeIds: mapTypeIds,
+					style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+					position: google.maps.ControlPosition.TOP_RIGHT
 				},
-				error: function(xhr, desc, err) {
-					console.log(xhr);
-					console.log("Details: " + desc + "\nError:" + err);
-				}
-			}); //Ende ajax
-			return false;
-		});//Ende forEach()
-
-		deleteArray.forEach(function(entry) {
-			var obj_typ = entry.typ;
-			var obj_nummer = entry.nummer;
-			data = {"task" : "delete", "objekt_nummer": obj_nummer, "projekt_id": prj_id , "objekt_typ": obj_typ};
-			data = $(this).serialize() + "&" + $.param(data);
-			$.ajax({
-				type: "POST",
-				dataType: "json",
-				url: "php/geometry.php",
-				data:data,
-				success: function(data) {
-				},
-				error: function(xhr, desc, err) {
-					console.log(xhr);
-					console.log("Details: " + desc + "\nError:" + err);
-				}
-			});//Ende ajax
-			return false;
-		});//Ende forEach()
-		setTimeout(function() {
-  			toastr.success('Projekt gespeichert. <span class="label label-info"><span class="fa fa-pencil" aria-hidden="true"></span> '+ objectArray.length+'</span> <span class="label label-danger"><span class="fa fa-trash" aria-hidden="true"></span> '+ deleteArray.length+'</span>'); //Zeigt an, wie viele Objekte gespeichert und gelöscht wurden
-  			deleteArray.length = 0; // Leert den Array der zu löschenden Elemente nach dem Speichern des Projekts
-		}, 100);//Ende setTimeout
-	}// Ende Funktiobn saveProjectStatus
-	</script>
-
-	<script type="text/javascript" defer> // OSM Layer laden
-	function loadOSMLayer(){
-		var mapTypeIds = [];
-		for(var type in google.maps.MapTypeId) {
-			mapTypeIds.push(google.maps.MapTypeId[type]);
-		}
-		mapTypeIds.push("OSM");
-		map = new google.maps.Map(document.getElementById('map'), {
-			zoom: 14,
-			mapTypeId: "OSM",
-			mapTypeControlOptions: {
-				mapTypeIds: mapTypeIds,
-				style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-				position: google.maps.ControlPosition.TOP_RIGHT
-			},
-			center: {lat: 52.13024, lng: 11.56567700000005} // Koordinaten des Kartenmittelpunkts
-		});
-		
-		OSM ='OSM'; //Variable OpenStreetMap definieren
-		map.mapTypes.set("OSM", new google.maps.ImageMapType({
-			getTileUrl: function(coord, zoom) {
-            // "Wrap" x (longitude) at 180th meridian properly
-            // NB: Don't touch coord.x because coord param is by reference, and changing its x property breakes something in Google's lib 
-				var tilesPerGlobe = 1 << zoom;
-				var x = coord.x % tilesPerGlobe;
-				if (x < 0) {
-					x = tilesPerGlobe+x;
-				}
-            // Wrap y (latitude) in a like manner if you want to enable vertical infinite scroll
-				return "https://tile.openstreetmap.org/" + zoom + "/" + x + "/" + coord.y + ".png";
-			},
-			tileSize: new google.maps.Size(256, 256),
-			name: "OpenStreetMap",
-			maxZoom: 18
-		}));	
-	}//Ende Funktion loadOSMLayer
-	</script><!-- OSM Layer Laden -->
-	 <script src="js/xmlwriter.js" type="text/javascript"></script>
-	<script type="text/javascript">
-    function mapToObject(){
-    	var mapOverlays = objectArray;
-        var tmpMap = new Object;
-        var tmpOverlay, paths;
-        tmpMap.zoom = map.getZoom();
-        tmpMap.tilt = map.getTilt();
-        tmpMap.mapTypeId = map.getMapTypeId();
-        tmpMap.center = { lat: map.getCenter().lat(), lng: map.getCenter().lng() };
-        tmpMap.overlays = new Array();
-
-        for( var i=0; i < mapOverlays.length; i++ ){
-            if( mapOverlays[i].getMap() == null ){
-                continue;
-            }
-            tmpOverlay = new Object;
-            tmpOverlay.type = mapOverlays[i].type;
-            tmpOverlay.title = mapOverlays[i].title;
-            tmpOverlay.content = mapOverlays[i].content;
-
-            if( mapOverlays[i].fillColor ){
-                tmpOverlay.fillColor = mapOverlays[i].fillColor;
-            }
-
-            if( mapOverlays[i].fillOpacity ){
-                tmpOverlay.fillOpacity = mapOverlays[i].fillOpacity;
-            }
-
-            if( mapOverlays[i].strokeColor ){
-                tmpOverlay.strokeColor = mapOverlays[i].strokeColor;
-            }
-
-            if( mapOverlays[i].strokeOpacity ){
-                tmpOverlay.strokeOpacity = mapOverlays[i].strokeOpacity;
-            }
-
-            if( mapOverlays[i].strokeWeight ){
-                tmpOverlay.strokeWeight = mapOverlays[i].strokeWeight;
-            }
-
-            if( mapOverlays[i].obj_nummer ){
-                tmpOverlay.obj_nummer = mapOverlays[i].obj_nummer;
-            }
-
-            if( mapOverlays[i].obj_messwert ){
-                tmpOverlay.obj_messwert = mapOverlays[i].obj_messwert;
-            }
-
-            if( mapOverlays[i].obj_hinweis ){
-                tmpOverlay.obj_hinweis = mapOverlays[i].obj_hinweis;
-            }
-
-            if( mapOverlays[i].obj_farbe ){
-                tmpOverlay.obj_farbe = mapOverlays[i].obj_farbe;
-            }
-
-            if( mapOverlays[i].obj_lat ){
-                tmpOverlay.obj_lat = mapOverlays[i].obj_lat;
-            }
-
-            if( mapOverlays[i].obj_lon ){
-                tmpOverlay.obj_lon = mapOverlays[i].obj_lon;
-            }
-
-            if( mapOverlays[i].obj_typ ){
-                tmpOverlay.obj_typ = mapOverlays[i].obj_typ;
-            }
-
-            if( mapOverlays[i].obj_parameter ){
-                tmpOverlay.obj_parameter = mapOverlays[i].obj_parameter;
-            }
-
-            if( mapOverlays[i].icon ){
-                tmpOverlay.icon = mapOverlays[i].icon;
-            }
-
-            if( mapOverlays[i].flat ){
-                tmpOverlay.flat = mapOverlays[i].flat;
-            }
-
-            if( mapOverlays[i].obj_typ == "polygon" ||  mapOverlays[i].obj_typ == "polygon1" ||  mapOverlays[i].obj_typ == "polygon2" ){
-                tmpOverlay.paths = new Array();
-                paths = mapOverlays[i].getPaths();
-                for( var j=0; j < paths.length; j++ ){
-                    tmpOverlay.paths[j] = new Array();
-                    for( var k=0; k < paths.getAt(j).length; k++ ){
-                        tmpOverlay.paths[j][k] = { lat: paths.getAt(j).getAt(k).lat().toString() , lng: paths.getAt(j).getAt(k).lng().toString() };
-                    }
-                }
-
-            }else if( mapOverlays[i].obj_typ == "polyline" ||  mapOverlays[i].obj_typ == "polygonCenter" ){
-                tmpOverlay.path = new Array();
-                path = mapOverlays[i].getPath();
-                for( var j=0; j < path.length; j++ ){
-                    tmpOverlay.path[j] = { lat: path.getAt(j).lat().toString() , lng: path.getAt(j).lng().toString() };
-                }
-
-            }else if( mapOverlays[i].obj_typ == "circle" ){
-                tmpOverlay.center = { lat: mapOverlays[i].getCenter().lat(), lng: mapOverlays[i].getCenter().lng() };
-                tmpOverlay.radius = mapOverlays[i].radius;
-
-            }else if( mapOverlays[i].obj_typ == "rectangle" ){
-                tmpOverlay.bounds = {  sw: {lat: mapOverlays[i].getBounds().getSouthWest().lat(), lng: mapOverlays[i].getBounds().getSouthWest().lng()},
-                    ne:     {lat: mapOverlays[i].getBounds().getNorthEast().lat(), lng: mapOverlays[i].getBounds().getNorthEast().lng()}
-                };
-
-            }else if( mapOverlays[i].obj_typ == "marker" ){
-                tmpOverlay.position = { lat: mapOverlays[i].getPosition().lat(), lng: mapOverlays[i].getPosition().lng() };
-            }
-            tmpMap.overlays.push( tmpOverlay );
-        }
-
-        return tmpMap;
-    }
-
-    function toKML() {
-        var result = mapToObject();
-        var xw = new XMLWriter('UTF-8');
-        xw.formatting = 'indented';//add indentation and newlines
-        xw.indentChar = ' ';//indent with spaces
-        xw.indentation = 2;//add 2 spaces per level
-
-        xw.writeStartDocument( );
-        xw.writeStartElement( 'kml' );
-        xw.writeAttributeString( "xmlns", "http://www.opengis.net/kml/2.2");
-		xw.writeAttributeString( "xmlns:gx", "http://www.google.com/kml/ext/2.2");
-        xw.writeStartElement('Document');
-		xw.writeStartElement('name');
-		xw.writeCDATA('Projekttitel');
-		xw.writeEndElement();
-
-		xw.writeStartElement('Style');
-		xw.writeAttributeString( "id", "white" );
-			xw.writeStartElement('IconStyle');
-			xw.writeAttributeString( "id", "mystyle" );
-				xw.writeStartElement('Icon');
-					xw.writeStartElement('href');
-						xw.writeCDATA( 'https://raw.githubusercontent.com/cuzcomd/DALUS/master/images/white.png');
-					xw.writeEndElement();
-					xw.writeStartElement('scale');
-						xw.writeCDATA( '.1.0');
-					xw.writeEndElement();
-				xw.writeEndElement();
-			xw.writeEndElement();
-		xw.writeEndElement();
-
-		xw.writeStartElement('Style');
-		xw.writeAttributeString( "id", "green" );
-			xw.writeStartElement('IconStyle');
-			xw.writeAttributeString( "id", "mystyle" );
-				xw.writeStartElement('Icon');
-					xw.writeStartElement('href');
-						xw.writeCDATA( 'https://raw.githubusercontent.com/cuzcomd/DALUS/master/images/green.png');
-					xw.writeEndElement();
-					xw.writeStartElement('scale');
-						xw.writeCDATA( '.1.0');
-					xw.writeEndElement();
-				xw.writeEndElement();
-			xw.writeEndElement();
-		xw.writeEndElement();
-
-		xw.writeStartElement('Style');
-		xw.writeAttributeString( "id", "blue" );
-			xw.writeStartElement('IconStyle');
-			xw.writeAttributeString( "id", "mystyle" );
-				xw.writeStartElement('Icon');
-					xw.writeStartElement('href');
-						xw.writeCDATA( 'https://raw.githubusercontent.com/cuzcomd/DALUS/master/images/blue.png');
-					xw.writeEndElement();
-					xw.writeStartElement('scale');
-						xw.writeCDATA( '.1.0');
-					xw.writeEndElement();
-				xw.writeEndElement();
-			xw.writeEndElement();
-		xw.writeEndElement();
-
-		xw.writeStartElement('Style');
-		xw.writeAttributeString( "id", "yellow" );
-			xw.writeStartElement('IconStyle');
-			xw.writeAttributeString( "id", "mystyle" );
-				xw.writeStartElement('Icon');
-					xw.writeStartElement('href');
-						xw.writeCDATA( 'https://raw.githubusercontent.com/cuzcomd/DALUS/master/images/yellow.png');
-					xw.writeEndElement();
-					xw.writeStartElement('scale');
-						xw.writeCDATA( '.1.0');
-					xw.writeEndElement();
-				xw.writeEndElement();
-			xw.writeEndElement();
-		xw.writeEndElement();
-
-		xw.writeStartElement('Style');
-		xw.writeAttributeString( "id", "red" );
-			xw.writeStartElement('IconStyle');
-			xw.writeAttributeString( "id", "mystyle" );
-				xw.writeStartElement('Icon');
-					xw.writeStartElement('href');
-						xw.writeCDATA( 'https://raw.githubusercontent.com/cuzcomd/DALUS/master/images/red.png');
-					xw.writeEndElement();
-					xw.writeStartElement('scale');
-						xw.writeCDATA( '.1.0');
-					xw.writeEndElement();
-				xw.writeEndElement();
-			xw.writeEndElement();
-		xw.writeEndElement();
-
-		xw.writeStartElement('Style');
-		xw.writeAttributeString( "id", "black" );
-			xw.writeStartElement('IconStyle');
-			xw.writeAttributeString( "id", "mystyle" );
-				xw.writeStartElement('Icon');
-					xw.writeStartElement('href');
-						xw.writeCDATA( 'https://raw.githubusercontent.com/cuzcomd/DALUS/master/images/black.png');
-					xw.writeEndElement();
-					xw.writeStartElement('scale');
-						xw.writeCDATA( '.1.0');
-					xw.writeEndElement();
-				xw.writeEndElement();
-			xw.writeEndElement();
-		xw.writeEndElement();
-
-        for( var i = 0; i < result.overlays.length; i++ ){
-            xw.writeStartElement('Placemark');
-            xw.writeStartElement('name');
-            if( result.overlays[i].obj_typ == "marker" ||  result.overlays[i].obj_typ == "met"){
-            	xw.writeCDATA( 'Messpunkt '+result.overlays[i].obj_nummer );
-            }
-            else{
-            	xw.writeCDATA( result.overlays[i].title );
-       		}
-            xw.writeEndElement();
+				center: {lat: 52.13024, lng: 11.56567700000005} // Koordinaten des Kartenmittelpunkts
+			});
 			
-			if( result.overlays[i].obj_typ == "marker" ||  result.overlays[i].obj_typ == "met"){
-            xw.writeStartElement('styleUrl');	
-            switch (result.overlays[i].obj_farbe)
-            {
-            	case 'white':
-            	xw.writeCDATA('#white');
-            	break;
-
-            	case 'green':
-            	xw.writeCDATA('#green');
-            	break;
-
-            	case 'blue':
-            	xw.writeCDATA('#blue');
-            	break;
-
-            	case 'yellow':
-            	xw.writeCDATA('#yellow');
-            	break;
-
-            	case 'red':
-            	xw.writeCDATA('#red');
-            	break;
-
-            	case 'black':
-            	xw.writeCDATA('#black');
-            	break;
-
-            	default:
-            	xw.writeCDATA('');
-            	break;
-            }	
-            xw.writeEndElement();
-            }
-            if( result.overlays[i].obj_typ == "marker" ){
-            	xw.writeStartElement('description');
-            	xw.writeCDATA( 'Messwert: '+result.overlays[i].obj_messwert+' ppm \n Hinweis:\n\n'+ result.overlays[i].obj_hinweis);
-            	xw.writeEndElement();
-
-                xw.writeStartElement('Point');
-                xw.writeElementString('coordinates', result.overlays[i].obj_lon+","+result.overlays[i].obj_lat+",0");
-                xw.writeEndElement();
-
-            }else if( result.overlays[i].obj_typ == "met" ){
-            	xw.writeStartElement('description');
-            	xw.writeCDATA( 'Adresse: '+result.overlays[i].obj_parameter.adresse+'\n'+
-            		'Ausbreitungswinkel: '+result.overlays[i].obj_parameter.ausbreitungswinkel+'°\n'+
-            		'Windrichtung: '+result.overlays[i].obj_parameter.windrichtung+'°\n'+
-            		'Gefährdung im Inneren von Gebäuden: '+result.overlays[i].obj_parameter.distanz_innen+' m\n'+
-            		'Gefährdung im Freien: '+result.overlays[i].obj_parameter.distanz_aussen+' m');
-            	xw.writeEndElement();
-
-                xw.writeStartElement('Point');
-                xw.writeElementString('coordinates', result.overlays[i].obj_lon+","+result.overlays[i].obj_lat+",0");
-                xw.writeEndElement();
-
-            }else if( result.overlays[i].obj_typ == "polygon" || result.overlays[i].obj_typ == "polygon1" || result.overlays[i].obj_typ == "polygon2" || result.overlays[i].obj_typ == "rectangle" || result.overlays[i].obj_typ == "circle" ){
-                xw.writeStartElement('Polygon');
-                xw.writeElementString('extrude', '1');
-                xw.writeElementString('altitudeMode', 'relativeToGround');
-
-                if( result.overlays[i].obj_typ == "rectangle" ){
-                    //its a polygon
-                    xw.writeStartElement('outerBoundaryIs');
-                    xw.writeStartElement('LinearRing');
-                    xw.writeStartElement( "coordinates" );
-                    xw.writeString( result.overlays[i].bounds.sw.lng + "," + result.overlays[i].bounds.sw.lat + ",10" );
-                    xw.writeString( result.overlays[i].bounds.ne.lng + "," + result.overlays[i].bounds.sw.lat + ",10" );
-                    xw.writeString( result.overlays[i].bounds.ne.lng + "," + result.overlays[i].bounds.ne.lat + ",10" );
-                    xw.writeString( result.overlays[i].bounds.sw.lng + "," + result.overlays[i].bounds.ne.lat + ",10" );
-                    xw.writeEndElement();
-                    xw.writeEndElement();
-                    xw.writeEndElement();
-                }else if (result.overlays[i].obj_typ == "circle"){
-                    //its a polygon, approximate a circle by a circular 64 sided polygon.
-                    xw.writeStartElement('outerBoundaryIs');
-                    xw.writeStartElement('LinearRing');
-                    xw.writeStartElement( "coordinates" );
-                    var d2r = Math.PI / 180;   // degrees to radians
-                    var r2d = 180 / Math.PI;   // radians to degrees
-                    var earthsradius = 6378137; // 6378137 is the radius of the earth in meters
-                    var dir = 1; // clockwise
-
-                    var points = 64;
-
-                    // find the raidus in lat/lon
-                    var rlat = (result.overlays[i].radius / earthsradius) * r2d;
-                    var rlng = rlat / Math.cos(result.overlays[i].center.lat * d2r);
-
-                    var extp = new Array();
-                    if (dir==1)     {var start=0;var end=points+1} // one extra here makes sure we connect the line
-                    else            {var start=points+1;var end=0}
-                    for (var j=start; (dir==1 ? j < end : j > end); j=j+dir){
-                        var theta = Math.PI * (j / (points/2));
-                        ey = result.overlays[i].center.lng + (rlng * Math.cos(theta)); // center a + radius x * cos(theta)
-                        ex = result.overlays[i].center.lat + (rlat * Math.sin(theta)); // center b + radius y * sin(theta)
-                        xw.writeString( ey + "," + ex + ",0" );
-                    }
-                    xw.writeEndElement();
-                    xw.writeEndElement();
-                    xw.writeEndElement();
-                }else{
-                    for( var j=0; j < result.overlays[i].paths.length; j++ ){
-                        if( j==0 ){
-                            xw.writeStartElement('outerBoundaryIs');
-                        }else{
-                            xw.writeStartElement('innerBoundaryIs');
-                        }
-                        xw.writeStartElement('LinearRing');
-                        xw.writeStartElement( "coordinates" );
-                        for( var k=0; k < result.overlays[i].paths[j].length; k++ ){
-                            xw.writeString( result.overlays[i].paths[j][k].lng + "," + result.overlays[i].paths[j][k].lat + ",0" );
-                        }
-                        xw.writeEndElement();
-                        xw.writeEndElement();
-                        xw.writeEndElement();
-                    }
-                }
-                xw.writeEndElement();
-
-            }else if( result.overlays[i].obj_typ == "polyline" || result.overlays[i].obj_typ == "polygonCenter" ){
-                xw.writeStartElement('LineString');
-                xw.writeElementString('extrude', '1');
-                xw.writeElementString('altitudeMode', 'relativeToGround');
-                xw.writeStartElement( "coordinates" );
-                for( var j=0; j < result.overlays[i].path.length; j++ ){
-                    xw.writeString( result.overlays[i].path[j].lng + "," + result.overlays[i].path[j].lat + ",0" );
-                }
-                xw.writeEndElement();
-                xw.writeEndElement();
-
-            }
-
-            xw.writeEndElement(); // END PlaceMarker
-        }
-
-        xw.writeEndElement();
-        xw.writeEndElement();
-        xw.writeEndDocument();
-
-        var xml = xw.flush(); //generate the xml string
-        xw.close();//clean the writer
-        xw = undefined;//don't let visitors use it, it's closed
-        //set the xml
-        document.getElementById('kmlString').value = xml;
-        var downloadLink = document.getElementById('download-link');
-        downloadLink.href = "data:;base64," + btoa($('#kmlString').val());
-    }
-</script>
-
+			OSM ='OSM'; //Variable OpenStreetMap definieren
+			map.mapTypes.set("OSM", new google.maps.ImageMapType({
+				getTileUrl: function(coord, zoom) {
+	            // "Wrap" x (longitude) at 180th meridian properly
+	            // NB: Don't touch coord.x because coord param is by reference, and changing its x property breakes something in Google's lib 
+					var tilesPerGlobe = 1 << zoom;
+					var x = coord.x % tilesPerGlobe;
+					if (x < 0) {
+						x = tilesPerGlobe+x;
+					}
+	            // Wrap y (latitude) in a like manner if you want to enable vertical infinite scroll
+					return "https://tile.openstreetmap.org/" + zoom + "/" + x + "/" + coord.y + ".png";
+				},
+				tileSize: new google.maps.Size(256, 256),
+				name: "OpenStreetMap",
+				maxZoom: 18
+			}));	
+		}//Ende Funktion loadOSMLayer
+	</script><!-- OSM Layer Laden -->
+	<script src="js/xmlwriter.js" defer></script>
+	<script src="js/exportKml.js" defer></script>
 </body>
 </html>
