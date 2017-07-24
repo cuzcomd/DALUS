@@ -967,7 +967,7 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 						<li id="setPath" data-toggle="tooltip" data-placement="bottom" title="Pfad zeichnen"><a data-toggle="tab"><i class="fa fa-pencil"></i></a></li>
 						<li id="deleteActiveObject" data-toggle="tooltip" data-placement="bottom" title="Objekt löschen"><a data-toggle="tab"><i class="fa fa-trash"></i></a></li>
 						<li class="dropdown" data-toggle="tooltip" data-placement="bottom" title="Messpunkte setzen">
-		    				<a class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-flag-o"></i>
+		    				<a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-flag-o"></i>
 		    				<span class="caret"></span></a>
 		    				<ul class="dropdown-menu">
 								<li id="setMarkWhite"><a data-toggle="tab"><img src="images/white.png"> Vorgeplanter Messpunkt</a></li>
