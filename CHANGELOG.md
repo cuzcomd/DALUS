@@ -1,6 +1,7 @@
 ## Changelog
 
 ### 1.3.1 (24.07.2017)
+* Feature: Adressen können jetzt direkt in der Karte gesucht werden
 * Bugfix: Öffnen des Messpunkt-Zeichenwerkzeugs ist in iOS und Safari jetzt möglich
 * Bugfix: Exportierte kml-Dateien tragen automatisch den aktuellen Projektnamen
 * Style: Einige CSS-Parameter sind jetzt in eine externe CSS-Datei verschoben
