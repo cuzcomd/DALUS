@@ -125,7 +125,7 @@ function mapToObject(){
 		xw.writeAttributeString( "xmlns:gx", "http://www.google.com/kml/ext/2.2");
         xw.writeStartElement('Document');
 		xw.writeStartElement('name');
-		xw.writeCDATA('Projekttitel');
+		xw.writeCDATA(activeProjectName);
 		xw.writeEndElement();
 
 		xw.writeStartElement('Style');
@@ -445,4 +445,5 @@ function mapToObject(){
         document.getElementById('kmlString').value = xml;
         var downloadLink = document.getElementById('download-link');
         downloadLink.href = "data:;base64," + btoa($('#kmlString').val());
+        downloadLink.download = activeProjectName+".kml"; //Erzuegt den Dateinamen des Downloads aus dem aktuellen Projektnamen
     }

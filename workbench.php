@@ -167,6 +167,7 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 	<script> // Initialfunktion
 	userID = 0; //Initialisierung
 	prj_id = 0; //Initialisierung
+	activeProjectName = "Unbekanntes Projekt";
 	loadUser(); // Daten des angemeldeten Benutzers laden
 	updateProjects(); //Verfügbare Projekte aktualisieren
 	updateSharedProjects(); //Verfügbare geteilte Projekte aktualisieren
@@ -931,10 +932,10 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 					<li style="border-bottom: 1px solid #ccc;" data-placement="bottom" title="Profil bearbeiten" role="button"><a data-toggle="modal" data-target="#modalUserSettings"><i class="fa fa-user-circle" aria-hidden="true"></i><span id="activeUser">&nbsp; Kein Benutzer aktiv</span> <i class='fa fa-cogs' aria-hidden="true"></i></a></li>
 					<li id="newProject" data-placement="bottom" title="Neues Projekt" role="button"><a data-toggle="modal" data-target="#modal_new_project"><i class="fa fa-pencil-square-o"></i> Neues Projekt</a></li>
 					<li id="openProject" data-placement="bottom" title="Projekt öffnen" role="button"><a data-toggle="modal" data-target="#modal_open_project"><i class="fa fa-folder-open-o"></i> Projekt öffnen</a></li>
-					<li id="editProject" data-placement="bottom" title="Projekt ändern" role="button" style="display:none;"><a data-toggle="modal" data-target="#modal_edit_project"><i class="fa fa-pencil"></i> Projekt ändern</a></li>
-					<li id="saveProject" role="button" style="display:none;"><a><i class="fa fa-floppy-o" aria-hidden="true"></i> Projekt speichern</a></li>
-					<li id="deleteProject" role="button" style="display:none;"><a><i class="fa fa-floppy-o" aria-hidden="true"></i> Projekt löschen</a></li>
-					<li id="exportKML" role="button" onclick="toKML()"><a id="download-link" href="data:;base64," download="projekt.kml"><i class="fa fa-floppy-o" aria-hidden="true"></i> kml-Datei exportieren</a></li>
+					<li id="editProject" data-placement="bottom" title="Projekt ändern" role="button"><a data-toggle="modal" data-target="#modal_edit_project"><i class="fa fa-pencil"></i> Projekt ändern</a></li>
+					<li id="saveProject" role="button"><a><i class="fa fa-floppy-o" aria-hidden="true"></i> Projekt speichern</a></li>
+					<li id="deleteProject" role="button" ><a><i class="fa fa-floppy-o" aria-hidden="true"></i> Projekt löschen</a></li>
+					<li id="exportKML" role="button" onclick="toKML()"><a id="download-link" href="data:;base64," download><i class="fa fa-floppy-o" aria-hidden="true"></i> kml-Datei exportieren</a></li>
 					<li id="printMap" role="button" onclick="printMap();"><a><i class="fa fa-print" aria-hidden="true"></i> Ansicht drucken</a></li>
 					<li role="button" onclick="location.href='php/logout'"><a><i class="fa fa-sign-out" aria-hidden="true"></i> Abmelden</a></li>
 					<li role="button" ><a data-toggle="modal" data-target="#modal_license"><i class="fa fa-info-circle" aria-hidden="true"></i> Informationen</a></li>
@@ -979,9 +980,7 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 					</ul>
 				</div> <!-- Ende Werkzeuge -->
 			</div><!-- Ende Floating_Panel -->
-			<textarea id="kmlString" style="width:100%; height:500px"></textarea>
-
-
+			<textarea id="kmlString"></textarea>
 		</div>	<!-- Ende Tab_content -->
 	</div>	<!-- Hauptmenü - Ende Wrapper_menue -->
 	<div class="windrose"><img src="images/arrow.png" alt="Windrose" id="arrow"/></div> <!-- Ende Windrose -->

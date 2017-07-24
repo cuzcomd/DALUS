@@ -86,6 +86,7 @@
 					$('.activeProjectName').attr("value",data["projektName"]);
 					$('.activeProjectID').val(data["projektID"]);
 					$('.activeUserID').val(userID);
+					activeProjectName = data["projektName"];
 					clearMap();
 					loadProjectObjects(); //Objekte einlesen
 					updateProjects(); //Verfügbare Projekte aktualiseren

@@ -45,7 +45,7 @@ a{
 	padding-bottom:15px;
 }
 
-#messpunktdiv{
+#messpunktdiv, #saveProject, #deleteProject, #editProject, #kmlString{
 	display:none;
 }
 
