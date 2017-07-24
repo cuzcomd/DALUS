@@ -532,7 +532,7 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 				</div>
 				<div class="modal-footer">
 					<div class="row">
-						<div class="col-xs-4 text-center">Version: 1.3.0</div>
+						<div class="col-xs-4 text-center"><a href="CHANGELOG.md" target="_blank">Version: 1.3.1</a></div>
 						<div class="col-xs-4"><a href="https://github.com/cuzcomd/DALUS" target="_blank"><i class="fa fa-github" aria-hidden="true"></i> GitHub Repository</a></div>
 						<div class="col-xs-4"><a href="mailto:kontakt@cuzcomd.de">kontakt@cuzcomd.de</a></div>
 					</div>
