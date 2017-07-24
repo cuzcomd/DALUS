@@ -1,5 +1,8 @@
 ## Changelog
 
+### 1.3.0 (21.07.2017)
+* Feature: Export der Projektgeometrie als kml-Datei
+
 ### 1.2.0 (20.07.2017)
 * Feature: Einführung von Benutzerrechten(Access Levels) Administrator und Benutzer
 * Feature: Administratoren haben Zugriff auf die Benutzerverwaltung und können neue Nutzer anlegen und Bestehende löschen

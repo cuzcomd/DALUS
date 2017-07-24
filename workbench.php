@@ -167,6 +167,7 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 	<script> // Initialfunktion
 	userID = 0; //Initialisierung
 	prj_id = 0; //Initialisierung
+	activeProjectName = "Unbekanntes Projekt";
 	loadUser(); // Daten des angemeldeten Benutzers laden
 	updateProjects(); //Verfügbare Projekte aktualisieren
 	updateSharedProjects(); //Verfügbare geteilte Projekte aktualisieren
@@ -531,7 +532,7 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 				</div>
 				<div class="modal-footer">
 					<div class="row">
-						<div class="col-xs-4 text-center">Version: 1.2.0</div>
+						<div class="col-xs-4 text-center">Version: 1.3.0</div>
 						<div class="col-xs-4"><a href="https://github.com/cuzcomd/DALUS" target="_blank"><i class="fa fa-github" aria-hidden="true"></i> GitHub Repository</a></div>
 						<div class="col-xs-4"><a href="mailto:kontakt@cuzcomd.de">kontakt@cuzcomd.de</a></div>
 					</div>
@@ -648,7 +649,6 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 							<label for="passwordOld" class="control-label col-sm-4">Aktuelles Passwort</label>
 							<div class="col-sm-8">     	
 								<input type="password" id="passwordOld" size="40"  maxlength="250" name="oldPassword" class="form-control" placeholder="Aktuelles Passwort" required>
-						
 							</div>
 						</div>
 						<div class="form-group">
@@ -932,9 +932,10 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 					<li style="border-bottom: 1px solid #ccc;" data-placement="bottom" title="Profil bearbeiten" role="button"><a data-toggle="modal" data-target="#modalUserSettings"><i class="fa fa-user-circle" aria-hidden="true"></i><span id="activeUser">&nbsp; Kein Benutzer aktiv</span> <i class='fa fa-cogs' aria-hidden="true"></i></a></li>
 					<li id="newProject" data-placement="bottom" title="Neues Projekt" role="button"><a data-toggle="modal" data-target="#modal_new_project"><i class="fa fa-pencil-square-o"></i> Neues Projekt</a></li>
 					<li id="openProject" data-placement="bottom" title="Projekt öffnen" role="button"><a data-toggle="modal" data-target="#modal_open_project"><i class="fa fa-folder-open-o"></i> Projekt öffnen</a></li>
-					<li id="editProject" data-placement="bottom" title="Projekt ändern" role="button" style="display:none;"><a data-toggle="modal" data-target="#modal_edit_project"><i class="fa fa-pencil"></i> Projekt ändern</a></li>
-					<li id="saveProject" role="button" style="display:none;"><a><i class="fa fa-floppy-o" aria-hidden="true"></i> Projekt speichern</a></li>
-					<li id="deleteProject" role="button" style="display:none;"><a><i class="fa fa-floppy-o" aria-hidden="true"></i> Projekt löschen</a></li>
+					<li id="editProject" data-placement="bottom" title="Projekt ändern" role="button"><a data-toggle="modal" data-target="#modal_edit_project"><i class="fa fa-pencil"></i> Projekt ändern</a></li>
+					<li id="saveProject" role="button"><a><i class="fa fa-floppy-o" aria-hidden="true"></i> Projekt speichern</a></li>
+					<li id="deleteProject" role="button" ><a><i class="fa fa-floppy-o" aria-hidden="true"></i> Projekt löschen</a></li>
+					<li id="exportKML" role="button" onclick="toKML()"><a id="download-link" href="data:;base64," download><i class="fa fa-floppy-o" aria-hidden="true"></i> kml-Datei exportieren</a></li>
 					<li id="printMap" role="button" onclick="printMap();"><a><i class="fa fa-print" aria-hidden="true"></i> Ansicht drucken</a></li>
 					<li role="button" onclick="location.href='php/logout'"><a><i class="fa fa-sign-out" aria-hidden="true"></i> Abmelden</a></li>
 					<li role="button" ><a data-toggle="modal" data-target="#modal_license"><i class="fa fa-info-circle" aria-hidden="true"></i> Informationen</a></li>
@@ -979,268 +980,18 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 					</ul>
 				</div> <!-- Ende Werkzeuge -->
 			</div><!-- Ende Floating_Panel -->
+			<textarea id="kmlString"></textarea>
 		</div>	<!-- Ende Tab_content -->
 	</div>	<!-- Hauptmenü - Ende Wrapper_menue -->
 	<div class="windrose"><img src="images/arrow.png" alt="Windrose" id="arrow"/></div> <!-- Ende Windrose -->
 	<div id="map"></div>
 
-	<script src="https://maps.googleapis.com/maps/api/js?libraries=geometry,drawing&callback=initMap" async defer></script> <!-- GooleAPI laden. Hier muss der API-Schlüssel eingetragen werden. -->
-	<script src="js/bootstrap.min.js"></script> <!-- Bootstrap.js laden -->
-	<script src="js/html2canvas.min.js"></script>
-	<script src="js/usng.js" defer></script> <!-- Script für Umwandlung von Geokoordinaten in UTM-Ref Koordinaten -->
-	<script defer> // Ádresse des MET-Modells durch Eingabemaske oder manuelle Festlegung bestimmen
-	function generateMET(resultsMap, manualLat, manualLon) {
-		if (manualLat !== undefined && manualLon !== undefined) { //Überprüfen, ob MET-Freisetzungsort manuell festgelegt wurde
-			var latitude = manualLat;
-			var longitude = manualLon;
-			var latlng = {lat: Number(latitude), lng: Number(longitude)};
-			new google.maps.Geocoder().geocode({'location': latlng}, function(results, status) {
-				if (status === google.maps.GeocoderStatus.OK) {
-					resultsMap.setCenter(results[0].geometry.location);
-					var adresse = results[1].formatted_address;
-					drawPolygon(resultsMap, latitude, longitude, adresse);
-				} 
-				else 
-				{
-					alert('Die Adresse konnte nicht ermittelt werden. Grund: ' + status);
-					
-				}
-			}); //Ende reverse geocoder
-		} // Ende if(manualLat !== undefined)
-		else{ //Überprüfen, ob MET-Freisetzungsort im Eingabefeld festgelegt wurde
-			var adresse = document.getElementById('addresse').value;
-			new google.maps.Geocoder().geocode({'address': adresse}, function(results, status) {
-				if (status === google.maps.GeocoderStatus.OK) {
-					resultsMap.setCenter(results[0].geometry.location);
-					var latitude = resultsMap.getCenter().lat();
-					var longitude = resultsMap.getCenter().lng();
-					drawPolygon(resultsMap, latitude, longitude, adresse);
-				} 
-				else 
-				{
-					alert('Die Adresse konnte nicht ermittelt werden. Grund: ' + status);
-				}
-			}); //Ende geocoder
-		} //Ende if(manualLat !== undefined)
-	}// Ende function generateMET()
-	</script><!-- MET-Modell generieren -->
-
-	<script defer> // Polygon berechnen und Freisetzungsort-Marker setzen
-	function drawPolygon(map, lat, lon, geoAdresse, winkel, richtung, innen, aussen, counter){
-		marker_color ="black";
-		$('#modal_MET').modal('hide');
-		if (winkel !== undefined) {
-			var ausbreitungswinkel = winkel;
-		} 
-		else {
-			var ausbreitungswinkel = parseInt(document.getElementById('winkel').value);
-		}
-
-		if (richtung !== undefined) {
-			var windrichtung_initial = richtung; // Eingegebene Windrichtung speichern
-			var windrichtung = richtung-180;
-		} 
-		else {
-			var windrichtung = parseInt(document.getElementById('windrichtung').value);
-			var windrichtung_initial = windrichtung; // Eingegebene Windrichtung speichern
-			windrichtung = windrichtung-180; // Google rechnet mit Windzugrichtung, daher muss Winkel um 180 Grad gedreht werden
-		}
-		document.getElementById('arrow').style.transform = 'rotate('+(windrichtung+90)+'deg)';
-		
-		if (innen !== undefined) {
-			var distanz_innen = innen;
-		} 
-		else {
-			var distanz_innen = parseInt(document.getElementById('distanz1').value);
-		}	
-
-		if (aussen !== undefined) {
-			var distanz_aussen = aussen;
-		}
-		else {
-			var distanz_aussen = parseInt(document.getElementById('distanz2').value);
-		}
-
-		if (geoAdresse !== undefined) {
-			var adresse = geoAdresse;
-		}
-		else {
-			var adresse = document.getElementById('addresse').value;
-		}
-
-		if (counter !== undefined) {
-			metCounter = parseInt(counter);
-		} 
-		else {
-		}
-		
-		var metParameter = {ausbreitungswinkel: ausbreitungswinkel,
-							windrichtung: windrichtung_initial,
-							distanz_innen: distanz_innen,
-							distanz_aussen: distanz_aussen,
-							adresse: adresse
-							};
-		var halbwinkel = ausbreitungswinkel / 2; // Winkelhalbierende berechnen
-		var utm_koord = LLtoUSNG(lat, lon, 5); // UTM-Ref Koordinaten berechnen
-		var ursprung = new google.maps.LatLng(lat, lon);
-		var p11 = new google.maps.geometry.spherical.computeOffset(ursprung, distanz_innen, windrichtung+halbwinkel); // Eckpunkt 1 für Polygon 1 berechnen
-		var p12 = new google.maps.geometry.spherical.computeOffset(ursprung, distanz_innen, windrichtung-halbwinkel); // Eckpunkt 2 für Polygon 1 berechnen
-		var p21 = new google.maps.geometry.spherical.computeOffset(ursprung, distanz_aussen, windrichtung+halbwinkel); // Eckpunkt 1 für Polygon 2 berechnen
-		var p22 = new google.maps.geometry.spherical.computeOffset(ursprung, distanz_aussen, windrichtung-halbwinkel); // Eckpunkt 2 für Polygon 2 berechnen
-		
-		// Polygon 2 (Gefährdung im Freien) zeichnen
-		var punkte2 = new Array();
-		var i = windrichtung-halbwinkel;
-		if(ausbreitungswinkel != 360){
-			for(var i; (i <= windrichtung+halbwinkel); i++) {
-				punkte2.push(new google.maps.geometry.spherical.computeOffset(ursprung, distanz_innen, i));
-			}
-			punkte2.push(p11);
-		}
-		
-		var i = windrichtung+halbwinkel;
-		for(var i; (i >= windrichtung-halbwinkel); i--) {
-			punkte2.push(new google.maps.geometry.spherical.computeOffset(ursprung, distanz_aussen, i));
-		}
-		
-		if(ausbreitungswinkel != 360){
-			punkte2.push(p12);
-		}
-		
-		var polygon2 = new google.maps.Polygon({
-			map: map,
-			paths: [punkte2],
-			strokeColor: '#FF9933',
-			strokeOpacity: 0.8,
-			strokeWeight: 3,
-			fillColor: '#FF9933',
-			fillOpacity: 0.1,
-			geodesic: true,
-			obj_nummer : metCounter,
-			obj_typ : 'polygon2'
-		});
-
-		var punkte = new Array();
-		var i =windrichtung-halbwinkel;
-
-		if(ausbreitungswinkel != 360){
-			punkte.push(ursprung);
-		}
-
-		for(var i; (i <= windrichtung+halbwinkel); i++) {
-			punkte.push(new google.maps.geometry.spherical.computeOffset(ursprung, distanz_innen, i));
-		}
-		
-		// Polygon 1 (Gefährdung im Gebäude) zeichnen
-		var polygon1 = new google.maps.Polygon({
-			map: map,
-			paths: [punkte],
-			strokeColor: '#FF3333',
-			strokeOpacity: 0.8,
-			strokeWeight: 3,
-			fillColor: '#FF9999',
-			fillOpacity: 0.1,
-			geodesic: true,
-			obj_nummer : metCounter,
-			obj_typ : 'polygon1'
-		});
-		
-		if(ausbreitungswinkel != 360){
-			var mitte = new google.maps.geometry.spherical.computeOffset(ursprung, distanz_aussen, windrichtung);
-			var line = new google.maps.Polyline({
-				path: [ursprung, mitte],
-				strokeOpacity: 0.8,
-				strokeColor: '#333333',
-				strokeWeight: 2,
-				map: map,
-				geodesic:true,
-				obj_nummer : metCounter,
-				obj_typ : 'polygonCenter'
-			});
-		}
-
-		// Marker am Freisetzungsort erstellen 
-		var marker = new google.maps.Marker({
-			position: new google.maps.LatLng(lat, lon),
-			icon:{url:'images/black.png', anchor: new google.maps.Point(16,16)},
-			obj_lat: lat,
-			obj_lon: lon,
-			obj_parameter: metParameter,
-			obj_typ: 'met',
-			obj_nummer: metCounter,
-			obj_farbe: 'black',
-  			map: map,
-  			title: 'Freisetzungsort',
-  			draggable:false,
-  			poly1: polygon1,
-  			poly2: polygon2,
-  			centerLine:line
-		});
-
-			objectArray.push(marker);
-			metCounter += 1;
-
-		marker.addListener('click', function() {//Informationsfenster bei Klick auf Marker öffnen
-		activeObject = this; // Setzt den aktuell ausgewählten marker als aktiv
-		infoWindow.setContent('<h5>Freisetzungsort</h5>'+
-			'<div class="fa fa-home"></div> '+adresse+'<br/><hr>' +
-			'<div class="fa fa-map-marker"></div> ' + this.obj_lat +' , ' + this.obj_lon +'<br/> (' + utm_koord + ')<br/><br/>'+
-			'Gef&auml;hrdung im Geb&auml;ude: ' + distanz_innen + ' m<br/>' +
-			'Gef&auml;hrdung im Freien: ' + distanz_aussen + ' m<br/><br/>' +
-			'Windrichtung: ' + windrichtung_initial + '&deg;' + '<br/>' +
-			'Ausbreitungswinkel: ' + ausbreitungswinkel + ' &deg;'  + '<br/><br/>'+
-			'<div class="btn-group" role="group" aria-label="Optionen">'+
-			'<button type="button" class="btn btn-default btn-danger" style="height:46px;" id="deleteButton" onclick="deleteObject();"><i class="fa fa-trash-o"></i></button>')
-		infoWindow.open(map,marker);
-		});
-	} //Ende function drawPolygon()
-	</script><!-- Polygon berechnen und Marker setzen -->
-	<script defer> // Ausbreitungswinkel berechnen
-	function computeAngle(){
-		var nebel = document.getElementById('nebel').value;
-		var wind = document.getElementById('windgeschwindigkeit').value;
-		var himmel = document.getElementById('himmel').value;
-		var tageszeit = document.getElementById('tageszeit').value;
-		var monat = document.getElementById('monat').value;
-		var brand = document.getElementById('brand').value;
-		if(nebel=="true")
-			met_winkel=45;
-		else if(wind == "high")
-			met_winkel=60;
-		else if(himmel=="true")
-			met_winkel=60;
-		else if(tageszeit=="night")
-		{
-			if(wind!="high")
-			{
-				if(brand=="true")
-					met_winkel=60;
-				else
-					met_winkel=45;
-			}
-			else 
-				met_winkel=45;
-		}
-		else if(wind=="low")
-		{
-			if(monat=="om")
-			{
-				if(brand=="true")
-					met_winkel=90;
-				else
-					met_winkel=60;
-			}
-			else
-				met_winkel=90;
-		}
-		else if(brand=="true")
-			met_winkel=90;
-		else
-			met_winkel=60;
-		
-		document.getElementById("winkel").value=met_winkel; // Berechneten Winkel in MET-Auswahlfeld eintragen	
-	}
-	</script><!-- Ausbreitungswinkel berechnen -->
+	<script src = "https://maps.googleapis.com/maps/api/js?libraries=geometry,drawing&callback=initMap" async defer></script> <!-- GooleAPI laden. Hier muss der API-Schlüssel eingetragen werden. -->
+	<script src = "js/bootstrap.min.js"></script> <!-- Bootstrap.js laden -->
+	<script src = "js/html2canvas.min.js" defer></script>
+	<script src = "js/usng.min.js" defer></script> <!-- Script für Umwandlung von Geokoordinaten in UTM-Ref Koordinaten -->
+	<script src = "js/MET.js" defer></script> <!-- Adresse des MET-Modells durch Eingabemaske oder manuelle Festlegung bestimmen -->
+	
 	<script defer> // Fixpunkte aus Datei laden
 	function loadFixpoints(switchMesspunkte){
 		switchMesspunkte.find('i').toggleClass("fa-toggle-off fa-toggle-on"); // Damit Menüpunkt farblich hinterlegt wird
@@ -1272,7 +1023,7 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 		} //Ende else
 	}//Ende function loadFixpoint
 	</script><!-- Fixpunkte laden -->
-	<script type="text/javascript" defer> // Projektgeometrie aus Datenbank laden
+	<script defer> // Projektgeometrie aus Datenbank laden
 	function loadProjectObjects(){
 		for (var i = 0; i < objectArray.length; i++ ) {
 			objectArray[i].setMap(null);
@@ -1628,333 +1379,109 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 	} //Ende Funktion clearMap()
 	</script><!-- Projektgeometrie laden -->
 
-	<script type="text/javascript" defer> // Ajax aufruf für Projekte
-		$("document").ready(function(){
-			$(".ajax_create_project").submit(function(){
+	<script src = "js/ajaxCalls.js" defer> // Ajax aufruf für Projekte </script>
+	<script defer> // Ajax für Speichern und Löschen von Objekten
+		function saveProjectStatus(){ // Erzeugt neue Messpunkte oder aktualisiert Vorhandene in der Datenbank
+			objectArray.forEach(function(entry) {
+				var obj_farbe = entry.obj_farbe;
+				var obj_lat = entry.obj_lat;
+				var obj_lon = entry.obj_lon;
+				var obj_typ = entry.obj_typ;
+				var obj_nummer = entry.obj_nummer;
+				var obj_hinweis = entry.obj_hinweis;
+				var obj_messwert = entry.obj_messwert;
+				var obj_parameter =JSON.stringify(entry.obj_parameter);
 				var data = {
-					"action": "create"
+					"task" : "save",
+					"obj_prj_id" : prj_id,
+					"obj_color" : obj_farbe,
+					"obj_lat" : obj_lat,
+					"obj_lon" : obj_lon,
+					"obj_nummer" : obj_nummer,
+					"obj_hinweis" : obj_hinweis,
+					"obj_messwert" : obj_messwert,
+					"obj_parameter" : obj_parameter,
+					"obj_typ" : obj_typ
 				};
 				data = $(this).serialize() + "&" + $.param(data);
 				$.ajax({
 					type: "POST",
 					dataType: "json",
-					url: "php/projects.php",
-					data: data,
+					url: "php/geometry.php",
+					data:data,
 					success: function(data) {
-					toastr.success('Neues Projekt angelegt.');
-					$("#activeProject").html("&nbsp; "+data["projekttitel"]);
-					$('.activeProjectName').attr("value",data["projekttitel"]);
-					$('.activeProjectID').val(data["projekt_id"]);
-					$('.activeUserID').val(userID);
-					prj_id = data["projekt_id"]; // In Datenbak erzeugte Projekt ID einlesen
-					$('#editProject').show(); // Menüpunkt 'Projekt bearbeiten' anzeigen
-					$('#saveProject').show(); // Menüpunkt 'Projekt speichern' anzeigen
-					$('#deleteProject').show(); // Menüpunkt 'Projekt speichern' anzeigen
-					$('#modal_new_project').modal('hide');
-					$("#projekt_titel_new").val(""); //Leert den Projekttitel im Inputfeld für ein neues Projekt
-					clearMap();
-					updateProjects();
-					updateSharedProjects();
-					isSharedWith();
-					loadProjectObjects();
-					updateAllUsers()
 					},
 					error: function(xhr, desc, err) {
 						console.log(xhr);
 						console.log("Details: " + desc + "\nError:" + err);
 					}
-				});
+				}); //Ende ajax
 				return false;
-			});
-			$(".ajax_edit_project").submit(function(){
-				var data = {
-					"action": "edit"
-				};
+			});//Ende forEach()
+
+			deleteArray.forEach(function(entry) {
+				var obj_typ = entry.typ;
+				var obj_nummer = entry.nummer;
+				data = {"task" : "delete", "objekt_nummer": obj_nummer, "projekt_id": prj_id , "objekt_typ": obj_typ};
 				data = $(this).serialize() + "&" + $.param(data);
 				$.ajax({
 					type: "POST",
 					dataType: "json",
-					url: "php/projects.php",
-					data: data,
+					url: "php/geometry.php",
+					data:data,
 					success: function(data) {
-					toastr.success('Projekt geändert.');
-					$("#activeProject").html("&nbsp; "+data["projekttitel"]);
-					$('.activeProjectName').attr("value",data["projekttitel"]);
-					
-					$('#modal_edit_project').modal('hide');
-					updateProjects();
-					updateSharedProjects();
-					isSharedWith();
-					updateAllUsers()
 					},
 					error: function(xhr, desc, err) {
 						console.log(xhr);
 						console.log("Details: " + desc + "\nError:" + err);
 					}
-				});
+				});//Ende ajax
 				return false;
-			});
-		});
-		$(".ajax_load_project").submit(function(){
-			var data = {
-				"action": "load"
-			};
-			data = $(this).serialize() + "&" + $.param(data);
-			$.ajax({
-				type: "POST",
-				dataType: "json",
-				url: "php/projects.php",
-				data: data,
-				success: function(data) {
-					toastr.success('Projekt geladen.');
-					$("#activeProject").html("&nbsp; "+data["projektName"]); //Projekttitel anzeigen
-					prj_id = parseInt(data["projektID"]); // In Datenbak erzeugte Projekt ID einlesen
-					messpunktNummer = parseInt(data["maxNum"])+1;
-					$('#editProject').show(); // Menüpunkt 'Projekt bearbeiten' anzeigen
-					$('#saveProject').show(); // Menüpunkt 'Projekt speichern' anzeigen
-					$('#deleteProject').show(); // Menüpunkt 'Projekt speichern' anzeigen
-					$('#modal_open_project').modal('hide'); //Modal schließen
-					$('.activeProjectName').attr("value",data["projektName"]);
-					$('.activeProjectID').val(data["projektID"]);
-					$('.activeUserID').val(userID);
-					clearMap();
-					loadProjectObjects(); //Objekte einlesen
-					updateProjects(); //Verfügbare Projekte aktualiseren
-					updateSharedProjects(); //Verfügbare mit dem Benutzer geteilte Projekte aktualiseren
-					isSharedWith(); //Aktualisieren, mit wem das geöffnete Projekt geteilt ist
-					updateAllUsers()
-				},
-				error: function(xhr, desc, err) {
-					console.log(xhr);
-					console.log("Details: " + desc + "\nError:" + err);
-				}
-			});
-			return false;
-		});
-		$(".ajax_edit_user").submit(function(){
-			var data = {
-				"action": "editUser"
-			};
-			data = $(this).serialize() + "&" + $.param(data);
-			$.ajax({
-				type: "POST",
-				dataType: "json",
-				url: "php/projects.php",
-				data: data,
-				success: function(data) {
-					switch(data){
-						case 'Success':
-							$('#modalUserSettings').modal('hide'); //Modal schließen
-							toastr.success('Daten geändert.');
-							loadUser(); //Lädt neue Nutzerdaten
-							updateProjects(); //Verfügbare Projekte aktualiseren
-							updateSharedProjects(); //Verfügbare mit dem Benutzer geteilte Projekte aktualiseren
-							isSharedWith(); //Aktualisieren, mit wem das geöffnete Projekt geteilt ist
-							updateAllUsers()
-							break;
-						case 'PasswordsDontMatch':
-							toastr.warning('Die Passwörter stimmen nicht überein.');
-							break;
-						case 'WrongPassword':
-							toastr.warning('Das aktuelle Passwort ist nicht korrekt.');
-							break;
-						default:
-						toastr.warning('Fehler aufgetreten.');
-							break;
-
-					}
-				},
-				error: function(xhr, desc, err) {
-					console.log(xhr);
-					console.log("Details: " + desc + "\nError:" + err);
-				}
-			});
-			return false;
-		});
-
-		$(".ajax_create_user").submit(function(){
-				var data = {
-					"action": "createUser"
-				};
-				data = $(this).serialize() + "&" + $.param(data);
-				$.ajax({
-					type: "POST",
-					dataType: "json",
-					url: "php/projects.php",
-					data: data,
-					success: function(data) {
-						switch(data){
-							case 'yes':
-								$('#modalUserSettings').modal('hide'); //Modal schließen
-								toastr.success('Neuen Benutzer angelegt.');
-								updateProjects();
-								updateSharedProjects();
-								isSharedWith();
-								updateAllUsers()
-								break;
-
-							case 'no':
-								toastr.warning('Dieser Benutzername ist schon vorhanden .');
-								break;
-
-							case 'noAdmin':
-							toastr.warning('Sie verfügen nicht über die notwendigen Rechte, um diese Aktion auszuführen. Wenden Sie sich an einen Administrator.');
-							break;
-
-							default:
-							toastr.warning('Fehler aufgetreten.');
-							break;
-						}
-
-					},
-					error: function(xhr, desc, err) {
-						console.log(xhr);
-						console.log("Details: " + desc + "\nError:" + err);
-					}
-				});
-				return false;
-			});
-
-		$(".ajax_delete_user").submit(function(){
-			var data = {
-				"action": "deleteUser"
-			};
-			data = $(this).serialize() + "&" + $.param(data);
-			$.ajax({
-				type: "POST",
-				dataType: "json",
-				url: "php/projects.php",
-				data: data,
-				success: function(data) {
-					switch(data){
-						case 'ok':
-						toastr.success('Nutzer gelöscht.');
-						loadUser(); //Lädt neue Nutzerdaten
-						updateProjects(); //Verfügbare Projekte aktualiseren
-						updateSharedProjects(); //Verfügbare mit dem Benutzer geteilte Projekte aktualiseren
-						isSharedWith(); //Aktualisieren, mit wem das geöffnete Projekt geteilt ist
-						updateAllUsers()
-						break;
-
-						case 'noAdmin':
-						toastr.warning('Sie verfügen nicht über die notwendigen Rechte, um diese Aktion auszuführen. Wenden Sie sich an einen Administrator.');
-						break;
-
-						default:
-						toastr.warning('Fehler aufgetreten.');
-						break;
-
-					}
-				},
-				error: function(xhr, desc, err) {
-					console.log(xhr);
-					console.log("Details: " + desc + "\nError:" + err);
-				}
-			});
-			return false;
-		});
-
+			});//Ende forEach()
+			setTimeout(function() {
+	  			toastr.success('Projekt gespeichert. <span class="label label-info"><span class="fa fa-pencil" aria-hidden="true"></span> '+ objectArray.length+'</span> <span class="label label-danger"><span class="fa fa-trash" aria-hidden="true"></span> '+ deleteArray.length+'</span>'); //Zeigt an, wie viele Objekte gespeichert und gelöscht wurden
+	  			deleteArray.length = 0; // Leert den Array der zu löschenden Elemente nach dem Speichern des Projekts
+			}, 100);//Ende setTimeout
+		}// Ende Funktiobn saveProjectStatus
 	</script>
-	<script type="text/javascript" defer> // Ajax für Speichern und Löschen von Objekten
-	function saveProjectStatus(){ // Erzeugt neue Messpunkte oder aktualisiert Vorhandene in der Datenbank
-		objectArray.forEach(function(entry) {
-			var obj_farbe = entry.obj_farbe;
-			var obj_lat = entry.obj_lat;
-			var obj_lon = entry.obj_lon;
-			var obj_typ = entry.obj_typ;
-			var obj_nummer = entry.obj_nummer;
-			var obj_hinweis = entry.obj_hinweis;
-			var obj_messwert = entry.obj_messwert;
-			var obj_parameter =JSON.stringify(entry.obj_parameter);
-			var data = {
-				"task" : "save",
-				"obj_prj_id" : prj_id,
-				"obj_color" : obj_farbe,
-				"obj_lat" : obj_lat,
-				"obj_lon" : obj_lon,
-				"obj_nummer" : obj_nummer,
-				"obj_hinweis" : obj_hinweis,
-				"obj_messwert" : obj_messwert,
-				"obj_parameter" : obj_parameter,
-				"obj_typ" : obj_typ
-			};
-			data = $(this).serialize() + "&" + $.param(data);
-			$.ajax({
-				type: "POST",
-				dataType: "json",
-				url: "php/geometry.php",
-				data:data,
-				success: function(data) {
+	<script defer> // OSM Layer laden
+		function loadOSMLayer(){
+			var mapTypeIds = [];
+			for(var type in google.maps.MapTypeId) {
+				mapTypeIds.push(google.maps.MapTypeId[type]);
+			}
+			mapTypeIds.push("OSM");
+			map = new google.maps.Map(document.getElementById('map'), {
+				zoom: 14,
+				mapTypeId: "OSM",
+				mapTypeControlOptions: {
+					mapTypeIds: mapTypeIds,
+					style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+					position: google.maps.ControlPosition.TOP_RIGHT
 				},
-				error: function(xhr, desc, err) {
-					console.log(xhr);
-					console.log("Details: " + desc + "\nError:" + err);
-				}
-			}); //Ende ajax
-			return false;
-		});//Ende forEach()
-
-		deleteArray.forEach(function(entry) {
-			var obj_typ = entry.typ;
-			var obj_nummer = entry.nummer;
-			data = {"task" : "delete", "objekt_nummer": obj_nummer, "projekt_id": prj_id , "objekt_typ": obj_typ};
-			data = $(this).serialize() + "&" + $.param(data);
-			$.ajax({
-				type: "POST",
-				dataType: "json",
-				url: "php/geometry.php",
-				data:data,
-				success: function(data) {
+				center: {lat: 52.13024, lng: 11.56567700000005} // Koordinaten des Kartenmittelpunkts
+			});
+			
+			OSM ='OSM'; //Variable OpenStreetMap definieren
+			map.mapTypes.set("OSM", new google.maps.ImageMapType({
+				getTileUrl: function(coord, zoom) {
+	            // "Wrap" x (longitude) at 180th meridian properly
+	            // NB: Don't touch coord.x because coord param is by reference, and changing its x property breakes something in Google's lib 
+					var tilesPerGlobe = 1 << zoom;
+					var x = coord.x % tilesPerGlobe;
+					if (x < 0) {
+						x = tilesPerGlobe+x;
+					}
+	            // Wrap y (latitude) in a like manner if you want to enable vertical infinite scroll
+					return "https://tile.openstreetmap.org/" + zoom + "/" + x + "/" + coord.y + ".png";
 				},
-				error: function(xhr, desc, err) {
-					console.log(xhr);
-					console.log("Details: " + desc + "\nError:" + err);
-				}
-			});//Ende ajax
-			return false;
-		});//Ende forEach()
-		setTimeout(function() {
-  			toastr.success('Projekt gespeichert. <span class="label label-info"><span class="fa fa-pencil" aria-hidden="true"></span> '+ objectArray.length+'</span> <span class="label label-danger"><span class="fa fa-trash" aria-hidden="true"></span> '+ deleteArray.length+'</span>'); //Zeigt an, wie viele Objekte gespeichert und gelöscht wurden
-  			deleteArray.length = 0; // Leert den Array der zu löschenden Elemente nach dem Speichern des Projekts
-		}, 100);//Ende setTimeout
-	}// Ende Funktiobn saveProjectStatus
-	</script>
-	<script type="text/javascript" defer> // OSM Layer laden
-	function loadOSMLayer(){
-		var mapTypeIds = [];
-		for(var type in google.maps.MapTypeId) {
-			mapTypeIds.push(google.maps.MapTypeId[type]);
-		}
-		mapTypeIds.push("OSM");
-		map = new google.maps.Map(document.getElementById('map'), {
-			zoom: 14,
-			mapTypeId: "OSM",
-			mapTypeControlOptions: {
-				mapTypeIds: mapTypeIds,
-				style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-				position: google.maps.ControlPosition.TOP_RIGHT
-			},
-			center: {lat: 52.13024, lng: 11.56567700000005} // Koordinaten des Kartenmittelpunkts
-		});
-		
-		OSM ='OSM'; //Variable OpenStreetMap definieren
-		map.mapTypes.set("OSM", new google.maps.ImageMapType({
-			getTileUrl: function(coord, zoom) {
-            // "Wrap" x (longitude) at 180th meridian properly
-            // NB: Don't touch coord.x because coord param is by reference, and changing its x property breakes something in Google's lib 
-				var tilesPerGlobe = 1 << zoom;
-				var x = coord.x % tilesPerGlobe;
-				if (x < 0) {
-					x = tilesPerGlobe+x;
-				}
-            // Wrap y (latitude) in a like manner if you want to enable vertical infinite scroll
-				return "https://tile.openstreetmap.org/" + zoom + "/" + x + "/" + coord.y + ".png";
-			},
-			tileSize: new google.maps.Size(256, 256),
-			name: "OpenStreetMap",
-			maxZoom: 18
-		}));	
-	}//Ende Funktion loadOSMLayer
+				tileSize: new google.maps.Size(256, 256),
+				name: "OpenStreetMap",
+				maxZoom: 18
+			}));	
+		}//Ende Funktion loadOSMLayer
 	</script><!-- OSM Layer Laden -->
+	<script src="js/xmlwriter.js" defer></script>
+	<script src="js/exportKml.js" defer></script>
 </body>
 </html>
