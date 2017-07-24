@@ -213,6 +213,38 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 		document.getElementById('deleteProject').addEventListener('click', function() { // Beim Klick auf "Löschen", aktuelles Projekt löschen
 			deleteProject();	
 		});
+
+        var input = (document.getElementById('pac-input'));
+
+        var autocomplete = new google.maps.places.Autocomplete(input);
+        autocomplete.bindTo('bounds', map);
+
+        autocomplete.addListener('place_changed', function() {
+          var place = autocomplete.getPlace();
+          if (!place.geometry) {
+            // User entered the name of a Place that was not suggested and
+            // pressed the Enter key, or the Place Details request failed.
+            window.alert("No details available for input: '" + place.name + "'");
+            return;
+          }
+
+          // If the place has a geometry, then present it on a map.
+          if (place.geometry.viewport) {
+            map.fitBounds(place.geometry.viewport);
+          } else {
+            map.setCenter(place.geometry.location);
+            map.setZoom(17);  // Why 17? Because it looks good.
+          }
+
+          var address = '';
+          if (place.address_components) {
+            address = [
+              (place.address_components[0] && place.address_components[0].short_name || ''),
+              (place.address_components[1] && place.address_components[1].short_name || ''),
+              (place.address_components[2] && place.address_components[2].short_name || '')
+            ].join(' ');
+          }
+        });
 	}//Ende Funktion initMap
 	</script> <!-- Initialfunktion -->
 	<script > // Google DrawingManager laden
@@ -955,6 +987,7 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 				</ul>
 			</li>
 			<li class="active" type="button" id ="switch_parameter" data-toggle="tooltip" data-placement="bottom" title="Auf Karte zeichnen"><a data-toggle="tab" href="#floating-panel"><i class="fa fa-paint-brush" aria-hidden="true"></i></a></li>
+			<li type="button" id ="switchSuche" data-toggle="tooltip" data-placement="bottom" title="Ort suchen"><a data-toggle="tab" href="#suche"><i class="fa fa-search" aria-hidden="true"></i></a></li>
 			<li id ="switch_winkel" data-toggle="tooltip" data-placement="bottom" title="Parameter des MET-Modells anpassen"><a href="#" data-toggle="modal" data-target="#modal_MET">MET</a></li>
 		</ul>
 		<div class="tab-content">
@@ -980,13 +1013,18 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 					</ul>
 				</div> <!-- Ende Werkzeuge -->
 			</div><!-- Ende Floating_Panel -->
-			<textarea id="kmlString"></textarea>
+			<div id ="suche" class="tab-pane fade">
+				<div class="input-group">
+					<input id="pac-input" class="form-control" type="text" placeholder="Ort suchen ...">
+					<span class="input-group-addon"><i class="fa fa-search"></i></span>
+				</div>
+			</div>
 		</div>	<!-- Ende Tab_content -->
 	</div>	<!-- Hauptmenü - Ende Wrapper_menue -->
 	<div class="windrose"><img src="images/arrow.png" alt="Windrose" id="arrow"/></div> <!-- Ende Windrose -->
 	<div id="map"></div>
-
-	<script src = "https://maps.googleapis.com/maps/api/js?libraries=geometry,drawing&callback=initMap" async defer></script> <!-- GooleAPI laden. Hier muss der API-Schlüssel eingetragen werden. -->
+	<textarea id="kmlString"></textarea>
+	<script src = "https://maps.googleapis.com/maps/api/js?libraries=geometry,drawing,places&callback=initMap" async defer></script> <!-- GooleAPI laden. Hier muss der API-Schlüssel eingetragen werden. -->
 	<script src = "js/bootstrap.min.js"></script> <!-- Bootstrap.js laden -->
 	<script src = "js/html2canvas.min.js" defer></script>
 	<script src = "js/usng.min.js" defer></script> <!-- Script für Umwandlung von Geokoordinaten in UTM-Ref Koordinaten -->
@@ -1378,7 +1416,6 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 		deleteArray = [];
 	} //Ende Funktion clearMap()
 	</script><!-- Projektgeometrie laden -->
-
 	<script src = "js/ajaxCalls.js" defer> // Ajax aufruf für Projekte </script>
 	<script defer> // Ajax für Speichern und Löschen von Objekten
 		function saveProjectStatus(){ // Erzeugt neue Messpunkte oder aktualisiert Vorhandene in der Datenbank
@@ -1457,7 +1494,7 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 				mapTypeControlOptions: {
 					mapTypeIds: mapTypeIds,
 					style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-					position: google.maps.ControlPosition.TOP_RIGHT
+					position: google.maps.ControlPosition.BOTTOM_RIGHT
 				},
 				center: {lat: 52.13024, lng: 11.56567700000005} // Koordinaten des Kartenmittelpunkts
 			});
