@@ -960,7 +960,7 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 		<div class="tab-content">
 		    <div id ="floating-panel" class="tab-pane fade in active">
 				<div class="werkzeuge text-center">
-					<ul class="nav nav-pills" style="display:inline-block;">
+					<ul class="nav nav-pills nav-werkzeuge">
 						<li id="setHand" data-toggle="tooltip" data-placement="bottom" title="Auswahl"><a data-toggle="tab"><i class="fa fa-mouse-pointer"></i></a></li>
 						<li id="setCirc" data-toggle="tooltip" data-placement="bottom" title="Kreis zeichnen"><a data-toggle="tab"><i class="fa fa-circle-thin"></i></a></li>
 						<li id="setPoly" data-toggle="tooltip" data-placement="bottom" title="Polygon zeichnen"><a data-toggle="tab"><i class="fa fa-bookmark-o"></i></a></li>

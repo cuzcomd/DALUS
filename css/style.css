@@ -72,6 +72,10 @@ a{
 	width;80px;
 }
 
+.nav-werkzeuge{
+	display:inline-block;
+}
+
 @media print {
   img {
     max-width: none !important;
