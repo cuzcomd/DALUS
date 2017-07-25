@@ -26,6 +26,8 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 	<link rel="stylesheet" href="css/font-awesome.min.css">
 	<link type="text/css" rel="stylesheet" href="css/style.css">
 	<script src="js/jquery.min.js"></script>
+	<link rel="stylesheet" href="css/alertify/alertify.core.css" />
+	<link rel="stylesheet" href="css/alertify/alertify.bootstrap.css" />
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script> <!-- Script zum dynamischen Anzeigen von Statusmeldungen -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" /> <!-- CSS für Script zum dynamischen Anzeigen von Statusmeldungen -->
 	<script>
@@ -1383,7 +1385,9 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 			"prj_id": prj_id
 		};
 		data = $(this).serialize() + "&" + $.param(data);
-		$.ajax({
+		alertify.confirm("Soll das Projekt wirklich gelöscht werden?", function (e) {
+    if (e) {
+        $.ajax({
 			type: "POST",
 			dataType: "json",
 			url: "php/projects.php",
@@ -1408,6 +1412,11 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 		}); //Ende ajax
 		toastr.error('Projekt gelöscht.');
 		return false;
+    } else {
+        // user clicked "cancel"
+    }
+});
+		
 	} //Ende Funktion deleteProject()
 
 	function printMap(){
@@ -1539,5 +1548,6 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 	</script><!-- OSM Layer Laden -->
 	<script src="js/xmlwriter.js" defer></script>
 	<script src="js/exportKml.js" defer></script>
+	<script src="js/alertify.min.js" defer></script>
 </body>
 </html>
