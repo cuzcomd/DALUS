@@ -889,25 +889,25 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 		</div><!-- Ende modal-dialog -->
 	</div><!-- Ende Modal_edit_project -->
 
-	<div class="modal fade" id="modalNutzerverwaltung" tabindex="-1" role="dialog" aria-labelledby="Nutzerverwaltung">
+	<div class="modal fade" id="modalAdmin" tabindex="-1" role="dialog" aria-labelledby="Administration">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title" id="myModalLabel">Nutzerverwaltung</h4>
+					<h4 class="modal-title" id="myModalLabel">Administration</h4>
 				</div>
 				<div class="modal-body">
-					<div class="panel-group" id="accordion">
-						<div class="panel panel-default">
-						    <div class="panel-heading">
-						    	<h4 class="panel-title">
-						        <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
-						        Neuen Benutzer anlegen</a>
-						      	</h4>
-						    </div>
-						    <div id="collapse1" class="panel-collapse collapse in">
-						      	<div class="panel-body">
-						      		<form id ="addNewUser" action='' method='POST' class='ajax_create_user form-horizontal' role='form'>
+					<div id="adminWrapper">
+						<div id="adminPanel">
+							<ul class="nav nav-pills nav-stacked">
+							  <li class="active"><a data-toggle="pill" href="#newUser">Neuen Benutzer anlegen</a></li>
+							  <li><a data-toggle="pill" href="#deleteUser">Benutzer löschen</a></li>
+							</ul>
+						</div> <!-- Ende adminPanel -->
+						<div id="adminContent">
+							<div class="tab-content">
+								<div id="newUser" class="tab-pane fade in active">
+								    <form id ="addNewUser" action='' method='POST' class='ajax_create_user form-horizontal' role='form'>
 										<div class="form-group">
 											<label for="newBenutzername" class="col-xs-4 control-label">Benutzername:</label>
 											<div class="col-xs-8">
@@ -944,30 +944,22 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 										 	Benutzer
 										 	</label>
 										</div>
+										<br>
 										<button type="submit" class="btn btn-primary"><span class='fa fa-user-plus'></span> Neuen Benutzer anlegen</button>
 									</form>
-							    </div>
-							</div>
-						</div>
-						<div class="panel panel-default">
-						    <div class="panel-heading">
-						      	<h4 class="panel-title">
-						        <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">
-						        Benutzer löschen</a>
-						      	</h4>
-						    </div>
-						    <div id="collapse2" class="panel-collapse collapse">
-						     	<div class="panel-body">
-							     	<form id ="deleteUser" action='' method='POST' class='ajax_delete_user form-horizontal' role='form'>
+								</div> <!-- Ende newUser -->
+								<div id="deleteUser" class="tab-pane fade">
+								    <form id ="deleteUser" action='' method='POST' class='ajax_delete_user form-horizontal' role='form'>
 							     		<select multiple class="form-control listOfAllUsers" type="text" id="deleteUsers" name="users[]" size="10">
 										<!-- Liste aller Nutzernamen -->
 										</select>
+										<br>
 										<button type="submit" class="btn btn-primary"><span class='fa fa-user-times'></span> Ausgewählte Benutzer löschen</button>
 									</form>
-							    </div>
-						    </div>
-						</div>
-					</div>
+								</div> <!-- Ende deleteUser -->
+							</div> <!-- Ende tab-content -->
+						</div> <!-- Ende adminContent -->
+					</div> <!-- Ende adminWrapper -->
 				</div><!-- Ende modal-body -->
 			</div><!-- Ende modal-content -->
 		</div><!-- Ende modal-dialog -->
@@ -994,7 +986,7 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 					<li role="button" ><a data-toggle="modal" data-target="#modal_license"><i class="fa fa-info-circle" aria-hidden="true"></i> Informationen</a></li>
 					<?php
 					if ($accessLevel == "admin"){
-						echo '<li id="nutzerverwaltung" data-placement="bottom" title="Nutzerverwaltung" role="button"><a data-toggle="modal" data-target="#modalNutzerverwaltung"><i class="fa fa-users"></i> Nutzerverwaltung</a></li>';
+						echo '<li id="adminMenu" data-placement="bottom" title="Administration" role="button"><a data-toggle="modal" data-target="#modalAdmin"><i class="fa fa-cogs"></i> Administration</a></li>';
 					}
 					?>					
 				</ul>

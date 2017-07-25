@@ -27,6 +27,20 @@ html, body {
 	font-family: 'Roboto','sans-serif';
 }
 
+#adminWrapper{
+	display:flex;
+ 	flex-wrap:wrap;
+ 	flex-direction:row;
+}
+
+#adminPanel{
+	border-right: solid 1px #ccc;
+	padding-right:15px;
+}
+
+#adminContent{
+	padding-left:15px;
+}
 .currentProject{
 	color:#eee;
 	word-wrap:break-word;
