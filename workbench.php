@@ -271,7 +271,7 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 	<script > // Google DrawingManager laden
 	function startDrawingManager(map){
 		var marker_color = "white"; //Marker standardmäßig als gelbe Marker zeichnen
-		var drawingManager = new google.maps.drawing.DrawingManager({
+		drawingManager = new google.maps.drawing.DrawingManager({
 			drawingMode: google.maps.drawing.OverlayType.null,
 			drawingControl: false,
 			polylineOptions: {

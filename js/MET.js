@@ -189,6 +189,10 @@ function drawPolygon(map, lat, lon, geoAdresse, winkel, richtung, innen, aussen,
 		objectArray.push(marker);
 		metCounter += 1;
 
+		drawingManager.setOptions({
+						drawingMode: google.maps.drawing.OverlayType.null
+					});
+
 	marker.addListener('click', function() {//Informationsfenster bei Klick auf Marker öffnen
 	activeObject = this; // Setzt den aktuell ausgewählten marker als aktiv
 	infoWindow.setContent('<h5>Freisetzungsort</h5>'+
