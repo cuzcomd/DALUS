@@ -1407,40 +1407,43 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 	<script defer> // Ajax für Speichern und Löschen von Objekten
 		function saveProjectStatus(){ // Erzeugt neue Messpunkte oder aktualisiert Vorhandene in der Datenbank
 			objectArray.forEach(function(entry) {
-				var obj_farbe = entry.obj_farbe;
-				var obj_lat = entry.obj_lat;
-				var obj_lon = entry.obj_lon;
-				var obj_typ = entry.obj_typ;
-				var obj_nummer = entry.obj_nummer;
-				var obj_hinweis = entry.obj_hinweis;
-				var obj_messwert = entry.obj_messwert;
-				var obj_parameter =JSON.stringify(entry.obj_parameter);
-				var data = {
-					"task" : "save",
-					"obj_prj_id" : prj_id,
-					"obj_color" : obj_farbe,
-					"obj_lat" : obj_lat,
-					"obj_lon" : obj_lon,
-					"obj_nummer" : obj_nummer,
-					"obj_hinweis" : obj_hinweis,
-					"obj_messwert" : obj_messwert,
-					"obj_parameter" : obj_parameter,
-					"obj_typ" : obj_typ
-				};
-				data = $(this).serialize() + "&" + $.param(data);
-				$.ajax({
-					type: "POST",
-					dataType: "json",
-					url: "php/geometry.php",
-					data:data,
-					success: function(data) {
-					},
-					error: function(xhr, desc, err) {
-						console.log(xhr);
-						console.log("Details: " + desc + "\nError:" + err);
-					}
-				}); //Ende ajax
-				return false;
+				if (entry.obj_typ != "polygon1" && entry.obj_typ != "polygon" && entry.obj_typ != "polygonCenter" )
+				{
+					var obj_farbe = entry.obj_farbe;
+					var obj_lat = entry.obj_lat;
+					var obj_lon = entry.obj_lon;
+					var obj_typ = entry.obj_typ;
+					var obj_nummer = entry.obj_nummer;
+					var obj_hinweis = entry.obj_hinweis;
+					var obj_messwert = entry.obj_messwert;
+					var obj_parameter =JSON.stringify(entry.obj_parameter);
+					var data = {
+						"task" : "save",
+						"obj_prj_id" : prj_id,
+						"obj_color" : obj_farbe,
+						"obj_lat" : obj_lat,
+						"obj_lon" : obj_lon,
+						"obj_nummer" : obj_nummer,
+						"obj_hinweis" : obj_hinweis,
+						"obj_messwert" : obj_messwert,
+						"obj_parameter" : obj_parameter,
+						"obj_typ" : obj_typ
+					};
+					data = $(this).serialize() + "&" + $.param(data);
+					$.ajax({
+						type: "POST",
+						dataType: "json",
+						url: "php/geometry.php",
+						data:data,
+						success: function(data) {
+						},
+						error: function(xhr, desc, err) {
+							console.log(xhr);
+							console.log("Details: " + desc + "\nError:" + err);
+						}
+					}); //Ende ajax
+					return false;
+				} //Ende if-Anweisung
 			});//Ende forEach()
 
 			deleteArray.forEach(function(entry) {
