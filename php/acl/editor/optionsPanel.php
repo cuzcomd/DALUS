@@ -1,0 +1,1 @@
+<li><a data-toggle="pill" href="#editKataster">Messkataster bearbeiten</a></li>

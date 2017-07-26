@@ -27,10 +27,20 @@ html, body {
 	font-family: 'Roboto','sans-serif';
 }
 
-#adminWrapper{
-	display:flex;
- 	flex-wrap:wrap;
- 	flex-direction:row;
+.activeUserMenu{
+	border-bottom: 1px solid #ccc;
+}
+
+.geocoderButtons{
+	padding-bottom:15px;
+}
+
+.geocoderButtons .btn{
+	margin-bottom:5px;
+}
+
+.btnInfoWindow{
+	height: 46px;
 }
 
 #adminPanel{
@@ -41,6 +51,7 @@ html, body {
 #adminContent{
 	padding-left:15px;
 }
+
 .currentProject{
 	color:#eee;
 	word-wrap:break-word;
@@ -159,3 +170,9 @@ a{
  }
 
  .fa-toggle-on{color:rgb(39, 160, 79);}
+
+ @media (min-width: 768px){
+.modalOptions{
+	width:700px !important;
+}
+}

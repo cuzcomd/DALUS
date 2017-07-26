@@ -447,7 +447,7 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 						'<form><div class="form-group"> <label for="messwert">Messwert [ppm]</label><input type="text" class="form-control" id="messwert" cols="50" value = "'+objectArray[index].obj_messwert+'" onchange="updateMesswert('+objectArray[index].obj_nummer+', this.value);"></div>'+
 						'<div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis('+objectArray[index].obj_nummer+', this.value);" rows="5">'+objectArray[index].obj_hinweis+'</textarea></div></form>'+
 						'<div class="btn-group" role="group" aria-label="Optionen">'+
-						'<button type="button" class="btn btn-default btn-danger" style="height:46px;" id="deleteButton" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button>'+
+						'<button type="button" class="btn btn-default btn-danger btnInfoWindow" id="deleteButton" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button>'+
 						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',1);"><img src="images/white.png"></button>'+
 						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',2);"><img src="images/green.png"></button>'+
 						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',3);"><img src="images/blue.png"></button>'+
@@ -464,7 +464,7 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 						'<form><div class="form-group"> <label for="messwert">Messwert [ppm]</label><input type="text" class="form-control" id="messwert" cols="50" value = "'+objectArray[index].obj_messwert+'" onchange="updateMesswert('+objectArray[index].obj_nummer+', this.value);"></div>'+
 						'<div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis('+objectArray[index].obj_nummer+', this.value);" rows="5">'+objectArray[index].obj_hinweis+'</textarea></div></form>'+
 						'<div class="btn-group" role="group" aria-label="Optionen">'+
-						'<button type="button" class="btn btn-default btn-danger" style="height:46px;" id="deleteButton" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button>'+
+						'<button type="button" class="btn btn-default btn-danger btnInfoWindow" id="deleteButton" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button>'+
 						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',1);"><img src="images/white.png"></button>'+
 						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',2);"><img src="images/green.png"></button>'+
 						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',3);"><img src="images/blue.png"></button>'+
@@ -685,44 +685,6 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 		</div><!-- Ende modal-dialog -->
 	</div><!-- Ende Modal_edit_project -->
 
-	<div class="modal fade" id="modalUserSettings" tabindex="-1" role="dialog" aria-labelledby="Profil">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title" id="myModalLabel">Daten ändern</h4>
-				</div>
-				<div class="modal-body">
-					<form action='' method='POST' class='ajax_edit_user form-horizontal' role='form'>
-						<div class="form-group">
-							<label for="username" class="control-label col-sm-4">Benutzername</label>
-							<div class="col-sm-8">
-								<input class="form-control" id="username" type="text" placeholder="Benutzername" name="username" value="" size="40" maxlength="250" required>
-							</div>
-							<label for="passwordOld" class="control-label col-sm-4">Aktuelles Passwort</label>
-							<div class="col-sm-8">     	
-								<input type="password" id="passwordOld" size="40"  maxlength="250" name="oldPassword" class="form-control" placeholder="Aktuelles Passwort" required>
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="password1" class="control-label col-sm-4">Neues Passwort</label> 
-							<div class="col-sm-8">    	
-								<input type="password" id="password1" size="40"  maxlength="250" name="password1" class="form-control" placeholder="Neues Passwort">
-							</div>
-							<label for="password2" class="control-label col-sm-4">Passwort wiederholen</label>
-							<div class="col-sm-8">
-								<input type="password" id="password1" size="40"  maxlength="250" name="password2" class="form-control" placeholder="Neues Passwort">
-							</div>
-						</div>
-						<div class="text-center">
-							<button type='submit' class='btn btn-primary'><span class='fa fa-check-square-o'></span> Änderung speichern</button>
-						</div>
-					</form>
-				</div><!-- Ende modal-body -->
-			</div><!-- Ende modal-content -->
-		</div><!-- Ende modal-dialog -->
-	</div><!-- Ende Modal_UserSettings -->
-
 	<div class="modal fade" id="modal_MET" tabindex="-1" role="dialog" aria-labelledby="MET Ausbreitungsmodell">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
@@ -733,11 +695,11 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 				<div class="modal-body">
 					<div id="wrapper_winkelrechner">
 						<div id="geocoder">
-							<div style="padding-bottom:15px;">
-								<button type="button" class="btn btn-primary" id="calcMET" data-toggle="tooltip" title="MET-Freisetzungsort aus Adressfeld lesen" style="margin-bottom:5px;"><i class="fa fa-crosshairs"></i> Zeichnen (Adresse)</button>
-								<button type="button" class="btn btn-primary" id="calcMETmanual" data-toggle="tooltip" title="MET Freisetzungsort manuell festlegen" style="margin-bottom:5px;"><i class="fa fa-crosshairs"></i> Zeichnen (Manuell)</button>
+							<div class="geocoderButtons">
+								<button type="button" class="btn btn-primary" id="calcMET" data-toggle="tooltip" title="MET-Freisetzungsort aus Adressfeld lesen" ><i class="fa fa-crosshairs"></i> Zeichnen (Adresse)</button>
+								<button type="button" class="btn btn-primary" id="calcMETmanual" data-toggle="tooltip" title="MET Freisetzungsort manuell festlegen"><i class="fa fa-crosshairs"></i> Zeichnen (Manuell)</button>
 								<span data-toggle="tooltip" title="MET Ausbreitungswinkel berechnen">
-									<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalWinkel" style="margin-bottom:5px;"><i class="fa fa-arrows-h"></i> Winkel bestimmen</button>
+									<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalWinkel"><i class="fa fa-arrows-h"></i> Winkel bestimmen</button>
 								</span>
 							</div>
 							<form id="input-form" class="form-horizontal" role="form">
@@ -889,41 +851,43 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 		</div><!-- Ende modal-dialog -->
 	</div><!-- Ende Modal_edit_project -->
 
-	<div class="modal fade" id="modalAdmin" tabindex="-1" role="dialog" aria-labelledby="Administration">
-		<div class="modal-dialog" role="document">
+	<div class="modal fade" id="modalOptions" tabindex="-1" role="dialog" aria-labelledby="Optionen">
+		<div class="modalOptions modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title" id="myModalLabel">Administration</h4>
+					<h4 class="modal-title" id="myModalLabel">Optionen </h4>
 				</div>
 				<div class="modal-body">
-					<div id="adminWrapper">
-						<div id="adminPanel">
+					<div id="adminWrapper" class="row">
+						<div id="adminPanel" class="col-xs-4">
 							<ul class="nav nav-pills nav-stacked">
-							  <?php
-							  if ($accessLevel == 'admin')
-							  {
-							  	include_once('php/admin/adminPanel.php');
-							  }
-							  else if ($accessLevel == 'editor' || $accessLevel == 'admin')
-							  {
-							  	include_once('php/admin/editorPanel.php');
-							  }
-							  ?>
+								<?php
+									include_once('php/acl/user/optionsPanel.php'); //Optionen für ACL "user" laden
+								  	if ($accessLevel == 'admin')
+								 	{
+								  		include_once('php/acl/admin/optionsPanel.php'); //Optionen für ACL "admin" laden
+								  	}
+								  	if ($accessLevel == 'editor' || $accessLevel == 'admin')
+								  	{
+								  		include_once('php/acl/editor/optionsPanel.php'); //Optionen für ACL "editor" laden
+								  	}
+								?>
 							</ul>
 						</div> <!-- Ende adminPanel -->
-						<div id="adminContent">
+						<div id="adminContent" class="col-xs-8">
 							<div class="tab-content">
 								<?php
-							  if ($accessLevel == 'admin')
-							  {
-							  	include_once('php/admin/adminContent.php');
-							  }
-							  else if ($accessLevel == 'editor' || $accessLevel == 'admin')
-							  {
-							  	include_once('php/admin/editorContent.php');
-							  }
-							  ?>
+									include_once('php/acl/user/optionsContent.php'); //Optionen für ACL "user" laden
+									if ($accessLevel == 'admin')
+									{
+										include_once('php/acl/admin/optionsContent.php'); //Optionen für ACL "admin" laden
+									}
+									if ($accessLevel == 'editor' || $accessLevel == 'admin')
+									{
+									  	include_once('php/acl/editor/optionsContent.php'); //Optionen für ACL "editor" laden
+									}
+								?>
 							</div> <!-- Ende tab-content -->
 						</div> <!-- Ende adminContent -->
 					</div> <!-- Ende adminWrapper -->
@@ -941,21 +905,17 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 				<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bars" aria-hidden="true"></i>
 				<span class="caret"></span></a>
 				<ul class="dropdown-menu">
-					<li style="border-bottom: 1px solid #ccc;" data-placement="bottom" title="Profil bearbeiten" role="button"><a data-toggle="modal" data-target="#modalUserSettings"><i class="fa fa-user-circle" aria-hidden="true"></i><span id="activeUser">&nbsp; Kein Benutzer aktiv</span> <i class='fa fa-cogs' aria-hidden="true"></i></a></li>
+					<li class="activeUserMenu" data-placement="bottom" title="Angemeldeter Benutzer" ><a><i class="fa fa-user-circle" aria-hidden="true"></i><span id="activeUser">&nbsp; Kein Benutzer aktiv</span></a></li>
 					<li id="newProject" data-placement="bottom" title="Neues Projekt" role="button"><a data-toggle="modal" data-target="#modal_new_project"><i class="fa fa-pencil-square-o"></i> Neues Projekt</a></li>
 					<li id="openProject" data-placement="bottom" title="Projekt öffnen" role="button"><a data-toggle="modal" data-target="#modal_open_project"><i class="fa fa-folder-open-o"></i> Projekt öffnen</a></li>
 					<li id="editProject" data-placement="bottom" title="Projekt ändern" role="button"><a data-toggle="modal" data-target="#modal_edit_project"><i class="fa fa-pencil"></i> Projekt ändern</a></li>
-					<li id="saveProject" role="button"><a><i class="fa fa-floppy-o" aria-hidden="true"></i> Projekt speichern</a></li>
-					<li id="deleteProject" role="button" ><a><i class="fa fa-floppy-o" aria-hidden="true"></i> Projekt löschen</a></li>
-					<li id="exportKML" role="button" onclick="toKML()"><a id="download-link" href="data:;base64," download><i class="fa fa-floppy-o" aria-hidden="true"></i> kml-Datei exportieren</a></li>
-					<li id="printMap" role="button" onclick="printMap();"><a><i class="fa fa-print" aria-hidden="true"></i> Ansicht drucken</a></li>
-					<li role="button" onclick="location.href='php/logout'"><a><i class="fa fa-sign-out" aria-hidden="true"></i> Abmelden</a></li>
-					<li role="button" ><a data-toggle="modal" data-target="#modal_license"><i class="fa fa-info-circle" aria-hidden="true"></i> Informationen</a></li>
-					<?php
-					if ($accessLevel == "admin" || $accessLevel == "editor"){
-						echo '<li id="adminMenu" data-placement="bottom" title="Administration" role="button"><a data-toggle="modal" data-target="#modalAdmin"><i class="fa fa-cogs"></i> Administration</a></li>';
-					}
-					?>					
+					<li id="saveProject" data-placement="bottom" title="Projekt speichern" role="button"><a><i class="fa fa-floppy-o" aria-hidden="true"></i> Projekt speichern</a></li>
+					<li id="deleteProject" data-placement="bottom" title="Projekt löschen" role="button" ><a><i class="fa fa-floppy-o" aria-hidden="true"></i> Projekt löschen</a></li>
+					<li id="exportKML" data-placement="bottom" title="Objekte als kml-Datei exportieren" role="button" onclick="toKML()"><a id="download-link" href="data:;base64," download><i class="fa fa-floppy-o" aria-hidden="true"></i> kml-Datei exportieren</a></li>
+					<li id="printMap" data-placement="bottom" title="Aktuellen Kartenausschnitt drucken" role="button" onclick="printMap();"><a><i class="fa fa-print" aria-hidden="true"></i> Ansicht drucken</a></li>
+					<li id="logout" data-placement="bottom" title="Akteuellen Benutzer abmelden" role="button" onclick="location.href='php/logout'"><a><i class="fa fa-sign-out" aria-hidden="true"></i> Abmelden</a></li>
+					<li id="adminMenu" data-placement="bottom" title="Optionen" role="button"><a data-toggle="modal" data-target="#modalOptions"><i class="fa fa-cogs"></i> Optionen</a></li>	
+					<li id="infofenster" data-placement="bottom" title="Informationen über DALUS" role="button" ><a data-toggle="modal" data-target="#modal_license"><i class="fa fa-info-circle" aria-hidden="true"></i> Informationen</a></li>				
 				</ul>
 			</li>
 			<li class="dropdown" id ="parameter" role="presentation" data-toggle="tooltip" data-placement="bottom" title="Parameter">
@@ -1130,7 +1090,7 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 						'<form><div class="form-group"> <label for="messwert">Messwert [ppm]</label><input type="text" class="form-control" id="messwert" cols="50" value = "'+objectArray[index].obj_messwert+'" onchange="updateMesswert('+objectArray[index].obj_nummer+', this.value);"></div>'+
 						'<div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis('+objectArray[index].obj_nummer+', this.value);" rows="5">'+objectArray[index].obj_hinweis+'</textarea></div></form>'+
 						'<div class="btn-group" role="group" aria-label="Optionen">'+
-						'<button type="button" class="btn btn-default btn-danger" style="height:46px;" id="deleteButton" onclick="deleteObject();"><i class="fa fa-trash-o"></i></button>'+
+						'<button type="button" class="btn btn-default btn-danger btnInfoWindow" id="deleteButton" onclick="deleteObject();"><i class="fa fa-trash-o"></i></button>'+
 						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',1);"><img src="images/white.png"></button>'+
 						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',2);"><img src="images/green.png"></button>'+
 						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',3);"><img src="images/blue.png"></button>'+
@@ -1147,7 +1107,7 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 						'<form><div class="form-group"> <label for="messwert">Messwert [ppm]</label><input type="text" class="form-control" id="messwert" cols="50" value = "'+objectArray[index].obj_messwert+'" onchange="updateMesswert('+objectArray[index].obj_nummer+', this.value);"></div>'+
 						'<div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis('+objectArray[index].obj_nummer+', this.value);" rows="5">'+objectArray[index].obj_hinweis+'</textarea></div></form>'+
 						'<div class="btn-group" role="group" aria-label="Optionen">'+
-						'<button type="button" class="btn btn-default btn-danger" style="height:46px;" id="deleteButton" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button>'+
+						'<button type="button" class="btn btn-default btn-danger btnInfoWindow" id="deleteButton" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button>'+
 						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',1);"><img src="images/white.png"></button>'+
 						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',2);"><img src="images/green.png"></button>'+
 						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',3);"><img src="images/blue.png"></button>'+
