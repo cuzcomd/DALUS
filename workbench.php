@@ -903,11 +903,11 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 							  <?php
 							  if ($accessLevel == 'admin')
 							  {
-							  	include_once('php/adminPanel.php');
+							  	include_once('php/admin/adminPanel.php');
 							  }
 							  else if ($accessLevel == 'editor' || $accessLevel == 'admin')
 							  {
-							  	include_once('php/editorPanel.php');
+							  	include_once('php/admin/editorPanel.php');
 							  }
 							  ?>
 							</ul>
@@ -917,11 +917,11 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 								<?php
 							  if ($accessLevel == 'admin')
 							  {
-							  	include_once('php/adminContent.php');
+							  	include_once('php/admin/adminContent.php');
 							  }
 							  else if ($accessLevel == 'editor' || $accessLevel == 'admin')
 							  {
-							  	include_once('php/editorContent.php');
+							  	include_once('php/admin/editorContent.php');
 							  }
 							  ?>
 							</div> <!-- Ende tab-content -->
