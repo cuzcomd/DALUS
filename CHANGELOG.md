@@ -1,5 +1,15 @@
 ## Changelog
 
+### 1.4.0 (28.07.2017)
+* Feature: Neue Nutzerberechtigung "Editor" (Kann Änderungen an manchen Parametern der Datenbank vornehmen, z. B. das Messkataster bearbeiten)
+* Feature: Administratoren haben die Möglichkeit, GPS-Tracking anzuzeigen (Konfiguration über das Frontend ist noch nicht vollständig umgesetzt!!!)
+* Feature: Vor dem Löschen eines Projekts erfolgt eine Sicherheitsabfrage
+* Style: Off-canvas Menü für mobile Endgeräte eingeführt
+* Style: Die Nutzerverwaltung heißt jetzt Optionen und gewährt Konfigurationsmöglichkeiten für die Datenbank und das eigene Nutzerprofil, je nach Berechtigung
+* Bug: Die einzelnen Polygone eines MET-Winkels werden nicht mehr separat in der Datenbank gespeichert
+* Bug: Das Speichern von kml-Dateien ist jetzt unter iOS und Safari direkt möglich.
+
+
 ### 1.3.1 (24.07.2017)
 * Feature: Adressen können jetzt direkt in der Karte gesucht werden
 * Bugfix: Öffnen des Messpunkt-Zeichenwerkzeugs ist in iOS und Safari jetzt möglich
@@ -10,7 +20,7 @@
 * Feature: Export der Projektgeometrie als kml-Datei
 
 ### 1.2.0 (20.07.2017)
-* Feature: Einführung von Benutzerrechten(Access Levels) Administrator und Benutzer
+* Feature: Einführung von Benutzerrechten (ACL: Access Control Levels) Administrator und Benutzer
 * Feature: Administratoren haben Zugriff auf die Benutzerverwaltung und können neue Nutzer anlegen und Bestehende löschen
 * Bugfix: Der Menüpunkt "Abmelden" hat zu einer falschen Adresse geführt und dei Sitzun nicht korrekt beendet
 

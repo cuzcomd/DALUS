@@ -3,32 +3,213 @@ html, body {
 	width:100%;
 	margin: 0;
 	padding: 0;
-	}
-      
+}
+
+a{
+	text-decoration:none;
+	color:#eee;
+}
+
+#adminContent{
+	padding-left:15px;
+}
+
+#adminPanel{
+	border-right: solid 1px #ccc;
+	padding-right:15px;
+}
+
+#arrow{
+	vertical-align:middle;
+	height:240px;
+} 
+
+#form_winkelrechner{
+	padding-bottom:15px;
+}
+
 #map {
     height: 100%;
 	display:relative;
-	}
-	
-.tab-content {
-	padding-top:10px;
-	}
-	
-.floating-panel {
-	width:320px;
-	height:100%;
-	position: absolute;
-    left: 0px;
-	top: 0px;
-	z-index: 5;
-	background-color: rgb(51, 68, 85);
-	border: 1px solid #999;
-	text-align: left;
-	font-family: 'Roboto','sans-serif';
 }
 
+#messpunktdiv, #saveProject, #deleteProject, #editProject, #kmlString, #module1, #module2, #module3{
+	display:none;
+}
+
+#pac-input {
+	text-overflow: ellipsis;
+}
+
+#pac-input:focus {
+	border-color: #4d90fe;
+}
+
+#target {
+	width: 345px;
+}
+
+#type-selector {
+	color: #fff;
+	background-color: #4d90fe;
+	padding: 5px 11px 0px 11px;
+}
+
+#type-selector label {
+	font-family: Roboto;
+	font-size: 13px;
+	font-weight: 300;
+}
+
+#wrapper_winkelrechner{
+ 	display:flex;
+ 	flex-wrap:wrap;
+ }
+
 .activeUserMenu{
-	border-bottom: 1px solid #ccc;
+	color:#eee;
+	padding: 0 15px 0 15px;
+}
+
+.btn-met{
+	box-shadow: none !important;
+	padding:0;
+}
+
+.btnInfoWindow{
+	height: 46px;
+}
+
+.currentProject{
+	color:#eee;
+	word-wrap:break-word;
+	padding: 0 15px;
+}
+
+.dalus-logo{
+	padding-left: 3px;
+	margin:3px auto;
+	float:left;
+}
+
+.dropdown-backdrop {
+	display:none;
+}
+
+.dropdown-menu>li>a{
+	padding:10px 20px;
+}
+
+.fa-toggle-on{
+	color:rgb(39, 160, 79);
+}
+
+.funkyradio div {
+  clear: both;
+  overflow: hidden;
+}
+
+.funkyradio label {
+  width: 100%;
+  border-radius: 3px;
+  border: 1px solid #D1D3D4;
+  font-weight: normal;
+}
+
+.funkyradio input[type="radio"]:empty,
+.funkyradio input[type="checkbox"]:empty {
+  display: none;
+}
+
+.funkyradio input[type="radio"]:empty ~ label,
+.funkyradio input[type="checkbox"]:empty ~ label {
+  position: relative;
+  line-height: 2.5em;
+  text-indent: 3.25em;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+.funkyradio input[type="radio"]:empty ~ label:before,
+.funkyradio input[type="checkbox"]:empty ~ label:before {
+  position: absolute;
+  display: block;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  content: '';
+  width: 2.5em;
+  background: #D1D3D4;
+  border-radius: 3px 0 0 3px;
+}
+
+.funkyradio input[type="radio"]:hover:not(:checked) ~ label,
+.funkyradio input[type="checkbox"]:hover:not(:checked) ~ label {
+  color: #888;
+}
+
+.funkyradio input[type="radio"]:hover:not(:checked) ~ label:before,
+.funkyradio input[type="checkbox"]:hover:not(:checked) ~ label:before {
+  content: '\2714';
+  text-indent: .9em;
+  color: #C2C2C2;
+}
+
+.funkyradio input[type="radio"]:checked ~ label,
+.funkyradio input[type="checkbox"]:checked ~ label {
+  color: #777;
+}
+
+.funkyradio input[type="radio"]:checked ~ label:before,
+.funkyradio input[type="checkbox"]:checked ~ label:before {
+  content: '\2714';
+  text-indent: .9em;
+  color: #333;
+  background-color: #ccc;
+}
+
+.funkyradio input[type="radio"]:focus ~ label:before,
+.funkyradio input[type="checkbox"]:focus ~ label:before {
+  box-shadow: 0 0 0 3px #999;
+}
+
+.funkyradio-default input[type="radio"]:checked ~ label:before,
+.funkyradio-default input[type="checkbox"]:checked ~ label:before {
+  color: #333;
+  background-color: #ccc;
+}
+
+.funkyradio-primary input[type="radio"]:checked ~ label:before,
+.funkyradio-primary input[type="checkbox"]:checked ~ label:before {
+  color: #fff;
+  background-color: #337ab7;
+}
+
+.funkyradio-success input[type="radio"]:checked ~ label:before,
+.funkyradio-success input[type="checkbox"]:checked ~ label:before {
+  color: #fff;
+  background-color: #5cb85c;
+}
+
+.funkyradio-danger input[type="radio"]:checked ~ label:before,
+.funkyradio-danger input[type="checkbox"]:checked ~ label:before {
+  color: #fff;
+  background-color: #d9534f;
+}
+
+.funkyradio-warning input[type="radio"]:checked ~ label:before,
+.funkyradio-warning input[type="checkbox"]:checked ~ label:before {
+  color: #fff;
+  background-color: #f0ad4e;
+}
+
+.funkyradio-info input[type="radio"]:checked ~ label:before,
+.funkyradio-info input[type="checkbox"]:checked ~ label:before {
+  color: #fff;
+  background-color: #5bc0de;
 }
 
 .geocoderButtons{
@@ -39,94 +220,27 @@ html, body {
 	margin-bottom:5px;
 }
 
-.btnInfoWindow{
-	height: 46px;
-}
-
-#adminPanel{
-	border-right: solid 1px #ccc;
-	padding-right:15px;
-}
-
-#adminContent{
-	padding-left:15px;
-}
-
-.currentProject{
-	color:#eee;
-	word-wrap:break-word;
-}
-
-a{
-	text-decoration:none;
-	color:#eee;
+.input-group-addon:first-child, .input-group-addon:last-child{
+	min-width:50px;
 }
 
 .modal a{
 	color:#27A04F;
 }
 
-#form_winkelrechner{
-	padding-bottom:15px;
+.module{
+	border-top:1px solid #eee;
 }
 
-#messpunktdiv, #saveProject, #deleteProject, #editProject, #kmlString{
-	display:none;
-}
+.moduleWrapper{
+ 	display:flex;
+ 	flex-direction:column;
+ 	color:#eee;
+ 	padding:15px;
+ }
 
-.windrose{
-	position:absolute;
-	bottom:20px;
-	left:20px;
-	background: url('../images/windrose.png') rgba(51, 68, 85, 0.8);
-	border-radius:200px;
-	width:240px;
-	height:240px;
-	text-align:center;
-	line-height:240px;
-	z-index:9999;
-	display:none;
-}
-
-#arrow{
-	vertical-align:middle;
-}
-
-.nav-werkzeuge{
-	display:inline-block;
-}
-
-      #pac-input {
-        text-overflow: ellipsis;
-      }
-
-      #pac-input:focus {
-        border-color: #4d90fe;
-      }
-
-      .pac-container {
-        font-family: Roboto;
-      }
-
-      #type-selector {
-        color: #fff;
-        background-color: #4d90fe;
-        padding: 5px 11px 0px 11px;
-      }
-
-      #type-selector label {
-        font-family: Roboto;
-        font-size: 13px;
-        font-weight: 300;
-      }
-      #target {
-        width: 345px;
-      }
-
-@media print {
-  img {
-    max-width: none !important;
-  }
+.navbar-default{
+	background-color:#345;
 }
 
 .nav>li>a {
@@ -138,41 +252,103 @@ a{
 	background-color:#345;
 }
 
-.input-group-addon:first-child, .input-group-addon:last-child{
-	min-width:50px;
+.navmenu{
+	overflow:hidden;
 }
 
-.btn-met{
-	box-shadow: none !important;
-	padding:0;
+.nav-werkzeuge{
+	border-bottom: 1px solid #eee;
 }
 
-.dropdown-menu>li>a{
-	padding:10px 20px;
+.pac-container {
+	font-family: Roboto;
 }
-@media only screen 
-  and (max-device-width: 1024px){
-.floating-panel {
+
+.searchbar{
+	margin: 0 15px;
+}
+
+.tab-content {
+	padding-top:10px;
+}
+
+.userInformation{
+	padding-right:15px;
+	line-height:40px;
+}
+
+.userInformation button{
+	margin:4px 0;
+}
+
+.userInformation a{
+	color:#345;
+}
+
+.werkzeuge{
+	padding: 5px 15px;
+}
+
+.werkzeuge a{
+	padding:10px 14px !important;
+}
+
+.werkzeuge-top{
+	height:39px;
+	margin:3px 0 3px 30px;
+	display:inline-block;
+}
+
+.windrose{
+	background: url('../images/windrose.png') rgba(51, 68, 85, 0.8);
+	background-size:contain;
+	background-repeat: no-repeat;
+	background-position:center;
 	width:100%;
-	height:auto;
+	text-align:center;
+	line-height:100%;
+}
+
+@media (max-device-width: 1024px){
+	#arrow{
+		width:100%;
+		height:100%;
+		min-width: 256px;
+		min-height: 256px;
+		max-width: 256px;
+		max-height: 256px;
 	}
 
 	.tab-content{
 		margin: 0 auto;
 		padding-bottom:10px;
 	}
+ 	.windrose{
+ 		padding:0;
+		width:100%;
+		min-width: 256px;
+    	min-height: 256px;
+    	max-width: 256px;
+    	max-height: 256px;
+ 	}
+} 
 
-  } 
-  
- #wrapper_winkelrechner{
- 	display:flex;
- 	flex-wrap:wrap;
- }
+@media (min-width: 768px){
+	.modal-dialog {
+	    width: 70vw;
+	}
 
- .fa-toggle-on{color:rgb(39, 160, 79);}
-
- @media (min-width: 768px){
-.modalOptions{
-	width:700px !important;
+	.navbar-toggle {
+	    display: inline-block;
+	}
 }
+
+@media (max-width: 991px){
+	.activeUserMenu{
+	padding: 15px 15px 0 15px;
+	}
+
+	.modal.in { 
+	display:block!important;
+	}
 }

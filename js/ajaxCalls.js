@@ -109,7 +109,7 @@
 			$.ajax({
 				type: "POST",
 				dataType: "json",
-				url: "php/projects.php",
+				url: "php/users.php",
 				data: data,
 				success: function(data) {
 					switch(data){
@@ -150,7 +150,7 @@
 				$.ajax({
 					type: "POST",
 					dataType: "json",
-					url: "php/projects.php",
+					url: "php/users.php",
 					data: data,
 					success: function(data) {
 						switch(data){
@@ -193,7 +193,7 @@
 			$.ajax({
 				type: "POST",
 				dataType: "json",
-				url: "php/projects.php",
+				url: "php/users.php",
 				data: data,
 				success: function(data) {
 					switch(data){

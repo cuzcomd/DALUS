@@ -9,6 +9,7 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
 	<title>DALUS</title>
 	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<link href="css/jasny-bootstrap.min.css" rel="stylesheet" media="screen">
 	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 	<!--[if lt IE 9]>
@@ -26,10 +27,48 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 	<link rel="stylesheet" href="css/font-awesome.min.css">
 	<link type="text/css" rel="stylesheet" href="css/style.css">
 	<script src="js/jquery.min.js"></script>
+	<link rel="stylesheet" href="css/datetimepicker.css">
 	<link rel="stylesheet" href="css/alertify/alertify.core.css" />
 	<link rel="stylesheet" href="css/alertify/alertify.bootstrap.css" />
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script> <!-- Script zum dynamischen Anzeigen von Statusmeldungen -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" /> <!-- CSS für Script zum dynamischen Anzeigen von Statusmeldungen -->
+	<script> // OSM Layer laden
+		function loadOSMLayer(){
+			var mapTypeIds = [];
+			for(var type in google.maps.MapTypeId) {
+				mapTypeIds.push(google.maps.MapTypeId[type]);
+			}
+			mapTypeIds.push("OSM");
+			map = new google.maps.Map(document.getElementById('map'), {
+				zoom: 14,
+				mapTypeId: "OSM",
+				mapTypeControlOptions: {
+					mapTypeIds: mapTypeIds,
+					style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+					position: google.maps.ControlPosition.BOTTOM_RIGHT
+				},
+				center: {lat: 52.13024, lng: 11.56567700000005} // Koordinaten des Kartenmittelpunkts
+			});
+			
+			OSM ='OSM'; //Variable OpenStreetMap definieren
+			map.mapTypes.set("OSM", new google.maps.ImageMapType({
+				getTileUrl: function(coord, zoom) {
+	            // "Wrap" x (longitude) at 180th meridian properly
+	            // NB: Don't touch coord.x because coord param is by reference, and changing its x property breakes something in Google's lib 
+					var tilesPerGlobe = 1 << zoom;
+					var x = coord.x % tilesPerGlobe;
+					if (x < 0) {
+						x = tilesPerGlobe+x;
+					}
+	            // Wrap y (latitude) in a like manner if you want to enable vertical infinite scroll
+					return "https://tile.openstreetmap.org/" + zoom + "/" + x + "/" + coord.y + ".png";
+				},
+				tileSize: new google.maps.Size(256, 256),
+				name: "OpenStreetMap",
+				maxZoom: 18
+			}));	
+		}//Ende Funktion loadOSMLayer
+	</script><!-- OSM Layer Laden -->
 	<script>
 	function loadUser(){ // Lädt die Daten des angemeldeten Benutzers
 		var data = {"action": "loadUser"};
@@ -37,13 +76,15 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 		$.ajax({
 			type: "POST",
 			dataType: "json",
-			url: "php/projects.php",
+			url: "php/users.php",
 			data: data,
 			success: function(data) {
-				$("#activeUser").html('&nbsp; '+data["vorname"] +' '+ data["nachname"]+'&nbsp;'); //Zeigt den Namen im Optionsmenü an
-				$(".activeUserID").val(data["benutzerID"]); //Setzt die ID des Benutzers als Feldwert
-				$("#username").val(data["benutzername"]);
-				userID = data["benutzerID"]; //Speichert die Benutzer-ID in einer globalen Variablen
+				benutzer = data["benutzer"];
+				optionen = data["optionen"];
+				$("#activeUser").html('&nbsp; '+benutzer.vorname +' '+ benutzer.nachname+'&nbsp;'); //Zeigt den Namen im Optionsmenü an
+				$(".activeUserID").val(benutzer.id); //Setzt die ID des Benutzers als Feldwert
+				$("#username").val(benutzer.benutzername);
+				userID = benutzer.id; //Speichert die Benutzer-ID in einer globalen Variablen
 				userAL = data["accessLevel"]; //Speichert die Zugriffsberechtigung des Benutzers in einer globalen Variablen
 			},
 			error: function(xhr, desc, err) {
@@ -84,7 +125,7 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 		$.ajax({
 			type: "POST",
 			dataType: "json",
-			url: "php/projects.php",
+			url: "php/users.php",
 			data: data,
 			success: function(data) {
 				$('.listOfAllUsers').children('option').remove();
@@ -165,11 +206,103 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 			}
 		});//Ende Ajax
 	}//Ende Funktion isSharedWith
+
+	function loadGPS(elementID, car, pathColor){
+		let startTrack = $("#startTrackInput").val();
+		let endTrack = $("#endTrackInput").val();
+		if(elementID.checked === false) { 
+			var gpsPath = [];
+			let index = objectArray.findIndex(x => x.obj_car == car); // Ermittelt Array-Index des PGS-Pfads
+			objectArray[index].setMap(null); //GPS-Pfad von der Karte löschen
+			objectArray.splice(index,1); // Löscht das Objekt aus dem Objekt-Array
+		}
+		else {
+			var gpsPath = [];
+			var data = {
+				"task" : "loadGPS",
+				"car" : car,
+				"start" : startTrack,
+				"end" : endTrack
+				};
+			data = $(this).serialize() + "&" + $.param(data);
+			
+			$.ajax({
+				type: "POST",
+				dataType: "json",
+				url: "php/geometry.php",
+				data: data,
+				success: function(data) {
+					for (let value of data) {
+						let gpsCoord = new google.maps.LatLng(value.gps_lat, value.gps_lon);
+						gpsPath.push(gpsCoord);
+					}
+					var gpsPolyline = new google.maps.Polyline({
+						path: gpsPath,
+						strokeOpacity: 0.8,
+						strokeColor: pathColor,
+						strokeWeight: 10,
+						geodesic: true,
+						obj_typ: 'gpsPath',
+						obj_car: car,
+						obj_nummer: objectNummer,
+						map: map
+					});
+					objectArray.push(gpsPolyline);
+					objectNummer += 1;
+				}, //Ende success
+				error: function(xhr, desc, err) {
+					console.log(xhr);
+					console.log("Details: " + desc + "\nError:" + err);
+				} //ende error
+			}); //Ende Ajax
+		} // Ende else-Funktion
+	} //Ende function loadGPS
+
+	function toggleNav(modalID){ //Schließt das off-canvas Menü und blendet ein Modal ein
+		if ($(window).width() < 992) //Überprüft, ob Fenster kleiner als 992px ist (Danach ist kein off-canvas Menü vorhanden)
+		{
+			$('#myNavmenu').offcanvas('toggle');
+			$(modalID).modal('show');
+		}
+		else
+		{
+			$(modalID).modal('show');
+		}
+	}
+
+	function loadProjectObjects(){
+		for (var i = 0; i < objectArray.length; i++ ) {
+			objectArray[i].setMap(null);
+		}
+		objectArray = [];
+		var data = {
+			"task" : "load",
+			"prj_id" : prj_id
+			};
+		data = $(this).serialize() + "&" + $.param(data);
+		
+		$.ajax({
+			type: "POST",
+			dataType: "json",
+			url: "php/geometry.php",
+			data: data,
+			success: function(data) {
+				drawObjects(data);
+			}, //Ende success
+			error: function(xhr, desc, err) {
+				console.log(xhr);
+				console.log("Details: " + desc + "\nError:" + err);
+			} //ende error
+		}); //Ende Ajax
+	} //Ende function loadProjectObjects
 	</script>
 	<script> // Initialfunktion
+	benutzer = []; //Initialisierung
+	optionen = []; //Initialisierung
+	userAL = ""; //Initialisierung
 	userID = 0; //Initialisierung
 	prj_id = 0; //Initialisierung
-	activeProjectName = "Unbekanntes Projekt";
+	activeProjectName = "Unbekanntes Projekt";  //Initialisierung
 	loadUser(); // Daten des angemeldeten Benutzers laden
 	updateProjects(); //Verfügbare Projekte aktualisieren
 	updateSharedProjects(); //Verfügbare geteilte Projekte aktualisieren
@@ -178,22 +311,15 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 	messpunktNummer = 1; //Initialisierung
 	objectNummer = 1;
 	metCounter = 1; //Zähler für die Anzahl an Freisetzungsmarkern
-	objectArray = new Array(); //Array für temporär erzeugte Objekte
-	deleteArray = new Array(); // Array für temporär gelöschte Objekte
+	objectArray = []; //Array für temporär erzeugte Objekte
+	deleteArray = []; // Array für temporär gelöschte Objekte
 	activeObject = null;
 	var selectedShape; //Initialisierung für aktuell markiertes Geometrieobjekt
 
 	function initMap() { // Erzeugung der Karte
-		objectArray = []; //Array für temporär erzeugte Objekte leeren
-		deleteArray = []; // Array für temporär gelöschte Objekte leeren
 		loadOSMLayer(); //OSM Kartenbilder laden
 		infoWindow = new google.maps.InfoWindow(); //Globale Initialisierung des Infowindows
 		startDrawingManager(map); //Google DrawingManager laden
-		// Rotierenden Pfeil in Windrose zeichnen
-		var windrichtung_start = parseInt(document.getElementById('windrichtung').value);
-		var windrichtung = windrichtung_start-90;
-		document.getElementById('arrow').style.transform = 'rotate('+windrichtung+'deg)';
-
 		loadProjectObjects();	// Im Projekt gespeicherte Objekte einlesen
 		
 		document.getElementById('calcMET').addEventListener('click', function() { // Beim Klick auf "Berechnen" MET-Modell erzeugen
@@ -203,10 +329,41 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 		document.getElementById('switchMesspunkte').addEventListener('click', function() {// Definierte Messpunkte ein-/ausblenden
 			loadFixpoints($(this));
 		});
-		document.getElementById('switchKompass').addEventListener('click', function() {// Definierte Messpunkte ein-/ausblenden
+
+		document.getElementById('switchKompass').addEventListener('click', function() {// Kompass ein-/ausblenden
 			$("#switchKompass").find('i').toggleClass("fa-toggle-off fa-toggle-on");
-			$(".windrose").toggle()
+			$('#module2').toggle();
 		});
+
+		document.getElementById('switchGPS').addEventListener('click', function() {// GPS-Tracking ein-/ausblenden
+			$('#switchGPS').find('i').toggleClass('fa-toggle-off fa-toggle-on');
+			$('#module1').toggle();
+			var data = {
+				"action" : "loadCars",
+				"cars" : optionen.opt_cars
+			};
+			data = $(this).serialize() + "&" + $.param(data);
+			$.ajax({
+				type: "POST",
+				dataType: "json",
+				url: "php/options.php",
+				data: data,
+				success: function(data) {
+					for (var key in data) {
+					    if (!data.hasOwnProperty(key)) continue; // skip loop if the property is from prototype
+					    var obj = data[key];
+					    for (var prop in obj) {
+					        if(!obj.hasOwnProperty(prop)) continue; // skip loop if the property is from prototype
+					        $('<div class=row"><div class="checkbox"><label class="col-xs-10"><input type="checkbox" name="car" onchange="loadGPS(this,\''+obj[prop].car_key+'\',\''+obj[prop].car_color+'\');">'+obj[prop].car_name+' </label><div style="background:'+obj[prop].car_color+';" class="col-xs-1">&nbsp;</div></div></div>').appendTo('#gpsLoadedCars');
+					    } //Ende for
+					} // Ende for 
+				}, //Ende success
+				error: function(xhr, desc, err) {
+					console.log(xhr);
+					console.log("Details: " + desc + "\nError:" + err);
+				} //ende error
+			}); //Ende Ajax
+		}); // Ende eventlistener
 		
 		document.getElementById('saveProject').addEventListener('click', function() { // Beim Klick auf "Speichern", aktuelle Änderungen speichern
 			saveProjectStatus();	
@@ -239,7 +396,6 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
      			 return;
      		}
 
-
 	        var marker = new google.maps.Marker({
 	          	map: map,
 				position: place.geometry.location
@@ -262,11 +418,7 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 	            ].join(' ');
 	        }
         });
-
-
-        
 	}//Ende Funktion initMap
-
 	</script> <!-- Initialfunktion -->
 	<script > // Google DrawingManager laden
 	function startDrawingManager(map){
@@ -294,13 +446,13 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 		drawingManager.setMap(map);
 	
 	// Beim Klick auf Geometriesymbole das jeweilige Werkzeug auswählen
-		document.getElementById('setHand').addEventListener('click', function() {
+		$('.setHand').click(function() {
 			drawingManager.setOptions({
 				drawingMode: google.maps.drawing.OverlayType.null
 			});
 		});
 		
-		document.getElementById('setMarkWhite').addEventListener('click', function() {
+		$('.setMarkWhite').click(function() {
 			drawingManager.setOptions({
 				drawingMode: google.maps.drawing.OverlayType.MARKER,
 				markerOptions: {icon: {url:'images/white.png',anchor: new google.maps.Point(16, 16)}, draggable:true}
@@ -308,72 +460,26 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 			marker_color = "white";
 			marker_typ = 'messpunkt';
 		});
-		
-		document.getElementById('setMarkGreen').addEventListener('click', function() {
-			drawingManager.setOptions({
-				drawingMode: google.maps.drawing.OverlayType.MARKER,
-				markerOptions: {icon: {url:'images/green.png',anchor: new google.maps.Point(16,16)}, draggable:true}
-			});
-			marker_color = "green";
-			marker_typ = 'messpunkt';
-		});
-
-		document.getElementById('setMarkBlue').addEventListener('click', function() {
-			drawingManager.setOptions({
-				drawingMode: google.maps.drawing.OverlayType.MARKER,
-				markerOptions: {icon: {url:'images/blue.png',anchor: new google.maps.Point(16,16)}, draggable:true}
-			});
-			marker_color = "blue";
-			marker_typ = 'messpunkt';
-		});
-
-		document.getElementById('setMarkYellow').addEventListener('click', function() {
-			drawingManager.setOptions({
-				drawingMode: google.maps.drawing.OverlayType.MARKER,
-				markerOptions: {icon: {url:'images/yellow.png',anchor: new google.maps.Point(16,16)}, draggable:true}
-			});
-			marker_color = "yellow";
-			marker_typ = 'messpunkt';
-		});
 	
-		document.getElementById('setMarkRed').addEventListener('click', function() {
-			drawingManager.setOptions({
-		  		drawingMode: google.maps.drawing.OverlayType.MARKER,
-		 		markerOptions: {icon: {url:'images/red.png',anchor: new google.maps.Point(16,16)}, draggable:true}
-	  		});
-			marker_color = "red";
-			marker_typ = 'messpunkt';
-  		});
-
-  		document.getElementById('calcMETmanual').addEventListener('click', function() {
-  			$('#modal_MET').modal('hide');
-			drawingManager.setOptions({
-		  		drawingMode: google.maps.drawing.OverlayType.MARKER,
-		  		markerOptions: {icon: {url:'images/fakeMarker.png',anchor: new google.maps.Point(0,0)}, draggable:true}
-	  		});
-			marker_typ = "metManual";
-			marker_color = "black";
-  		});
-	
-		document.getElementById('setCirc').addEventListener('click', function() {
+		$('.setCirc').click(function() {
 	 		drawingManager.setOptions({
 		  		drawingMode: google.maps.drawing.OverlayType.CIRCLE
 	  		});
   		});
 	
-		document.getElementById('setPoly').addEventListener('click', function() {
+		$('.setPoly').click(function() {
 	  		drawingManager.setOptions({
 		  		drawingMode: google.maps.drawing.OverlayType.POLYGON
 	  		});
   		});
 	
-		document.getElementById('setPath').addEventListener('click', function() {
+		$('.setPath').click(function() {
 	  		drawingManager.setOptions({
 		  		drawingMode: google.maps.drawing.OverlayType.POLYLINE
 	  		});
   		});
 
-  		document.getElementById('deleteActiveObject').addEventListener('click', function() {
+  		$('.deleteActiveObject').click(function() {
 	  		deleteObject(); //Löschfunktion für geladene Objekte
 	  		deleteSelectedShape(); //Löschfunktion für neu erzeugte Objekte
   		});
@@ -422,6 +528,7 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 				var latitude= newMarker.getPosition().lat().toFixed(6);
 				var longitude= newMarker.getPosition().lng().toFixed(6);
 				generateMET(map, latitude, longitude);
+				newMarker.setMap(null);
 			}
 
 			if (event.type == google.maps.drawing.OverlayType.MARKER && marker_typ == 'messpunkt') {
@@ -580,12 +687,12 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 
 						    You should have received a copy of the GNU General Public License
 						    along with this program.  If not, see <a href="https://www.gnu.org/licenses/" target="_blank">https://www.gnu.org/licenses/</a>.<br/><br/>
-					</div>
+						</div>
 					</div>
 				</div>
 				<div class="modal-footer">
 					<div class="row">
-						<div class="col-xs-4 text-center"><a href="CHANGELOG.md" target="_blank">Version: 1.3.1</a></div>
+						<div class="col-xs-4 text-center"><a href="CHANGELOG.md" target="_blank">Version: 1.4.0</a></div>
 						<div class="col-xs-4"><a href="https://github.com/cuzcomd/DALUS" target="_blank"><i class="fa fa-github" aria-hidden="true"></i> GitHub Repository</a></div>
 						<div class="col-xs-4"><a href="mailto:kontakt@cuzcomd.de">kontakt@cuzcomd.de</a></div>
 					</div>
@@ -685,89 +792,6 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 		</div><!-- Ende modal-dialog -->
 	</div><!-- Ende Modal_edit_project -->
 
-	<div class="modal fade" id="modal_MET" tabindex="-1" role="dialog" aria-labelledby="MET Ausbreitungsmodell">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title" id="myModalLabel">MET Ausbreitungsmodell</h4>
-				</div>
-				<div class="modal-body">
-					<div id="wrapper_winkelrechner">
-						<div id="geocoder">
-							<div class="geocoderButtons">
-								<button type="button" class="btn btn-primary" id="calcMET" data-toggle="tooltip" title="MET-Freisetzungsort aus Adressfeld lesen" ><i class="fa fa-crosshairs"></i> Zeichnen (Adresse)</button>
-								<button type="button" class="btn btn-primary" id="calcMETmanual" data-toggle="tooltip" title="MET Freisetzungsort manuell festlegen"><i class="fa fa-crosshairs"></i> Zeichnen (Manuell)</button>
-								<span data-toggle="tooltip" title="MET Ausbreitungswinkel berechnen">
-									<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalWinkel"><i class="fa fa-arrows-h"></i> Winkel bestimmen</button>
-								</span>
-							</div>
-							<form id="input-form" class="form-horizontal" role="form">
-								<div class="form-group" data-toggle="tooltip" title="Freisetzungsort">
-									<label class="control-label col-xs-4" for="addresse">Scha&shy;dens&shy;ort</label>
-									<div class="col-xs-8">
-										<div class="input-group">
-											<span class="input-group-addon"><i class="fa fa-home"></i></span>
-											<input id="addresse" type="textbox" value="Alt Diesdorf 4, Magdeburg" class="form-control">
-										</div>
-									</div>
-								</div>
-		
-								<div class="form-group" data-toggle="tooltip" title="Ausbreitungswinkel">
-									<label class="control-label col-xs-4" for="winkel">Aus&shy;brei&shy;tungs&shy;winkel</label>
-									<div class="col-xs-8">
-										<div class="input-group">
-											<span class="input-group-addon"><i class="fa fa-arrows-h"></i></span>
-											<select id="winkel" name="winkel" class="form-control">
-												<option value="45" label="45&deg;">45&deg;</option>
-												<option value="60" label="60&deg;" selected>60&deg;</option>
-												<option value="90" label="90&deg;">90&deg;</option>
-												<option value="360" label="360&deg;">360&deg;</option>
-											</select>
-										</div>
-									</div>
-								</div>
-		
-								<div class="form-group" data-toggle="tooltip" title="Windrichtung">
-									<label class="control-label col-xs-4" for="windrichtung">Wind&shy;richtung</label>
-									<div class="col-xs-8">
-										<div class="input-group">
-											<span class="input-group-addon"><i class="fa fa-location-arrow"></i></span>
-											<input id="windrichtung" type="number" value="280" class="form-control" onchange="document.getElementById('arrow').style.transform = 'rotate('+(this.value-90)+'deg)';">
-											<span class="input-group-addon">&deg;</span>
-										</div>
-									</div>
-								</div>
-		
-								<div class="form-group" data-toggle="tooltip" title="Gefährdung für Personen im Gebäude">
-									<label class="control-label col-xs-4" for="distanz 1">Gefährdung für Personen im Gebäude</label>
-									<div class="col-xs-8">
-										<div class="input-group">
-											<span class="input-group-addon"><i class="fa fa-exclamation"></i> <i class="fa fa-home"></i></span>
-											<input id="distanz1" type="number" value="600" class="form-control">
-											<span class="input-group-addon">m</span>
-										</div>
-									</div>
-								</div>
-									
-								<div class="form-group" data-toggle="tooltip" title="Gefährdung für Personen im Freien">
-									<label class="control-label col-xs-4" for="distanz 1">Geährdung für Personen im Freien</label>
-									<div class="col-xs-8">
-										<div class="input-group">
-											<span class="input-group-addon"><i class="fa fa-exclamation"></i> <i class="fa fa-street-view"></i></span>
-											<input id="distanz2" type="number" value="1300"  class="form-control">
-											<span class="input-group-addon">m</span>
-										</div>
-									</div>
-								</div>
-							</form>
-						</div> <!-- Ende div Geocoder -->
-					</div> <!-- Ende Wrapper_Winkelrechner -->
-				</div><!-- Ende modal-body -->
-			</div><!-- Ende modal-content -->
-		</div><!-- Ende modal-dialog -->
-	</div><!-- Ende Modal_edit_project -->
-
 	<div class="modal fade" id="modalWinkel" tabindex="-1" role="dialog" aria-labelledby="MET Ausbreitungswinkel">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
@@ -776,80 +800,231 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 					<h4 class="modal-title" id="myModalLabel">MET Ausbreitungswinkel</h4>
 				</div>
 				<div class="modal-body">
-					<div id="winkelrechner" class="panel panel-default">
-							<div class="panel-body">
-								<form id="form_winkelrechner" class="form-horizontal">
-									<div class="form-group">
-										<label for="nebel" class="col-xs-4 form-control-label">Nebel</label>
-										<div class="col-xs-8">
-											<select id="nebel" name="nebel" class="form-control" onchange="computeAngle();">
-												<option value="true" label="Ja">Ja</option>
-												<option value="false" label="Nein">Nein</option>
-											</select>
-										</div>
-									</div>
-	
-									<div class="form-group">	
-										<label for="windgeschwindigkeit" class="col-xs-4 form-control-label">Wind&shy;ge&shy;schwin&shy;dig&shy;keit</label>
-										<div class="col-xs-8">
-											<select id="windgeschwindigkeit" name="windgeschwindigkeit" class="form-control" onchange="computeAngle();">
-												<option value="high" label="gr&ouml;&szlig;er 5 m/s (18 km/h)">gr&ouml;&szlig;er 5 m/s (18 km/h)</option>
-												<option value="medium" label="zwischen 1 m/s (4 km/h) und 5 m/s (18 km/h)">zwischen 1 m/s (4 km/h) und 5 m/s (18 km/h)</option>
-												<option value="low" label="kleiner 1 m/s (4 km/h)">kleiner 1 m/s (4 km/h)</option>
-											</select>
-										</div>
-									</div>
-
-									<div class="form-group">	
-										<label for="himmel" class="col-xs-4 form-control-label">Bedeckter Himmel</label>
-										<div class="col-xs-8">
-											<select id="himmel" name="himmel" class="form-control" onchange="computeAngle();">
-												<option value="true" label="mehr als 50 %">mehr als 50 %</option>
-												<option value="false" label="weniger als 50 %">weniger als 50 %</option>
-											</select>
-										</div>
-									</div>
-	
-									<div class="form-group">
-										<label for="tageszeit" class="col-xs-4 form-control-label">Tageszeit</label>
-										<div class="col-xs-8">
-											<select id="tageszeit" name="tageszeit" class="form-control" onchange="computeAngle();">
-												<option value="day" label="Tag">Tag</option>
-												<option value="night" label="Nacht">Nacht</option>
-											</select>
-										</div>
-									</div>
-								
-									<div class="form-group">
-										<label for="monat" class="col-xs-4 form-control-label">Monat</label>
-										<div class="col-xs-8">
-											<select id="monat" name="monat" class="form-control" onchange="computeAngle();">
-												<option value="om" label="Oktober - M&auml;rz">Oktober - M&auml;rz</option>
-												<option value="as" label="April - September">April - September</option>
-											</select>
-										</div>
-									</div>
-	
-									<div class="form-group">
-										<label for="brand" class="col-xs-4 form-control-label">Brand</label>
-										<div class="col-xs-8">
-											<select id="brand" name="brand" class="form-control" onchange="computeAngle();">
-												<option value="true" label="Ja">Ja</option>
-												<option value="false" label="Nein">Nein</option>
-											</select>
-										</div>
-									</div>
-								</form>
-							</div> <!-- Ende panel-body -->
-							<div class="alert alert-warning alert-dismissible" role="alert">
-								<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-								<strong>Hinweis:</strong><br/>Der Winkel wird automatisch aktualisiert.
-							</div>
-						</div> <!-- Ende Winkelrechner -->
+					 <!-- Ende Winkelrechner -->
 				</div><!-- Ende modal-body -->
 			</div><!-- Ende modal-content -->
 		</div><!-- Ende modal-dialog -->
 	</div><!-- Ende Modal_edit_project -->
+
+	<div class="modal fade" id="modalMET" tabindex="-1" role="dialog" aria-labelledby="MET Ausbreitungsmodell">
+		<div class="modalMET modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">MET Ausbreitungsmodell</h4>
+				</div>
+				<div class="modal-body">
+					<div id="METWrapper" class="row">
+						<div id="METPanel" class="col-xs-4">
+							<ul class="nav nav-pills nav-stacked">
+								<li class="active"><a data-toggle="pill" href="#metAuto">An Adresse zeichnen</a></li>
+								<li><a data-toggle="pill" href="#metMan">Manuell zeichnen</a></li>
+								<li><a data-toggle="pill" href="#metWinkel">Winkel bestimmen</a></li>
+							</ul>
+						</div> <!-- Ende adminPanel -->
+						<div id="adminContent" class="col-xs-8">
+							<div class="tab-content">
+								<div id="metAuto" class="tab-pane fade in active ">
+									<div id="geocoder">
+										<form id="input-form" class="form-horizontal" role="form">
+											<div class="form-group" data-toggle="tooltip" title="Freisetzungsort">
+												<label class="control-label col-xs-4" for="addresse">Scha&shy;dens&shy;ort</label>
+												<div class="col-xs-8">
+													<div class="input-group">
+														<span class="input-group-addon"><i class="fa fa-home"></i></span>
+														<input id="addresse" type="textbox" value="Alt Diesdorf 4, Magdeburg" class="form-control">
+													</div>
+												</div>
+											</div>
+					
+											<div class="form-group" data-toggle="tooltip" title="Ausbreitungswinkel">
+												<label class="control-label col-xs-4" for="winkelAuto">Aus&shy;brei&shy;tungs&shy;winkel</label>
+												<div class="col-xs-8">
+													<div class="input-group">
+														<span class="input-group-addon"><i class="fa fa-arrows-h"></i></span>
+														<select id="winkelAuto" name="winkel" class="form-control">
+															<option value="45" label="45&deg;">45&deg;</option>
+															<option value="60" label="60&deg;" selected>60&deg;</option>
+															<option value="90" label="90&deg;">90&deg;</option>
+															<option value="360" label="360&deg;">360&deg;</option>
+														</select>
+													</div>
+												</div>
+											</div>
+		
+											<div class="form-group" data-toggle="tooltip" title="Windrichtung">
+												<label class="control-label col-xs-4" for="windrichtung">Wind&shy;richtung</label>
+												<div class="col-xs-8">
+													<div class="input-group">
+														<span class="input-group-addon"><i class="fa fa-location-arrow"></i></span>
+														<input id="windrichtung" type="number" value="280" class="form-control" onchange="document.getElementById('arrow').style.transform = 'rotate('+(this.value-90)+'deg)';">
+														<span class="input-group-addon">&deg;</span>
+													</div>
+												</div>
+											</div>
+					
+											<div class="form-group" data-toggle="tooltip" title="Gefährdung für Personen im Gebäude">
+												<label class="control-label col-xs-4" for="distanz 1">Gefährdung für Personen im Gebäude</label>
+												<div class="col-xs-8">
+													<div class="input-group">
+														<span class="input-group-addon"><i class="fa fa-exclamation"></i> <i class="fa fa-home"></i></span>
+														<input id="distanz1" type="number" value="600" class="form-control">
+														<span class="input-group-addon">m</span>
+													</div>
+												</div>
+											</div>
+												
+											<div class="form-group" data-toggle="tooltip" title="Gefährdung für Personen im Freien">
+												<label class="control-label col-xs-4" for="distanz 1">Geährdung für Personen im Freien</label>
+												<div class="col-xs-8">
+													<div class="input-group">
+														<span class="input-group-addon"><i class="fa fa-exclamation"></i> <i class="fa fa-street-view"></i></span>
+														<input id="distanz2" type="number" value="1300"  class="form-control">
+														<span class="input-group-addon">m</span>
+													</div>
+												</div>
+											</div>
+										</form>
+										<br>
+										<div class="geocoderButtons">
+											<button type="button" class="btn btn-primary" id="calcMET" data-toggle="tooltip" title="MET-Freisetzungsort aus Adressfeld lesen" ><i class="fa fa-crosshairs"></i> Zeichnen</button>
+										</div>
+									</div> <!-- Ende Geocoder -->
+								</div> <!-- Ende metAuto -->
+
+								<div id="metMan" class="tab-pane fade ">
+									<div id="geocoder">
+										<form id="input-form" class="form-horizontal" role="form">
+											<div class="form-group" data-toggle="tooltip" title="Ausbreitungswinkel">
+												<label class="control-label col-xs-4" for="winkelMan">Aus&shy;brei&shy;tungs&shy;winkel</label>
+												<div class="col-xs-8">
+													<div class="input-group">
+														<span class="input-group-addon"><i class="fa fa-arrows-h"></i></span>
+														<select id="winkelMan" name="winkel" class="form-control">
+															<option value="45" label="45&deg;">45&deg;</option>
+															<option value="60" label="60&deg;" selected>60&deg;</option>
+															<option value="90" label="90&deg;">90&deg;</option>
+															<option value="360" label="360&deg;">360&deg;</option>
+														</select>
+													</div>
+												</div>
+											</div>
+					
+											<div class="form-group" data-toggle="tooltip" title="Windrichtung">
+												<label class="control-label col-xs-4" for="windrichtungMan">Wind&shy;richtung</label>
+												<div class="col-xs-8">
+													<div class="input-group">
+														<span class="input-group-addon"><i class="fa fa-location-arrow"></i></span>
+														<input id="windrichtungMan" type="number" value="280" class="form-control" onchange="document.getElementById('arrow').style.transform = 'rotate('+(this.value-90)+'deg)';">
+														<span class="input-group-addon">&deg;</span>
+													</div>
+												</div>
+											</div>
+					
+											<div class="form-group" data-toggle="tooltip" title="Gefährdung für Personen im Gebäude">
+												<label class="control-label col-xs-4" for="distanz1Man">Gefährdung für Personen im Gebäude</label>
+												<div class="col-xs-8">
+													<div class="input-group">
+														<span class="input-group-addon"><i class="fa fa-exclamation"></i> <i class="fa fa-home"></i></span>
+														<input id="distanz1Man" type="number" value="600" class="form-control">
+														<span class="input-group-addon">m</span>
+													</div>
+												</div>
+											</div>
+												
+											<div class="form-group" data-toggle="tooltip" title="Gefährdung für Personen im Freien">
+												<label class="control-label col-xs-4" for="distanz2Man">Geährdung für Personen im Freien</label>
+												<div class="col-xs-8">
+													<div class="input-group">
+														<span class="input-group-addon"><i class="fa fa-exclamation"></i> <i class="fa fa-street-view"></i></span>
+														<input id="distanz2Man" type="number" value="1300"  class="form-control">
+														<span class="input-group-addon">m</span>
+													</div>
+												</div>
+											</div>
+										</form>
+										<br>
+										<div class="geocoderButtons">
+											<button type="button" class="btn btn-primary" id="calcMETmanual" data-toggle="tooltip" title="MET Freisetzungsort manuell festlegen" ontouchstart="drawMetMarkerManual()" onclick="drawMetMarkerManual()"></i> Zeichnen</button>
+										</div>
+									</div> <!-- Ende Geocoder -->
+								</div> <!-- Ende metMan -->
+
+								<div id="metWinkel" class="tab-pane fade ">
+									<form id="form_winkelrechner" class="form-horizontal">
+										<div class="form-group">
+											<label for="nebel" class="col-xs-4 form-control-label">Nebel</label>
+											<div class="col-xs-8">
+												<select id="nebel" name="nebel" class="form-control" onchange="computeAngle();">
+													<option value="true" label="Ja">Ja</option>
+													<option value="false" label="Nein">Nein</option>
+												</select>
+											</div>
+										</div>
+		
+										<div class="form-group">	
+											<label for="windgeschwindigkeit" class="col-xs-4 form-control-label">Wind&shy;ge&shy;schwin&shy;dig&shy;keit</label>
+											<div class="col-xs-8">
+												<select id="windgeschwindigkeit" name="windgeschwindigkeit" class="form-control" onchange="computeAngle();">
+													<option value="high" label="gr&ouml;&szlig;er 5 m/s (18 km/h)">gr&ouml;&szlig;er 5 m/s (18 km/h)</option>
+													<option value="medium" label="zwischen 1 m/s (4 km/h) und 5 m/s (18 km/h)">zwischen 1 m/s (4 km/h) und 5 m/s (18 km/h)</option>
+													<option value="low" label="kleiner 1 m/s (4 km/h)">kleiner 1 m/s (4 km/h)</option>
+												</select>
+											</div>
+										</div>
+
+										<div class="form-group">	
+											<label for="himmel" class="col-xs-4 form-control-label">Bedeckter Himmel</label>
+											<div class="col-xs-8">
+												<select id="himmel" name="himmel" class="form-control" onchange="computeAngle();">
+													<option value="true" label="mehr als 50 %">mehr als 50 %</option>
+													<option value="false" label="weniger als 50 %">weniger als 50 %</option>
+												</select>
+											</div>
+										</div>
+		
+										<div class="form-group">
+											<label for="tageszeit" class="col-xs-4 form-control-label">Tageszeit</label>
+											<div class="col-xs-8">
+												<select id="tageszeit" name="tageszeit" class="form-control" onchange="computeAngle();">
+													<option value="day" label="Tag">Tag</option>
+													<option value="night" label="Nacht">Nacht</option>
+												</select>
+											</div>
+										</div>
+									
+										<div class="form-group">
+											<label for="monat" class="col-xs-4 form-control-label">Monat</label>
+											<div class="col-xs-8">
+												<select id="monat" name="monat" class="form-control" onchange="computeAngle();">
+													<option value="om" label="Oktober - M&auml;rz">Oktober - M&auml;rz</option>
+													<option value="as" label="April - September">April - September</option>
+												</select>
+											</div>
+										</div>
+		
+										<div class="form-group">
+											<label for="brand" class="col-xs-4 form-control-label">Brand</label>
+											<div class="col-xs-8">
+												<select id="brand" name="brand" class="form-control" onchange="computeAngle();">
+													<option value="true" label="Ja">Ja</option>
+													<option value="false" label="Nein">Nein</option>
+												</select>
+											</div>
+										</div>
+									</form>
+									<div class="alert alert-warning alert-dismissible" role="alert">
+										<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+										<strong>Hinweis:</strong><br/>Der Winkel wird automatisch aktualisiert.
+									</div>
+								</div><!-- Ende metWinkel -->
+							</div> <!-- Ende tab-content -->
+						</div> <!-- Ende adminContent -->
+					</div> <!-- Ende adminWrapper -->
+				</div><!-- Ende modal-body -->
+			</div><!-- Ende modal-content -->
+		</div><!-- Ende modal-dialog -->
+	</div><!-- Ende modalMET -->
 
 	<div class="modal fade" id="modalOptions" tabindex="-1" role="dialog" aria-labelledby="Optionen">
 		<div class="modalOptions modal-dialog" role="document">
@@ -894,81 +1069,155 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 				</div><!-- Ende modal-body -->
 			</div><!-- Ende modal-content -->
 		</div><!-- Ende modal-dialog -->
-	</div><!-- Ende Modal_UserSettings -->
+	</div><!-- Ende modalOptions -->
 
-	<div class="hidden-print col-xs-3 floating-panel" id="Wrapper_menue">
+	<nav id="myNavmenu" class="navmenu navmenu-default navmenu-fixed-left offcanvas-sm" role="navigation">
+  		<a class="navmenu-brand visible-md visible-lg text-center" onclick="toggleNav('#modal_license')"><img src="images/dalus_logo.svg" width="150px"></a>
+  		<div class="userInformation">
+  			<span class="activeUserMenu"><i class="fa fa-user-circle" aria-hidden="true"></i><span id="activeUser">&nbsp; Kein Benutzer aktiv</span></span>
+  			<button id="logout" role="button" onclick="location.href='php/logout'" class="btn btn-default pull-right"><a><i class="fa fa-sign-out" aria-hidden="true"></i> Abmelden</a></button>
+  		</div>
 		<div class="currentProject">
 			<h5><span class="fa fa-folder-open" aria-hidden="true"></span> <span id="activeProject">&nbsp; Kein Projekt geöffnet</span></h5>
 		</div>
-		<ul class="nav nav-tabs">
-			<li class="dropdown" id ="project_options" role="presentation" data-toggle="tooltip" data-placement="bottom" title="Hauptmenü">
-				<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bars" aria-hidden="true"></i>
+		<div class="form-group searchbar has-feedback">
+			<input id="pac-input" class="form-control" type="text" placeholder="Ort suchen ...">
+			<span class="glyphicon glyphicon-search form-control-feedback"></span>
+		</div>
+		<div class="werkzeuge">
+			<ul class="nav nav-pills nav-werkzeuge">
+				<li class="setHand" data-toggle="tooltip" data-placement="bottom" title="Auswahl" role="button"><a data-toggle="tab"><i class="fa fa-mouse-pointer"></i></a></li>
+				<li class="setMarkWhite" data-toggle="tooltip" data-placement="bottom" title="Auswahl" role="button"><a data-toggle="tab"><i class="fa fa-flag-o"></i></a></li>
+				<li class="setCirc" data-toggle="tooltip" data-placement="bottom" title="Kreis zeichnen" role="button"><a data-toggle="tab"><i class="fa fa-circle-thin"></i></a></li>
+				<li class="setPoly" data-toggle="tooltip" data-placement="bottom" title="Polygon zeichnen" role="button"><a data-toggle="tab"><i class="fa fa-bookmark-o"></i></a></li>
+				<li class="setPath" data-toggle="tooltip" data-placement="bottom" title="Pfad zeichnen" role="button"><a data-toggle="tab"><i class="fa fa-pencil"></i></a></li>
+				<li class="deleteActiveObject" data-toggle="tooltip" data-placement="bottom" title="Objekt löschen" role="button"><a data-toggle="tab"><i class="fa fa-trash"></i></a></li>
+			</ul>
+		</div> <!-- Ende Werkzeuge -->
+		<ul class="nav navmenu-nav">
+			<li class="dropdown open" id ="project_options" role="presentation" data-toggle="tooltip" data-placement="bottom" title="Projekt">
+				<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bars" aria-hidden="true"></i> Projekt
 				<span class="caret"></span></a>
-				<ul class="dropdown-menu">
-					<li class="activeUserMenu" data-placement="bottom" title="Angemeldeter Benutzer" ><a><i class="fa fa-user-circle" aria-hidden="true"></i><span id="activeUser">&nbsp; Kein Benutzer aktiv</span></a></li>
-					<li id="newProject" data-placement="bottom" title="Neues Projekt" role="button"><a data-toggle="modal" data-target="#modal_new_project"><i class="fa fa-pencil-square-o"></i> Neues Projekt</a></li>
-					<li id="openProject" data-placement="bottom" title="Projekt öffnen" role="button"><a data-toggle="modal" data-target="#modal_open_project"><i class="fa fa-folder-open-o"></i> Projekt öffnen</a></li>
-					<li id="editProject" data-placement="bottom" title="Projekt ändern" role="button"><a data-toggle="modal" data-target="#modal_edit_project"><i class="fa fa-pencil"></i> Projekt ändern</a></li>
-					<li id="saveProject" data-placement="bottom" title="Projekt speichern" role="button"><a><i class="fa fa-floppy-o" aria-hidden="true"></i> Projekt speichern</a></li>
-					<li id="deleteProject" data-placement="bottom" title="Projekt löschen" role="button" ><a><i class="fa fa-floppy-o" aria-hidden="true"></i> Projekt löschen</a></li>
-					<li id="exportKML" data-placement="bottom" title="Objekte als kml-Datei exportieren" role="button" onclick="toKML()"><a id="download-link" href="data:;base64," download><i class="fa fa-floppy-o" aria-hidden="true"></i> kml-Datei exportieren</a></li>
-					<li id="printMap" data-placement="bottom" title="Aktuellen Kartenausschnitt drucken" role="button" onclick="printMap();"><a><i class="fa fa-print" aria-hidden="true"></i> Ansicht drucken</a></li>
-					<li id="logout" data-placement="bottom" title="Akteuellen Benutzer abmelden" role="button" onclick="location.href='php/logout'"><a><i class="fa fa-sign-out" aria-hidden="true"></i> Abmelden</a></li>
-					<li id="adminMenu" data-placement="bottom" title="Optionen" role="button"><a data-toggle="modal" data-target="#modalOptions"><i class="fa fa-cogs"></i> Optionen</a></li>	
-					<li id="infofenster" data-placement="bottom" title="Informationen über DALUS" role="button" ><a data-toggle="modal" data-target="#modal_license"><i class="fa fa-info-circle" aria-hidden="true"></i> Informationen</a></li>				
+				<ul class="dropdown-menu navmenu-nav" role="menu">
+					<li id="newProject" role="button" onclick="toggleNav('#modal_new_project')" ><a href="#"><i class="fa fa-pencil-square-o"></i> Neues Projekt</a></li>
+					<li id="openProject" role="button" onclick="toggleNav('#modal_open_project')"><a href="#"><i class="fa fa-folder-open-o"></i> Projekt öffnen</a></li>
+					<li id="editProject" role="button" onclick="toggleNav('#modal_edit_project')" ><a href="#"><i class="fa fa-pencil-square-o"></i> Projekt ändern</a></li>
+					<li id="saveProject" role="button"><a><i class="fa fa-floppy-o" aria-hidden="true"></i> Projekt speichern</a></li>
+					<li id="deleteProject" role="button" ><a><i class="fa fa-trash-o" aria-hidden="true"></i> Projekt löschen</a></li>
+					<li id="exportKML" onclick="toKML()" ><a id="download-link" href="data:;base64," download><i class="fa fa-floppy-o" aria-hidden="true"></i> kml-Datei exportieren</a></li>
+					<li id="printMap" role="button" onclick="printMap()" ><a><i class="fa fa-print" aria-hidden="true"></i> Ansicht drucken</a></li>		
 				</ul>
 			</li>
+			<li id="verwaltung" role="button" onclick="toggleNav('#modalOptions')"><a href="#"><i class="fa fa-cogs"></i> Optionen</a></li>
 			<li class="dropdown" id ="parameter" role="presentation" data-toggle="tooltip" data-placement="bottom" title="Parameter">
-				<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-wrench" aria-hidden="true"></i>
+				<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-eye-slash" aria-hidden="true"></i> Ansicht
 				<span class="caret"></span></a>
-				<ul class="dropdown-menu">
-					<li id = "switchMesspunkte" data-click-state="0"><a><i class="fa fa-toggle-off" aria-hidden="true"></i> Messkataster</a></li>
-					<li id = "switchKompass" type="button"><a><i class="fa fa-toggle-off" aria-hidden="true"></i> Kompass</a></li>
+				<ul class="dropdown-menu navmenu-nav" role="menu" >
+					<li id = "switchMesspunkte" data-click-state="0" role="button"><a><i class="fa fa-toggle-off" aria-hidden="true"></i> Messkataster</a></li>
+					<li id = "switchKompass" data-click-state="0" role="button"><a><i class="fa fa-toggle-off" aria-hidden="true"></i> Kompass</a></li>
+					<?php 
+						if ($accessLevel == 'admin'){
+							echo '<li id = "switchGPS" data-click-state="0" role="button"><a><i class="fa fa-toggle-off" aria-hidden="true"></i> GPS Tracking</a></li>';
+						}
+					?>
+							
 				</ul>
 			</li>
-			<li class="active" type="button" id ="switch_parameter" data-toggle="tooltip" data-placement="bottom" title="Auf Karte zeichnen"><a data-toggle="tab" href="#floating-panel"><i class="fa fa-paint-brush" aria-hidden="true"></i></a></li>
-			<li type="button" id ="switchSuche" data-toggle="tooltip" data-placement="bottom" title="Ort suchen"><a data-toggle="tab" href="#suche"><i class="fa fa-search" aria-hidden="true"></i></a></li>
-			<li id ="switch_winkel" data-toggle="tooltip" data-placement="bottom" title="Parameter des MET-Modells anpassen"><a href="#" data-toggle="modal" data-target="#modal_MET">MET</a></li>
-		</ul>
-		<div class="tab-content">
-		    <div id ="floating-panel" class="tab-pane fade in active">
-				<div class="werkzeuge text-center">
-					<ul class="nav nav-pills nav-werkzeuge">
-						<li id="setHand" data-toggle="tooltip" data-placement="bottom" title="Auswahl"><a data-toggle="tab"><i class="fa fa-mouse-pointer"></i></a></li>
-						<li id="setCirc" data-toggle="tooltip" data-placement="bottom" title="Kreis zeichnen"><a data-toggle="tab"><i class="fa fa-circle-thin"></i></a></li>
-						<li id="setPoly" data-toggle="tooltip" data-placement="bottom" title="Polygon zeichnen"><a data-toggle="tab"><i class="fa fa-bookmark-o"></i></a></li>
-						<li id="setPath" data-toggle="tooltip" data-placement="bottom" title="Pfad zeichnen"><a data-toggle="tab"><i class="fa fa-pencil"></i></a></li>
-						<li id="deleteActiveObject" data-toggle="tooltip" data-placement="bottom" title="Objekt löschen"><a data-toggle="tab"><i class="fa fa-trash"></i></a></li>
-						<li class="dropdown" data-toggle="tooltip" data-placement="bottom" title="Messpunkte setzen">
-		    				<a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-flag-o"></i>
-		    				<span class="caret"></span></a>
-		    				<ul class="dropdown-menu">
-								<li id="setMarkWhite"><a data-toggle="tab"><img src="images/white.png"> Vorgeplanter Messpunkt</a></li>
-								<li id="setMarkGreen"><a data-toggle="tab"><img src="images/green.png"> Messung negativ - kein Geruch/Niederschlag</a></li>
-								<li id="setMarkBlue"><a data-toggle="tab"><img src="images/blue.png"> Messung negativ - mit Geruch/Niederschlag</a></li>
-								<li id="setMarkYellow"><a data-toggle="tab"><img src="images/yellow.png"> Messung positiv - Beurteilungswert unterschritten</a></li>
-								<li id="setMarkRed"><a data-toggle="tab"><img src="images/red.png"> Messung positiv - Beurteilungswert überschritten </a></li>
-							</ul>
-						</li>
-					</ul>
-				</div> <!-- Ende Werkzeuge -->
-			</div><!-- Ende Floating_Panel -->
-			<div id ="suche" class="tab-pane fade">
-				<div class="input-group">
-					<input id="pac-input" class="form-control" type="text" placeholder="Ort suchen ...">
-					<span class="input-group-addon" id="startSuche"><i class="fa fa-search"></i></span>
+			<li class="dropdown" id ="modelle" role="presentation" data-toggle="tooltip" data-placement="bottom" title="Ausbreitungsmodelle">
+				<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-location-arrow" aria-hidden="true"></i> Ausbreitungsmodelle
+				<span class="caret"></span></a>
+				<ul class="dropdown-menu navmenu-nav" role="menu" >
+					<li id ="switch_winkel" role="button" onclick="toggleNav('#modalMET')"><a href="#"><i class="fa fa-location-arrow"></i> MET</a></li>
+				</ul>
+			</li>
+			</ul>
+	
+		<div class="moduleWrapper">
+			<div id = "module1" class="module gpsLegende">
+				<h5><b>GPS Tracking</b></h5>
+				<div>
+					<form id="gpsLoadedCars" action="" class="form"  role="form">
+					<!-- Vom Benutzer gespeicherte Fahrzeuge -->
+					</form>
+				</div>
+				<br><br>
+				<div>
+					<form action="" class="form"  role="form">
+				        <div class="form-group">
+				            <label for="startTrack" class="control-label">Von</label>
+				            <div class="input-group date form_datetime" id="startTrack" placeholder = "2017-07-17 10:30">
+				                <input class="form-control" size="16" type="text" value="" id="startTrackInput">
+				                <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+								<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+				            </div>
+							<input type="hidden" id="dtp_input1" value="" />
+				        </div>
+				        <div class="form-group">
+				            <label for="endTrack" class="control-label">Bis</label>
+				            <div class="input-group date form_datetime" id="endTrack" placeholder = "2017-07-17 10:30">
+				                <input class="form-control" size="16" type="text" value="" id="endTrackInput">
+				                <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+								<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+				            </div>
+							<input type="hidden" id="dtp_input1" value="" />
+				        </div>
+					</form>
 				</div>
 			</div>
-		</div>	<!-- Ende Tab_content -->
-	</div>	<!-- Hauptmenü - Ende Wrapper_menue -->
-	<div class="windrose"><img src="images/arrow.png" alt="Windrose" id="arrow"/></div> <!-- Ende Windrose -->
+			<div id = "module2" class="module windrose" ><img src="images/arrow.png" alt="Windrose" id="arrow"/></div>
+			<div id = "module3" class="module"></div>
+		</div>
+	</nav>
+<div class="navbar navbar-default navbar-fixed-top hidden-md hidden-lg">
+<img class="dalus-logo" src="images/dalus_logo.svg" height="44px" onclick="$('#modal_license').modal('show')">
+<span class="werkzeuge-top">
+			<ul class="nav nav-pills nav-werkzeuge">
+				<li class="setHand" data-toggle="tooltip" data-placement="bottom" title="Auswahl" role="button"><a data-toggle="tab"><i class="fa fa-mouse-pointer"></i></a></li>
+				<li class="setMarkWhite" data-toggle="tooltip" data-placement="bottom" title="Auswahl" role="button"><a data-toggle="tab"><i class="fa fa-flag-o"></i></a></li>
+				<li class="setCirc" data-toggle="tooltip" data-placement="bottom" title="Kreis zeichnen" role="button"><a data-toggle="tab"><i class="fa fa-circle-thin"></i></a></li>
+				<li class="setPoly" data-toggle="tooltip" data-placement="bottom" title="Polygon zeichnen" role="button"><a data-toggle="tab"><i class="fa fa-bookmark-o"></i></a></li>
+				<li class="setPath" data-toggle="tooltip" data-placement="bottom" title="Pfad zeichnen" role="button"><a data-toggle="tab"><i class="fa fa-pencil"></i></a></li>
+				<li class="deleteActiveObject" data-toggle="tooltip" data-placement="bottom" title="Objekt löschen" role="button"><a data-toggle="tab"><i class="fa fa-trash"></i></a></li>
+			</ul>
+		</span> <!-- Ende Werkzeuge -->
+  <button type="button" class="navbar-toggle" data-toggle="offcanvas" data-target="#myNavmenu" data-canvas="body">
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+  </button>
+</div>
 	<div id="map"></div>
 	<textarea id="kmlString"></textarea>
 	<script src = "https://maps.googleapis.com/maps/api/js?libraries=geometry,drawing,places&callback=initMap" async defer></script> <!-- GooleAPI laden. Hier muss der API-Schlüssel eingetragen werden. -->
 	<script src = "js/bootstrap.min.js"></script> <!-- Bootstrap.js laden -->
+	<script src="js/jasny-bootstrap.min.js"></script>
 	<script src = "js/html2canvas.min.js" defer></script>
 	<script src = "js/usng.min.js" defer></script> <!-- Script für Umwandlung von Geokoordinaten in UTM-Ref Koordinaten -->
 	<script src = "js/MET.js" defer></script> <!-- Adresse des MET-Modells durch Eingabemaske oder manuelle Festlegung bestimmen -->
+	<script src = "js/datetimepicker.js"></script>
+	<script src = "js/datetimepicker.de.js"></script>
+	<script> // Datetimepicker
+		var currentdate = new Date(); 
+	    var datetime = currentdate.getFullYear() + "-"
+		    + ("0" + (currentdate.getMonth() + 1)).slice(-2) + "-" 
+		    + ("0" + currentdate.getDate()).slice(-2) + " "  
+		    + ("0" + currentdate.getHours()).slice(-2) + ":"  
+		    + ("0" + currentdate.getMinutes()).slice(-2)+ ":"
+		    + ("0" + currentdate.getSeconds()).slice(-2);
+		$("#startTrackInput").val(datetime);
+		$("#endTrackInput").val(datetime);
+	    $('.form_datetime').datetimepicker({
+	        language:  'de',
+	        weekStart: 1,
+	        todayBtn:  1,
+			autoclose: 1,
+			todayHighlight: 1,
+			startView: 2,
+			forceParse: 0,
+	        showMeridian: 1,
+	        format: 'yyyy-mm-dd hh:ii:ss'
+	    });
+	</script>
 	
 	<script defer> // Fixpunkte aus Datei laden
 	function loadFixpoints(switchMesspunkte){
@@ -1002,32 +1251,6 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 	}//Ende function loadFixpoint
 	</script><!-- Fixpunkte laden -->
 	<script defer> // Projektgeometrie aus Datenbank laden
-	function loadProjectObjects(){
-		for (var i = 0; i < objectArray.length; i++ ) {
-			objectArray[i].setMap(null);
-		}
-		objectArray = [];
-		var data = {
-			"task" : "load",
-			"prj_id" : prj_id
-			};
-		data = $(this).serialize() + "&" + $.param(data);
-		
-		$.ajax({
-			type: "POST",
-			dataType: "json",
-			url: "php/geometry.php",
-			data: data,
-			success: function(data) {
-				drawObjects(data);
-			}, //Ende success
-			error: function(xhr, desc, err) {
-				console.log(xhr);
-				console.log("Details: " + desc + "\nError:" + err);
-			} //ende error
-		}); //Ende Ajax
-	} //Ende function loadProjectObjects
-
 	function drawObjects(theArray){
 		for (const value of theArray) {
 			switch(value.obj_farbe) {
@@ -1305,37 +1528,34 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 		};
 		data = $(this).serialize() + "&" + $.param(data);
 		alertify.confirm("Soll das Projekt wirklich gelöscht werden?", function (e) {
-    if (e) {
-        $.ajax({
-			type: "POST",
-			dataType: "json",
-			url: "php/projects.php",
-			data: data,
-			success: function(data) {
-				$("#activeProject").html("&nbsp; Kein Projekt geöffnet");
-				$('#editProject').hide(); // Menüpunkt 'Projekt bearbeiten' anzeigen
-				$('#saveProject').hide(); // Menüpunkt 'Projekt speichern' anzeigen
-				$('#deleteProject').hide(); // Menüpunkt 'Projekt speichern' anzeigen
-				prj_id = 0;
-				clearMap();
-				loadProjectObjects();
-				updateProjects();
-				updateSharedProjects();
-				isSharedWith();
-				updateAllUsers()
-			},
-			error: function(xhr, desc, err) {
-				console.log(xhr);
-				console.log("Details: " + desc + "\nError:" + err);
-			}
-		}); //Ende ajax
-		toastr.error('Projekt gelöscht.');
-		return false;
-    } else {
-        // user clicked "cancel"
-    }
-});
-		
+		    if (e) {
+		    	 $.ajax({
+					type: "POST",
+					dataType: "json",
+					url: "php/projects.php",
+					data: data,
+					success: function(data) {
+						$("#activeProject").html("&nbsp; Kein Projekt geöffnet");
+						$('#editProject').hide(); // Menüpunkt 'Projekt bearbeiten' anzeigen
+						$('#saveProject').hide(); // Menüpunkt 'Projekt speichern' anzeigen
+						$('#deleteProject').hide(); // Menüpunkt 'Projekt speichern' anzeigen
+						prj_id = 0;
+						clearMap();
+						loadProjectObjects();
+						updateProjects();
+						updateSharedProjects();
+						isSharedWith();
+						updateAllUsers()
+					},
+					error: function(xhr, desc, err) {
+						console.log(xhr);
+						console.log("Details: " + desc + "\nError:" + err);
+					}
+				}); //Ende ajax
+				toastr.error('Projekt gelöscht.');
+				return false;
+			} // Ende if
+		}); // Ende alerify
 	} //Ende Funktion deleteProject()
 
 	function printMap(){
@@ -1431,43 +1651,6 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 			}, 100);//Ende setTimeout
 		}// Ende Funktiobn saveProjectStatus
 	</script>
-	<script defer> // OSM Layer laden
-		function loadOSMLayer(){
-			var mapTypeIds = [];
-			for(var type in google.maps.MapTypeId) {
-				mapTypeIds.push(google.maps.MapTypeId[type]);
-			}
-			mapTypeIds.push("OSM");
-			map = new google.maps.Map(document.getElementById('map'), {
-				zoom: 14,
-				mapTypeId: "OSM",
-				mapTypeControlOptions: {
-					mapTypeIds: mapTypeIds,
-					style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-					position: google.maps.ControlPosition.BOTTOM_RIGHT
-				},
-				center: {lat: 52.13024, lng: 11.56567700000005} // Koordinaten des Kartenmittelpunkts
-			});
-			
-			OSM ='OSM'; //Variable OpenStreetMap definieren
-			map.mapTypes.set("OSM", new google.maps.ImageMapType({
-				getTileUrl: function(coord, zoom) {
-	            // "Wrap" x (longitude) at 180th meridian properly
-	            // NB: Don't touch coord.x because coord param is by reference, and changing its x property breakes something in Google's lib 
-					var tilesPerGlobe = 1 << zoom;
-					var x = coord.x % tilesPerGlobe;
-					if (x < 0) {
-						x = tilesPerGlobe+x;
-					}
-	            // Wrap y (latitude) in a like manner if you want to enable vertical infinite scroll
-					return "https://tile.openstreetmap.org/" + zoom + "/" + x + "/" + coord.y + ".png";
-				},
-				tileSize: new google.maps.Size(256, 256),
-				name: "OpenStreetMap",
-				maxZoom: 18
-			}));	
-		}//Ende Funktion loadOSMLayer
-	</script><!-- OSM Layer Laden -->
 	<script src="js/xmlwriter.js" defer></script>
 	<script src="js/exportKml.js" defer></script>
 	<script src="js/alertify.min.js" defer></script>

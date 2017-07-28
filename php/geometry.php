@@ -6,6 +6,7 @@ if (is_ajax()) {
 		case "delete": deleteGeometry(); break;
 		case "save": saveGeometry(); break;
 		case "load": loadGeometry(); break;
+		case "loadGPS": loadGPS(); break;
     }
   }
 }
@@ -66,6 +67,21 @@ function loadGeometry(){
 	include("config.php");
 	$stmt = $pdo->prepare("SELECT * FROM objects WHERE obj_prj_id = :prj_id");
 	$stmt->bindParam(':prj_id', $_POST["prj_id"], PDO::PARAM_INT);
+	$stmt->execute();
+	$rows = $stmt->fetchAll(PDO::FETCH_OBJ);
+  	echo json_encode($rows);
+}
+
+function loadGPS(){
+	include("config.php");
+	$car = (!empty($_POST['car']) ? $_POST['car']:'');
+	$start = (!empty($_POST['start']) ? $_POST['start']:'');
+	$end = (!empty($_POST['end']) ? $_POST['end']:'');
+
+	$stmt = $pdo->prepare("SELECT * FROM gps WHERE gps_car_id = :car AND gps_time BETWEEN :startTime AND :stopTime");
+	$stmt->bindParam(':car', $car, PDO::PARAM_STR, 12);
+	$stmt->bindParam(':startTime', $start, PDO::PARAM_STR, 12);
+	$stmt->bindParam(':stopTime', $end, PDO::PARAM_STR, 12);
 	$stmt->execute();
 	$rows = $stmt->fetchAll(PDO::FETCH_OBJ);
   	echo json_encode($rows);

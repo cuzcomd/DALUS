@@ -1,13 +1,27 @@
+function drawMetMarkerManual(){
+	$('#modalMET').modal('hide');
+	drawingManager.setOptions({
+		drawingMode: google.maps.drawing.OverlayType.MARKER,
+		markerOptions: {icon: {url:'images/fake.png',anchor: new google.maps.Point(0,0)},
+		draggable:true
+	}});
+	marker_typ = 'metManual';
+}
+
 function generateMET(resultsMap, manualLat, manualLon) {
 		if (manualLat !== undefined && manualLon !== undefined) { //Überprüfen, ob MET-Freisetzungsort manuell festgelegt wurde
 			var latitude = manualLat;
 			var longitude = manualLon;
+			var winkel = parseInt(document.getElementById('winkelMan').value);
+			var richtung = parseInt(document.getElementById('windrichtungMan').value);
+			var innen = parseInt(document.getElementById('distanz1Man').value);
+			var aussen = parseInt(document.getElementById('distanz2Man').value);
 			var latlng = {lat: Number(latitude), lng: Number(longitude)};
 			new google.maps.Geocoder().geocode({'location': latlng}, function(results, status) {
 				if (status === google.maps.GeocoderStatus.OK) {
 					resultsMap.setCenter(results[0].geometry.location);
 					var adresse = results[1].formatted_address;
-					drawPolygon(resultsMap, latitude, longitude, adresse);
+					drawPolygon(resultsMap, latitude, longitude, adresse, winkel, richtung, innen, aussen);
 				} 
 				else 
 				{
@@ -35,12 +49,12 @@ function generateMET(resultsMap, manualLat, manualLon) {
 
 function drawPolygon(map, lat, lon, geoAdresse, winkel, richtung, innen, aussen, counter){
 	marker_color ="black";
-	$('#modal_MET').modal('hide');
+	$('#modalMET').modal('hide');
 	if (winkel !== undefined) {
 		var ausbreitungswinkel = winkel;
 	} 
 	else {
-		var ausbreitungswinkel = parseInt(document.getElementById('winkel').value);
+		var ausbreitungswinkel = parseInt(document.getElementById('winkelAuto').value);
 	}
 
 	if (richtung !== undefined) {
@@ -203,7 +217,7 @@ function drawPolygon(map, lat, lon, geoAdresse, winkel, richtung, innen, aussen,
 		'Windrichtung: ' + windrichtung_initial + '&deg;' + '<br/>' +
 		'Ausbreitungswinkel: ' + ausbreitungswinkel + ' &deg;'  + '<br/><br/>'+
 		'<div class="btn-group" role="group" aria-label="Optionen">'+
-		'<button type="button" class="btn btn-default btn-danger" style="height:46px;" id="deleteButton" onclick="deleteObject();"><i class="fa fa-trash-o"></i></button>')
+		'<button type="button" class="btn btn-default btn-danger" id="deleteButton" ontouchstart="deleteObject()" onclick="deleteObject()"><i class="fa fa-trash-o"></i></button>')
 	infoWindow.open(map,marker);
 	});
 } //Ende function drawPolygon()
@@ -250,5 +264,6 @@ function computeAngle(){
 	else
 		met_winkel=60;
 	
-	document.getElementById("winkel").value=met_winkel; // Berechneten Winkel in MET-Auswahlfeld eintragen	
+	document.getElementById("winkelAuto").value=met_winkel; // Berechneten Winkel in MET-Auswahlfeld eintragen	
+	document.getElementById("winkelMan").value=met_winkel; // Berechneten Winkel in MET-Auswahlfeld eintrage
 }

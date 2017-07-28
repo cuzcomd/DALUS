@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 14. Jul 2017 um 10:58
+-- Erstellungszeit: 28. Jul 2017 um 17:37
 -- Server-Version: 10.1.22-MariaDB
 -- PHP-Version: 7.1.4
 
@@ -27,6 +27,35 @@ USE `dalus`;
 -- --------------------------------------------------------
 
 --
+-- Tabellenstruktur für Tabelle `cars`
+--
+
+CREATE TABLE `cars` (
+  `car_id` int(10) UNSIGNED NOT NULL,
+  `car_key` varchar(255) COLLATE latin1_german1_ci NOT NULL,
+  `car_name` varchar(255) COLLATE latin1_german1_ci NOT NULL,
+  `car_color` varchar(255) COLLATE latin1_german1_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `gps`
+--
+
+CREATE TABLE `gps` (
+  `gps_car_id` varchar(10) COLLATE latin1_german1_ci NOT NULL,
+  `gps_lat` double NOT NULL,
+  `gps_lon` double NOT NULL,
+  `gps_speed` float NOT NULL,
+  `gps_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `gps_id` int(11) NOT NULL,
+  `gps_aid` varchar(255) COLLATE latin1_german1_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Tabellenstruktur für Tabelle `objects`
 --
 
@@ -43,6 +72,17 @@ CREATE TABLE `objects` (
   `obj_prj_id` int(10) UNSIGNED NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `options`
+--
+
+CREATE TABLE `options` (
+  `opt_userid` int(10) UNSIGNED NOT NULL,
+  `opt_cars` varchar(255) COLLATE latin1_german1_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
 -- --------------------------------------------------------
 
@@ -81,11 +121,29 @@ CREATE TABLE `users` (
 --
 
 --
+-- Indizes für die Tabelle `cars`
+--
+ALTER TABLE `cars`
+  ADD PRIMARY KEY (`car_id`);
+
+--
+-- Indizes für die Tabelle `gps`
+--
+ALTER TABLE `gps`
+  ADD PRIMARY KEY (`gps_id`);
+
+--
 -- Indizes für die Tabelle `objects`
 --
 ALTER TABLE `objects`
   ADD PRIMARY KEY (`obj_nummer`,`obj_prj_id`,`obj_typ`) USING BTREE,
   ADD UNIQUE KEY `obj_id` (`obj_id`);
+
+--
+-- Indizes für die Tabelle `options`
+--
+ALTER TABLE `options`
+  ADD UNIQUE KEY `opt_userid` (`opt_userid`);
 
 --
 -- Indizes für die Tabelle `projects`
@@ -105,6 +163,16 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT für exportierte Tabellen
 --
 
+--
+-- AUTO_INCREMENT für Tabelle `cars`
+--
+ALTER TABLE `cars`
+  MODIFY `car_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT für Tabelle `gps`
+--
+ALTER TABLE `gps`
+  MODIFY `gps_id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT für Tabelle `objects`
 --
