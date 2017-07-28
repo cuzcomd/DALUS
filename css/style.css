@@ -344,6 +344,9 @@ a{
 }
 
 @media (max-width: 991px){
+	.nav-werkzeuge{
+	border-bottom: none;
+}
 	.activeUserMenu{
 	padding: 15px 15px 0 15px;
 	}

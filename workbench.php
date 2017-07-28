@@ -721,7 +721,7 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 							</select>
 						</div>
 						<div class="text-center">
-							<button type='submit' class='btn btn-primary'><span class='fa fa-check-square-o'></span> Projekt anlegen</button>
+							<button type='submit' class='btn btn-primary' onclick="$('#modal_new_project').modal('hide')"><span class='fa fa-check-square-o'></span> Projekt anlegen</button>
 						</div>
 					</form>
 				</div><!-- Ende modal-body -->
@@ -744,7 +744,7 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 							</select>
 						</div>
 						<div class="text-center">
-							<button type='submit' class='btn btn-primary'><span class='fa fa-check-square-o'></span> Projekt öffnen</button>
+							<button type='submit' class='btn btn-primary' onclick="$('#modal_open_project').modal('hide')"><span class='fa fa-check-square-o'></span> Projekt öffnen</button>
 						</div>
 					</form>
 					<h5>Für mich freigegebene Projekte</h5>
@@ -754,7 +754,7 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 							</select>
 						</div>
 						<div class="text-center">
-							<button type='submit' class='btn btn-primary'><span class='fa fa-check-square-o'></span> Projekt öffnen</button>
+							<button type='submit' class='btn btn-primary' onclick="$('#modal_open_project').modal('hide')"><span class='fa fa-check-square-o'></span> Projekt öffnen</button>
 						</div>
 					</form>
 				</div><!-- Ende modal-body -->
@@ -784,7 +784,7 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 							</select>
 						</div>
 						<div class="text-center">
-							<button type='submit' class='btn btn-primary'><span class='fa fa-check-square-o'></span> Änderung Speichern</button>
+							<button type='submit' class='btn btn-primary' onclick="$('#modal_edit_project').modal('hide')"><span class='fa fa-check-square-o'></span> Änderung Speichern</button>
 						</div>
 					</form>
 				</div><!-- Ende modal-body -->
