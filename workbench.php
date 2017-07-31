@@ -373,8 +373,27 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 			deleteProject();	
 		});
 
-		var input = (document.getElementById('pac-input'));
+		document.getElementById('startSearch').addEventListener('click', function(){
+			var adresse = $('#pac-input').val();
+			if (adresse)
+			{
+				new google.maps.Geocoder().geocode( { 'address': adresse}, function(results, status) {
+		    		if (status == 'OK') {
+				        map.setCenter(results[0].geometry.location);
+				        var marker = new google.maps.Marker({
+				            map: map,
+				            position: results[0].geometry.location
+				        });
+			      	} 
+			      	else {
+     					alert('Geocode was not successful for the following reason: ' + status);
+     				}
+	     		});
+	     		return;
+     		}
+		});
 
+		var input = /** @type {!HTMLInputElement} */(document.getElementById('pac-input'));
         var autocomplete = new google.maps.places.Autocomplete(input);
         autocomplete.bindTo('bounds', map);
 
@@ -1080,9 +1099,9 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 		<div class="currentProject">
 			<h5><span class="fa fa-folder-open" aria-hidden="true"></span> <span id="activeProject">&nbsp; Kein Projekt geöffnet</span></h5>
 		</div>
-		<div class="form-group searchbar has-feedback">
+		<div class="input-group searchbar">
 			<input id="pac-input" class="form-control" type="text" placeholder="Ort suchen ...">
-			<span class="glyphicon glyphicon-search form-control-feedback"></span>
+			<span id = "startSearch" class="input-group-addon" role="button"><i class="fa fa-search"></i></span>
 		</div>
 		<div class="werkzeuge">
 			<ul class="nav nav-pills nav-werkzeuge">
@@ -1096,21 +1115,21 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 		</div> <!-- Ende Werkzeuge -->
 		<ul class="nav navmenu-nav">
 			<li class="dropdown open" id ="project_options" role="presentation" data-toggle="tooltip" data-placement="bottom" title="Projekt">
-				<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bars" aria-hidden="true"></i> Projekt
+				<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bars" aria-hidden="true"></i> Projekt
 				<span class="caret"></span></a>
 				<ul class="dropdown-menu navmenu-nav" role="menu">
-					<li id="newProject" role="button" onclick="toggleNav('#modal_new_project')" ><a href="#"><i class="fa fa-pencil-square-o"></i> Neues Projekt</a></li>
-					<li id="openProject" role="button" onclick="toggleNav('#modal_open_project')"><a href="#"><i class="fa fa-folder-open-o"></i> Projekt öffnen</a></li>
-					<li id="editProject" role="button" onclick="toggleNav('#modal_edit_project')" ><a href="#"><i class="fa fa-pencil-square-o"></i> Projekt ändern</a></li>
+					<li id="newProject" role="button" onclick="toggleNav('#modal_new_project')" ><a><i class="fa fa-pencil-square-o"></i> Neues Projekt</a></li>
+					<li id="openProject" role="button" onclick="toggleNav('#modal_open_project')"><a><i class="fa fa-folder-open-o"></i> Projekt öffnen</a></li>
+					<li id="editProject" role="button" onclick="toggleNav('#modal_edit_project')" ><a><i class="fa fa-pencil-square-o"></i> Projekt ändern</a></li>
 					<li id="saveProject" role="button"><a><i class="fa fa-floppy-o" aria-hidden="true"></i> Projekt speichern</a></li>
 					<li id="deleteProject" role="button" ><a><i class="fa fa-trash-o" aria-hidden="true"></i> Projekt löschen</a></li>
 					<li id="exportKML" onclick="toKML()" ><a id="download-link" href="data:;base64," download><i class="fa fa-floppy-o" aria-hidden="true"></i> kml-Datei exportieren</a></li>
 					<li id="printMap" role="button" onclick="printMap()" ><a><i class="fa fa-print" aria-hidden="true"></i> Ansicht drucken</a></li>		
 				</ul>
 			</li>
-			<li id="verwaltung" role="button" onclick="toggleNav('#modalOptions')"><a href="#"><i class="fa fa-cogs"></i> Optionen</a></li>
-			<li class="dropdown" id ="parameter" role="presentation" data-toggle="tooltip" data-placement="bottom" title="Parameter">
-				<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-eye-slash" aria-hidden="true"></i> Ansicht
+			<li id="verwaltung" role="button" onclick="toggleNav('#modalOptions')"><a><i class="fa fa-cogs"></i> Optionen</a></li>
+			<li class="dropdown" id ="parameter" role="presentation" data-toggle="tooltip" data-placement="bottom" title="Ansicht">
+				<a class="dropdown-toggle" data-toggle="dropdown"role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-eye-slash" aria-hidden="true"></i> Ansicht
 				<span class="caret"></span></a>
 				<ul class="dropdown-menu navmenu-nav" role="menu" >
 					<li id = "switchMesspunkte" data-click-state="0" role="button"><a><i class="fa fa-toggle-off" aria-hidden="true"></i> Messkataster</a></li>
@@ -1124,10 +1143,10 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 				</ul>
 			</li>
 			<li class="dropdown" id ="modelle" role="presentation" data-toggle="tooltip" data-placement="bottom" title="Ausbreitungsmodelle">
-				<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-location-arrow" aria-hidden="true"></i> Ausbreitungsmodelle
+				<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-location-arrow" aria-hidden="true"></i> Ausbreitungsmodelle
 				<span class="caret"></span></a>
 				<ul class="dropdown-menu navmenu-nav" role="menu" >
-					<li id ="switch_winkel" role="button" onclick="toggleNav('#modalMET')"><a href="#"><i class="fa fa-location-arrow"></i> MET</a></li>
+					<li id ="switch_winkel" role="button" onclick="toggleNav('#modalMET')"><a><i class="fa fa-location-arrow"></i> MET</a></li>
 				</ul>
 			</li>
 			</ul>
