@@ -1,10 +1,12 @@
 ## Changelog
 
 ### 1.4.1 (31.07.2017)
+* Feature: Die Adresssuche lässt sich durch einen Klick auf die Lupe starten. 
 * Style: Anpassung der Nutzeroberfläche
 * Bug: Laden des GPS-Moduls hat zu einer fehlerhaften Anzeige der verfügbaren Fahrzeuge geführt.
 * Bug: Ändern des Benutzernamens hat zu einer falschen Rückmeldung geführt.
 * Bug: Unter Chrome für Android wurden modals nicht geschlossen, wenn Buttons im Modal gedrückt wurden.
+* Bug: Die Adresssuche hat die automatische Verfollständigung nicht korrekt angezeigt
 
 ### 1.4.0 (28.07.2017)
 * Feature: Neue Nutzerberechtigung "Editor" (Kann Änderungen an manchen Parametern der Datenbank vornehmen, z. B. das Messkataster bearbeiten)
