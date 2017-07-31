@@ -101,7 +101,7 @@ function editUser(){
 			$stmt3->bindParam(':username', $username, PDO::PARAM_STR, 12);
 			$stmt3->bindParam(':userID', $userid, PDO::PARAM_INT);
 			$stmt3->execute();
-			$return = 'Erfolg';
+			$return = 'Success';
 		}
 	}
 	else{$return = 'WrongPassword';}
