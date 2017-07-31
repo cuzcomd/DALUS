@@ -22,7 +22,7 @@ if(isset($_GET['login'])) {
  header("Location: workbench"); /* Redirect browser */
 exit();
  } else {
- $errorMessage = "E-Mail oder Passwort war ungültig";
+ $errorMessage = "Benutzername oder Passwort war ungültig.";
  }
  
 }
@@ -65,12 +65,12 @@ exit();
 			<label for="inputName" class="sr-only">Benutzername</label>
 			<div class="input-group" >
       			<div class="input-group-addon"><i class="fa fa-user-circle" aria-hidden="true"></i></div>
-        		<input type="text" id="inputName" class="form-control" size="40" maxlength="250" name="benutzername" placeholder="Benutzername" autofocus><br />
+        		<input type="text" id="inputName" class="form-control" size="40" maxlength="20" name="benutzername" placeholder="Benutzername" autofocus><br />
         	</div>
         	<label for="inputPassword" class="sr-only">Passwort</label>
         	<div class="input-group">
       			<div class="input-group-addon"><i class="fa fa-lock" aria-hidden="true"></i></div>
-        		<input type="password" id="inputPassword" size="40"  maxlength="250" name="passwort" class="form-control" placeholder="Password">
+        		<input type="password" id="inputPassword" size="40"  maxlength="20" name="passwort" class="form-control" placeholder="Password">
         	</div>
         	<button class="btn btn-lg btn-block loginButton" type="submit">Anmelden</button>
 		</form>

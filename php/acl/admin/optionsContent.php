@@ -3,19 +3,19 @@
 		<div class="form-group">
 			<label for="newBenutzername" class="col-xs-4 control-label">Benutzername:</label>
 			<div class="col-xs-8">
-		    	<input type="text" class="form-control" id="newBenutzername" name="benutzername" required>
+		    	<input type="text" class="form-control" id="newBenutzername" name="benutzername" maxlength="20" required>
 		    </div>
 		</div>
 		<div class="form-group">
 		    <label for="newVorname" class="col-xs-4 control-label">Vorname:</label>
 		    <div class="col-xs-8">
-		    	<input type="test" class="form-control" id="newVorname" name="vorname" required>
+		    	<input type="test" class="form-control" id="newVorname" name="vorname" maxlength="20" required>
 		    </div>
 		</div>
 		<div class="form-group">
 			<label for="newNachname" class="col-xs-4 control-label">Nachname:</label>
 			<div class="col-xs-8">
-		    	<input type="text" class="form-control" id="newNachname" name="nachname" required>
+		    	<input type="text" class="form-control" id="newNachname" name="nachname" maxlength="20" required>
 		    </div>
 		</div>
 		<div class="form-group">

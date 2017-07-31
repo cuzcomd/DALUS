@@ -1141,11 +1141,7 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 				<ul class="dropdown-menu navmenu-nav" role="menu" >
 					<li id = "switchMesspunkte" data-click-state="0" role="button"><a><i class="fa fa-toggle-off" aria-hidden="true"></i> Messkataster</a></li>
 					<li id = "switchKompass" data-click-state="0" role="button"><a><i class="fa fa-toggle-off" aria-hidden="true"></i> Kompass</a></li>
-					<?php 
-						if ($accessLevel == 'admin'){
-							echo '<li id = "switchGPS" data-click-state="0" role="button"><a><i class="fa fa-toggle-off" aria-hidden="true"></i> GPS Tracking</a></li>';
-						}
-					?>	
+					<li id = "switchGPS" data-click-state="0" role="button"><a><i class="fa fa-toggle-off" aria-hidden="true"></i> GPS Tracking</a></li>
 				</ul>
 			</li>
 			<li class="dropdown" id ="modelle" role="presentation" data-toggle="tooltip" data-placement="bottom" title="Ausbreitungsmodelle">

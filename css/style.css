@@ -7,7 +7,7 @@ html, body {
 
 a{
 	text-decoration:none;
-	color:#a3bcd3;
+	color:#ddd;
 }
 
 #adminContent{
@@ -17,6 +17,12 @@ a{
 #adminPanel{
 	border-right: solid 1px #ccc;
 	padding-right:15px;
+}
+
+#adminWrapper{
+	display:flex;
+ 	flex-direction:row;
+
 }
 
 #arrow{
@@ -240,7 +246,7 @@ a{
  }
 
 .navmenu-nav a{
-	color: #bcd5ec!important;
+	color: #ddd!important;
 }
 
 .navmenu-nav a:hover{
