@@ -338,31 +338,39 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 		document.getElementById('switchGPS').addEventListener('click', function() {// GPS-Tracking ein-/ausblenden
 			$('#switchGPS').find('i').toggleClass('fa-toggle-off fa-toggle-on');
 			$('#module1').toggle();
-			var data = {
-				"action" : "loadCars",
-				"cars" : optionen.opt_cars
-			};
-			data = $(this).serialize() + "&" + $.param(data);
-			$.ajax({
-				type: "POST",
-				dataType: "json",
-				url: "php/options.php",
-				data: data,
-				success: function(data) {
-					for (var key in data) {
-					    if (!data.hasOwnProperty(key)) continue; // skip loop if the property is from prototype
-					    var obj = data[key];
-					    for (var prop in obj) {
-					        if(!obj.hasOwnProperty(prop)) continue; // skip loop if the property is from prototype
-					        $('<div class=row"><div class="checkbox"><label class="col-xs-10"><input type="checkbox" name="car" onchange="loadGPS(this,\''+obj[prop].car_key+'\',\''+obj[prop].car_color+'\');">'+obj[prop].car_name+' </label><div style="background:'+obj[prop].car_color+';" class="col-xs-1">&nbsp;</div></div></div>').appendTo('#gpsLoadedCars');
-					    } //Ende for
-					} // Ende for 
-				}, //Ende success
-				error: function(xhr, desc, err) {
-					console.log(xhr);
-					console.log("Details: " + desc + "\nError:" + err);
-				} //ende error
-			}); //Ende Ajax
+
+			if($('#switchGPS').attr('data-click-state') == 1) { 
+				$('#switchGPS').attr('data-click-state', 0) // Wenn Schalter aktiviert ist, ihn wieder deaktivieren
+				$('#gpsLoadedCars').children().remove();
+			}
+			else {
+				$('#switchGPS').attr('data-click-state', 1) // Wenn Schalter aktiviert ist, ihn wieder deaktivieren
+				var data = {
+					"action" : "loadCars",
+					"cars" : optionen.opt_cars
+				};
+				data = $(this).serialize() + "&" + $.param(data);
+				$.ajax({
+					type: "POST",
+					dataType: "json",
+					url: "php/options.php",
+					data: data,
+					success: function(data) {
+						for (var key in data) {
+						    if (!data.hasOwnProperty(key)) continue; // skip loop if the property is from prototype
+						    var obj = data[key];
+						    for (var prop in obj) {
+						        if(!obj.hasOwnProperty(prop)) continue; // skip loop if the property is from prototype
+						        $('<div class=row"><div class="checkbox"><label class="col-xs-10"><input type="checkbox" name="car" onchange="loadGPS(this,\''+obj[prop].car_key+'\',\''+obj[prop].car_color+'\');">'+obj[prop].car_name+' </label><div style="background:'+obj[prop].car_color+';" class="col-xs-1">&nbsp;</div></div></div>').appendTo('#gpsLoadedCars');
+						    } //Ende for
+						} // Ende for 
+					}, //Ende success
+					error: function(xhr, desc, err) {
+						console.log(xhr);
+						console.log("Details: " + desc + "\nError:" + err);
+					} //ende error
+				}); //Ende Ajax
+			} //Ende else
 		}); // Ende eventlistener
 		
 		document.getElementById('saveProject').addEventListener('click', function() { // Beim Klick auf "Speichern", aktuelle Änderungen speichern
@@ -711,7 +719,7 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 				</div>
 				<div class="modal-footer">
 					<div class="row">
-						<div class="col-xs-4 text-center"><a href="CHANGELOG.md" target="_blank">Version: 1.4.0</a></div>
+						<div class="col-xs-4 text-center"><a href="CHANGELOG.md" target="_blank">Version: 1.4.1</a></div>
 						<div class="col-xs-4"><a href="https://github.com/cuzcomd/DALUS" target="_blank"><i class="fa fa-github" aria-hidden="true"></i> GitHub Repository</a></div>
 						<div class="col-xs-4"><a href="mailto:kontakt@cuzcomd.de">kontakt@cuzcomd.de</a></div>
 					</div>
@@ -1091,19 +1099,20 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 	</div><!-- Ende modalOptions -->
 
 	<nav id="myNavmenu" class="navmenu navmenu-default navmenu-fixed-left offcanvas-sm" role="navigation">
-  		<a class="navmenu-brand visible-md visible-lg text-center" onclick="toggleNav('#modal_license')"><img src="images/dalus_logo.svg" width="150px"></a>
-  		<div class="userInformation">
-  			<span class="activeUserMenu"><i class="fa fa-user-circle" aria-hidden="true"></i><span id="activeUser">&nbsp; Kein Benutzer aktiv</span></span>
-  			<button id="logout" role="button" onclick="location.href='php/logout'" class="btn btn-default pull-right"><a><i class="fa fa-sign-out" aria-hidden="true"></i> Abmelden</a></button>
-  		</div>
-		<div class="currentProject">
-			<h5><span class="fa fa-folder-open" aria-hidden="true"></span> <span id="activeProject">&nbsp; Kein Projekt geöffnet</span></h5>
+		<div class="userInformation">
+			<span class="fa fa-user-circle" aria-hidden="true"></span>
+			<span id="activeUser">&nbsp; Kein Benutzer aktiv</span>
 		</div>
+		<div class="projectInformation">
+			<span class="fa fa-folder-open" aria-hidden="true"></span>
+			<span id="activeProject">&nbsp; Kein Projekt geöffnet</span>
+		</div>
+  		<!-- <a class="navmenu-brand text-center"><img src="images/dalus_logo.svg" width="150px"></a>  -->		
 		<div class="input-group searchbar">
 			<input id="pac-input" class="form-control" type="text" placeholder="Ort suchen ...">
 			<span id = "startSearch" class="input-group-addon" role="button"><i class="fa fa-search"></i></span>
 		</div>
-		<div class="werkzeuge">
+		<div class="werkzeuge hidden-sm hidden-xs">
 			<ul class="nav nav-pills nav-werkzeuge">
 				<li class="setHand" data-toggle="tooltip" data-placement="bottom" title="Auswahl" role="button"><a data-toggle="tab"><i class="fa fa-mouse-pointer"></i></a></li>
 				<li class="setMarkWhite" data-toggle="tooltip" data-placement="bottom" title="Auswahl" role="button"><a data-toggle="tab"><i class="fa fa-flag-o"></i></a></li>
@@ -1123,11 +1132,9 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 					<li id="editProject" role="button" onclick="toggleNav('#modal_edit_project')" ><a><i class="fa fa-pencil-square-o"></i> Projekt ändern</a></li>
 					<li id="saveProject" role="button"><a><i class="fa fa-floppy-o" aria-hidden="true"></i> Projekt speichern</a></li>
 					<li id="deleteProject" role="button" ><a><i class="fa fa-trash-o" aria-hidden="true"></i> Projekt löschen</a></li>
-					<li id="exportKML" onclick="toKML()" ><a id="download-link" href="data:;base64," download><i class="fa fa-floppy-o" aria-hidden="true"></i> kml-Datei exportieren</a></li>
-					<li id="printMap" role="button" onclick="printMap()" ><a><i class="fa fa-print" aria-hidden="true"></i> Ansicht drucken</a></li>		
+					<li id="exportKML" onclick="toKML()" ><a id="download-link" href="data:;base64," download><i class="fa fa-floppy-o" aria-hidden="true"></i> kml-Datei exportieren</a></li>	
 				</ul>
 			</li>
-			<li id="verwaltung" role="button" onclick="toggleNav('#modalOptions')"><a><i class="fa fa-cogs"></i> Optionen</a></li>
 			<li class="dropdown" id ="parameter" role="presentation" data-toggle="tooltip" data-placement="bottom" title="Ansicht">
 				<a class="dropdown-toggle" data-toggle="dropdown"role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-eye-slash" aria-hidden="true"></i> Ansicht
 				<span class="caret"></span></a>
@@ -1138,8 +1145,7 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 						if ($accessLevel == 'admin'){
 							echo '<li id = "switchGPS" data-click-state="0" role="button"><a><i class="fa fa-toggle-off" aria-hidden="true"></i> GPS Tracking</a></li>';
 						}
-					?>
-							
+					?>	
 				</ul>
 			</li>
 			<li class="dropdown" id ="modelle" role="presentation" data-toggle="tooltip" data-placement="bottom" title="Ausbreitungsmodelle">
@@ -1186,9 +1192,15 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 			<div id = "module2" class="module windrose" ><img src="images/arrow.png" alt="Windrose" id="arrow"/></div>
 			<div id = "module3" class="module"></div>
 		</div>
+		<div class="nav sidebar-footer">
+			
+		<a href='php/logout' data-toggle="tooltip" data-placement="bottom" title="Abmelden"><span class="fa fa-power-off" aria-hidden="true"></span></a>
+		<a onclick="toggleNav('#modal_license')" data-toggle="tooltip" data-placement="bottom" title="Informationen über Dalus"><span class="fa fa-info-circle" aria-hidden="true"></span></a>
+		<a onclick="toggleNav('#modalOptions')" data-toggle="tooltip" data-placement="bottom" title="Optionen"><span class="fa fa-cogs"></span></a>
+		<a onclick="printMap()"  ata-toggle="tooltip" data-placement="bottom" title="Ansicht drucken"><span class="fa fa-print" aria-hidden="true"></span></a></li>
+		</div>
 	</nav>
-<div class="navbar navbar-default navbar-fixed-top hidden-md hidden-lg">
-<img class="dalus-logo" src="images/dalus_logo.svg" height="44px" onclick="$('#modal_license').modal('show')">
+<div class="navbar navbar-default navbar-fixed-top hidden-md hidden-lg text-center">
 <span class="werkzeuge-top">
 			<ul class="nav nav-pills nav-werkzeuge">
 				<li class="setHand" data-toggle="tooltip" data-placement="bottom" title="Auswahl" role="button"><a data-toggle="tab"><i class="fa fa-mouse-pointer"></i></a></li>

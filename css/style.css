@@ -7,7 +7,7 @@ html, body {
 
 a{
 	text-decoration:none;
-	color:#eee;
+	color:#a3bcd3;
 }
 
 #adminContent{
@@ -39,6 +39,29 @@ a{
 
 #pac-input {
 	text-overflow: ellipsis;
+	background: rgba(0,0,0,0.4);
+	border:none;
+	color:#a3bcd3;
+}
+#pac-input::-webkit-input-placeholder
+{
+	color: #7D96AD ;
+}
+##pac-input::-ms-input-placeholder
+{
+	color: #7D96AD ;
+}
+#pac-input:-ms-input-placeholder
+{
+	color: #7D96AD ;
+}
+#pac-input::-moz-placeholder
+{
+	color: #7D96AD ;
+}
+#pac-input::placeholder
+{
+	color: #7D96AD ;
 }
 
 #pac-input:focus {
@@ -54,11 +77,6 @@ a{
  	flex-wrap:wrap;
  }
 
-.activeUserMenu{
-	color:#eee;
-	padding: 0 15px 0 15px;
-}
-
 .btn-met{
 	box-shadow: none !important;
 	padding:0;
@@ -66,12 +84,6 @@ a{
 
 .btnInfoWindow{
 	height: 46px;
-}
-
-.currentProject{
-	color:#eee;
-	word-wrap:break-word;
-	padding: 0 15px;
 }
 
 .dalus-logo{
@@ -213,7 +225,7 @@ a{
 }
 
 .modal a{
-	color:#27A04F;
+	color:#333;
 }
 
 .module{
@@ -223,9 +235,17 @@ a{
 .moduleWrapper{
  	display:flex;
  	flex-direction:column;
- 	color:#eee;
+ 	color:#a3bcd3;
  	padding:15px;
  }
+
+.navmenu-nav a{
+	color: #bcd5ec!important;
+}
+
+.navmenu-nav a:hover{
+	color: #27a04f!important;
+}
 
 .navbar-default{
 	background-color:#345;
@@ -236,7 +256,7 @@ a{
 }
 
 .nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover{
-	color:#eee;
+	color:#a3bcd3;
 	background-color:#345;
 }
 
@@ -244,34 +264,56 @@ a{
 	overflow:hidden;
 }
 
-.nav-werkzeuge{
-	border-bottom: 1px solid #eee;
-}
-
 .pac-container {
 	font-family: Roboto;
 	z-index:9999;
 }
 
+.projectInformation, .userInformation{
+	background: #273340;
+    color: #7d96ad;
+	padding: 2.5px 15px;
+	display:block;
+	width:100%;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
 .searchbar{
-	margin: 0 15px;
+	margin: 15px;
+}
+
+.sidebar-footer{
+	bottom: 0;
+    clear: both;
+    display: block;
+    margin: 5px 0 0;
+    position: absolute;
+    width: 300px;
+    background: #172D44;
+    color: #5A738E;
+    z-index: 999;
+}
+
+.sidebar-footer a {
+    padding: 7px 0 3px;
+    text-align: center;
+    width: 25%;
+    font-size: 17px;
+    display: block;
+    float: left;
+    background: #172D44;
+    cursor: pointer;
+    color: #5A738E;
+}
+
+.sidebar-footer a:hover {
+    color: #169e4d;
 }
 
 .tab-content {
 	padding-top:10px;
-}
-
-.userInformation{
-	padding-right:15px;
-	line-height:40px;
-}
-
-.userInformation button{
-	margin:4px 0;
-}
-
-.userInformation a{
-	color:#345;
 }
 
 .werkzeuge{
@@ -283,9 +325,12 @@ a{
 }
 
 .werkzeuge-top{
-	height:39px;
-	margin:3px 0 3px 30px;
+	margin:5px 0 0 30px;
 	display:inline-block;
+}
+
+.werkzeuge-top>ul>li>a{
+	padding:10px 25px;
 }
 
 .windrose{
@@ -322,6 +367,12 @@ a{
  	}
 } 
 
+@media (max-width: 470px){
+	.werkzeuge-top>ul>li>a{
+	padding:10px 15px;
+}
+}
+
 @media (min-width: 768px){
 	.modal-dialog {
 	    width: 70vw;
@@ -333,14 +384,11 @@ a{
 }
 
 @media (max-width: 991px){
-	.nav-werkzeuge{
-	border-bottom: none;
-}
-	.activeUserMenu{
-	padding: 15px 15px 0 15px;
+	.modal.in { 
+		display:block!important;
 	}
 
-	.modal.in { 
-	display:block!important;
+	.nav-werkzeuge{
+		border-bottom: none;
 	}
 }

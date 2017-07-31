@@ -1,5 +1,11 @@
 ## Changelog
 
+### 1.4.1 (31.07.2017)
+* Style: Anpassung der Nutzeroberfläche
+* Bug: Laden des GPS-Moduls hat zu einer fehlerhaften Anzeige der verfügbaren Fahrzeuge geführt.
+* Bug: Ändern des Benutzernamens hat zu einer falschen Rückmeldung geführt.
+* Bug: Unter Chrome für Android wurden modals nicht geschlossen, wenn Buttons im Modal gedrückt wurden.
+
 ### 1.4.0 (28.07.2017)
 * Feature: Neue Nutzerberechtigung "Editor" (Kann Änderungen an manchen Parametern der Datenbank vornehmen, z. B. das Messkataster bearbeiten)
 * Feature: Administratoren haben die Möglichkeit, GPS-Tracking anzuzeigen (Konfiguration über das Frontend ist noch nicht vollständig umgesetzt!!!)
