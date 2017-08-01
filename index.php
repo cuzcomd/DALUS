@@ -70,7 +70,7 @@ exit();
         	<label for="inputPassword" class="sr-only">Passwort</label>
         	<div class="input-group">
       			<div class="input-group-addon"><i class="fa fa-lock" aria-hidden="true"></i></div>
-        		<input type="password" id="inputPassword" size="40"  maxlength="20" name="passwort" class="form-control" placeholder="Password">
+        		<input type="password" id="inputPassword" size="40"  maxlength="20" name="passwort" class="form-control" placeholder="Passwort">
         	</div>
         	<button class="btn btn-lg btn-block loginButton" type="submit">Anmelden</button>
 		</form>

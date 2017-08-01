@@ -326,7 +326,7 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 			generateMET(map);
 		});
 		
-		document.getElementById('switchMesspunkte').addEventListener('click', function() {// Definierte Messpunkte ein-/ausblenden
+		document.getElementById('switchMesskataster').addEventListener('click', function() {// Messkataster ein-/ausblenden
 			loadFixpoints($(this));
 		});
 
@@ -569,6 +569,7 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 					obj_messwert: '0',
 					obj_hinweis: ' '
 					});
+				newMarker.setLabel({text:newMarker.obj_nummer.toString(), fontWeight: "700"});
 				newMarker.content = '';
 				objectArray.push(newMarker);
 				messpunktNummer += 1; // Messpunktnummer inkrementieren
@@ -1139,7 +1140,7 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 				<a class="dropdown-toggle" data-toggle="dropdown"role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-eye-slash" aria-hidden="true"></i> Ansicht
 				<span class="caret"></span></a>
 				<ul class="dropdown-menu navmenu-nav" role="menu" >
-					<li id = "switchMesspunkte" data-click-state="0" role="button"><a><i class="fa fa-toggle-off" aria-hidden="true"></i> Messkataster</a></li>
+					<li id = "switchMesskataster" data-click-state="0" role="button"><a><i class="fa fa-toggle-off" aria-hidden="true"></i> Messkataster</a></li>
 					<li id = "switchKompass" data-click-state="0" role="button"><a><i class="fa fa-toggle-off" aria-hidden="true"></i> Kompass</a></li>
 					<li id = "switchGPS" data-click-state="0" role="button"><a><i class="fa fa-toggle-off" aria-hidden="true"></i> GPS Tracking</a></li>
 				</ul>
@@ -1283,31 +1284,32 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 			switch(value.obj_farbe) {
 				case 'white':
 				var icon_type = 'images/white.png';
+				var labelColor = "black";
 				break;
 
 				case 'green':
 				var icon_type = 'images/green.png';
+				var labelColor = "white";
 				break;
 
 				case 'blue':
 				var icon_type = 'images/blue.png';
+				var labelColor = "white";
 				break;
 
 				case 'yellow':
 				var icon_type = 'images/yellow.png';
+				var labelColor = "black";
 				break;
-
 				
 				case 'red':
 				var icon_type = 'images/red.png';
-				break;
-
-				case 'black':
-				var icon_type = 'images/black.png';
+				var labelColor = "white";
 				break;
 
 				default:
 				var icon_type = 'images/white.png';
+				var labelColor = "black";
 			}
 
 			switch(value.obj_typ) {
@@ -1317,7 +1319,8 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 				position: {lat:Number(value.obj_lat), lng:Number(value.obj_lon)},
 				obj_lat: Number(value.obj_lat),
 				obj_lon: Number(value.obj_lon),
-				icon:{url:icon_type, anchor: new google.maps.Point(16,16)},
+				icon:{url:icon_type, anchor: new google.maps.Point(16,16), },
+				label: {text: value.obj_nummer.toString(), fontWeight: "700", color: labelColor},
 				obj_nummer: Number(value.obj_nummer),
 				obj_farbe: value.obj_farbe,
 				obj_messwert: Number(value.obj_messwert),
@@ -1521,26 +1524,31 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 		switch(color){
 			case 1:
 			activeObject.setIcon({url:'images/white.png', anchor: new google.maps.Point(16,16)});
+			activeObject.setLabel({text: activeObject.obj_nummer.toString(), color: "black", fontWeight: "700"});
 			objectArray[index].obj_farbe = "white";
 			break;
 
 			case 2:
 			activeObject.setIcon({url:'images/green.png', anchor: new google.maps.Point(16,16)});
+			activeObject.setLabel({text: activeObject.obj_nummer.toString(), color: "white", fontWeight: "700"});
 			objectArray[index].obj_farbe = "green";
 			break;
 
 			case 3:
 			activeObject.setIcon({url:'images/blue.png', anchor: new google.maps.Point(16,16)});
+			activeObject.setLabel({text: activeObject.obj_nummer.toString(), color: "white", fontWeight: "700"});
 			objectArray[index].obj_farbe = "blue";
 			break;
 
 			case 4:
 			activeObject.setIcon({url:'images/yellow.png', anchor: new google.maps.Point(16,16)});
+			activeObject.setLabel({text: activeObject.obj_nummer.toString(), color: "black", fontWeight: "700"});
 			objectArray[index].obj_farbe = "yellow";
 			break;
 
 			case 5:
 			activeObject.setIcon({url:'images/red.png', anchor: new google.maps.Point(16,16)});
+			activeObject.setLabel({text: activeObject.obj_nummer.toString(), color: "white", fontWeight: "700"});
 			objectArray[index].obj_farbe = "red";
 			break;
 
