@@ -41,6 +41,8 @@
 {"type": "Feature", "properties": {"nummer": "16-04","name": "Florapark", "adresse": "Am Florapark, 39128 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.607952, 52.158674]}},
 {"type": "Feature", "properties": {"nummer": "16-05","name": "Florapark", "adresse": "Am Florapark, 39128 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.606594, 52.160571]}},
 
+{"type": "Feature", "properties": {"nummer": "20-01","name": "Mittelweg", "adresse": "Mittelweg 27, 39130 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.568141, 52.148428]}},
+
 {"type": "Feature", "properties": {"nummer": "22-00","name": "Gerätehaus FF Olvenstedt", "adresse": "Olvenstedter Grund 20, 39130 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.573326, 52.149977]}},
 {"type": "Feature", "properties": {"nummer": "22-01","name": "Albert-Einstein-Gymnasium", "adresse": "Hans-Grade-Straße 120, 39128 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.594997, 52.156383]}},
 {"type": "Feature", "properties": {"nummer": "22-02","name": "Krankenhaus Klinikum Olvenstedt - Süd-Ost Seite", "adresse": "Birkenallee 34, 39130 Magdeburg", "odl": "0", "ips": "0" },"geometry": { "type": "Point", "coordinates": [11.584373, 52.157037]}},
