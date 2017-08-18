@@ -1622,7 +1622,7 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 	<script defer> // Ajax für Speichern und Löschen von Objekten
 		function saveProjectStatus(){ // Erzeugt neue Messpunkte oder aktualisiert Vorhandene in der Datenbank
 			objectArray.forEach(function(entry) {
-				if (entry.obj_typ != "polygon1" && entry.obj_typ != "polygon" && entry.obj_typ != "polygonCenter" )
+				if (entry.obj_typ != "polygon1" && entry.obj_typ != "polygon2" && entry.obj_typ != "polygonCenter" )
 				{
 					var obj_farbe = entry.obj_farbe;
 					var obj_lat = entry.obj_lat;
