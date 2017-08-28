@@ -1,7 +1,6 @@
 <?php require('php/session.php'); ?>
 <!DOCTYPE html>
-<!-- Dieses Projekt wurde von cuzcoMD [www.cuzcomd.de] entwickelt. Es ist vom Autor lizenziert unter einer Creative Commons Namennennung - Nicht-kommerziell - Weitergabe unter gleichen Bedingungen 4.0 International Lizenz.
-Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf, solange es sich um eine nicht kommerzielle Nutzung handelt und der ursprüngliche Autor genannt wird. Zudem muss die Weitergabe unter der gleichen Lizenz erfolgen. -->
+<!-- This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. -->
 <html lang="de">
 <head>
 	<meta charset="UTF-8"/>
@@ -30,291 +29,40 @@ Dies bedeutet, dass jeder Änderungen vornehmen und diese veröffentlichen darf,
 	<link rel="stylesheet" href="css/datetimepicker.css">
 	<link rel="stylesheet" href="css/alertify/alertify.core.css" />
 	<link rel="stylesheet" href="css/alertify/alertify.bootstrap.css" />
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script> <!-- Script zum dynamischen Anzeigen von Statusmeldungen -->
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" /> <!-- CSS für Script zum dynamischen Anzeigen von Statusmeldungen -->
-	<script> // OSM Layer laden
-		function loadOSMLayer(){
-			var mapTypeIds = [];
-			for(var type in google.maps.MapTypeId) {
-				mapTypeIds.push(google.maps.MapTypeId[type]);
-			}
-			mapTypeIds.push("OSM");
-			map = new google.maps.Map(document.getElementById('map'), {
-				zoom: 14,
-				mapTypeId: "OSM",
-				mapTypeControlOptions: {
-					mapTypeIds: mapTypeIds,
-					style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-					position: google.maps.ControlPosition.BOTTOM_RIGHT
-				},
-				center: {lat: 52.13024, lng: 11.56567700000005} // Koordinaten des Kartenmittelpunkts
-			});
-			
-			OSM ='OSM'; //Variable OpenStreetMap definieren
-			map.mapTypes.set("OSM", new google.maps.ImageMapType({
-				getTileUrl: function(coord, zoom) {
-	            // "Wrap" x (longitude) at 180th meridian properly
-	            // NB: Don't touch coord.x because coord param is by reference, and changing its x property breakes something in Google's lib 
-					var tilesPerGlobe = 1 << zoom;
-					var x = coord.x % tilesPerGlobe;
-					if (x < 0) {
-						x = tilesPerGlobe+x;
-					}
-	            // Wrap y (latitude) in a like manner if you want to enable vertical infinite scroll
-					return "https://tile.openstreetmap.org/" + zoom + "/" + x + "/" + coord.y + ".png";
-				},
-				tileSize: new google.maps.Size(256, 256),
-				name: "OpenStreetMap",
-				maxZoom: 18
-			}));	
-		}//Ende Funktion loadOSMLayer
-	</script><!-- OSM Layer Laden -->
-	<script>
-	function loadUser(){ // Lädt die Daten des angemeldeten Benutzers
-		var data = {"action": "loadUser"};
-		data = $(this).serialize() + "&" + $.param(data);
-		$.ajax({
-			type: "POST",
-			dataType: "json",
-			url: "php/users.php",
-			data: data,
-			success: function(data) {
-				benutzer = data["benutzer"];
-				optionen = data["optionen"];
-				$("#activeUser").html('&nbsp; '+benutzer.vorname +' '+ benutzer.nachname+'&nbsp;'); //Zeigt den Namen im Optionsmenü an
-				$(".activeUserID").val(benutzer.id); //Setzt die ID des Benutzers als Feldwert
-				$("#username").val(benutzer.benutzername);
-				userID = benutzer.id; //Speichert die Benutzer-ID in einer globalen Variablen
-				userAL = data["accessLevel"]; //Speichert die Zugriffsberechtigung des Benutzers in einer globalen Variablen
-			},
-			error: function(xhr, desc, err) {
-				console.log(xhr);
-				console.log("Details: " + desc + "\nError:" + err);
-			}
-		});//Ende Ajax
-	}//Ende Funktion loadUser
-
-	function updateProjects(){ //Aktualisiert die Liste der Projekte, die für den angemeldeten Benutzer sichtbar sind
-		$('#projectOpen').children('option').remove();// Leert die Liste aller verfügbaren Optionen
-		var data = {"action": "updateProjects"};
-		data = $(this).serialize() + "&" + $.param(data);
-		$.ajax({
-			type: "POST",
-			dataType: "json",
-			url: "php/projects.php",
-			data: data,
-			success: function(data) {
-				$.each(data, function (key, value) {
-				 	$('#projectOpen') // Fügt eine neue Option hinzu
-				 	.append($('<option></option>') 
-				 	.attr('value', value.prj_name)
-				 	.text(value.prj_name));
-				});
-			},
-			error: function(xhr, desc, err) {
-				console.log(xhr);
-				console.log("Details: " + desc + "\nError:" + err);
-			}
-		});//Ende Ajax
-	}//Ende Funktion updateProjects
-
-function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den angemeldeten Benutzer sichtbar sind
-		$('.listOfAllUsers').children('option').remove(); // Leert die Liste aller verfügbaren Optionen
-		var data = {"action": "updateAllUsers"};
-		data = $(this).serialize() + "&" + $.param(data);
-		$.ajax({
-			type: "POST",
-			dataType: "json",
-			url: "php/users.php",
-			data: data,
-			success: function(data) {
-				$('.listOfAllUsers').children('option').remove();
-				$('.listOfAllUsersExceptMe').children('option').remove();
-				$.each(data, function (key, value) {
-					$('.listOfAllUsers')// Fügt eine neue Option hinzu
-					.append($('<option></option>') 
-				 	.attr('value', value.id)
-				 	.text(value.vorname+' '+value.nachname+' ('+value.benutzername+')'));
-
-				 	if (value.id != userID){
-				 		$('.listOfAllUsersExceptMe')// Fügt eine neue Option hinzu
-						.append($('<option></option>') 
-				 		.attr('value', value.id)
-				 		.text(value.benutzername));
-				 	}
-				});
-			},
-			error: function(xhr, desc, err) {
-				console.log(xhr);
-				console.log("Details: " + desc + "\nError:" + err);
-			}
-		});//Ende Ajax
-	}//Ende Funktion updateSharedProjects
-
-	function updateSharedProjects(){ //Aktualisiert die Liste der Projekte, die für den angemeldeten Benutzer sichtbar sind
-		$('#projectOpenShared').children('option').remove(); // Leert die Liste aller verfügbaren Optionen
-		var data = {"action": "updateSharedProjects"};
-		data = $(this).serialize() + "&" + $.param(data);
-		$.ajax({
-			type: "POST",
-			dataType: "json",
-			url: "php/projects.php",
-			data: data,
-			success: function(data) {
-				$.each(data, function (key, value) {
-					$('#projectOpenShared')// Fügt eine neue Option hinzu
-					.append($('<option></option>') 
-				 	.attr('value', value.prj_name)
-				 	.text(value.prj_name));
-				});
-			},
-			error: function(xhr, desc, err) {
-				console.log(xhr);
-				console.log("Details: " + desc + "\nError:" + err);
-			}
-		});//Ende Ajax
-	}//Ende Funktion updateSharedProjects
-
-	function isSharedWith(){ //Aktualisiert die Liste der Projekte, die für den angemeldeten Benutzer sichtbar sind
-		$('#projektShared').children('option').remove();// Leert die Liste aller verfügbaren Optionen
-		var data = {"action": "isSharedWith", "projectID": prj_id};
-		data = $(this).serialize() + "&" + $.param(data);
-		$.ajax({
-			type: "POST",
-			dataType: "json",
-			url: "php/projects.php",
-			data: data,
-			success: function(data) {
-				$.each(data, function (key, value) {
-					if (value.shared == "yes") {
-						$('#projektShared')// Fügt eine neue Option hinzu
-					 	.append($('<option selected selected="selected"></option>') 
-					 	.attr('value', value.id)
-					 	.text(value.username));
-					}
-					else{
-						$('#projektShared')
-						 .append($('<option></option>') 
-						 .attr('value', value.id)
-						 .text(value.username));
-						}
-				});//Ende each()
-			},//Ende success
-			error: function(xhr, desc, err) {
-				console.log(xhr);
-				console.log("Details: " + desc + "\nError:" + err);
-			}
-		});//Ende Ajax
-	}//Ende Funktion isSharedWith
-
-	function loadGPS(elementID, car, pathColor){
-		let startTrack = $("#startTrackInput").val();
-		let endTrack = $("#endTrackInput").val();
-		if(elementID.checked === false) { 
-			var gpsPath = [];
-			let index = objectArray.findIndex(x => x.obj_car == car); // Ermittelt Array-Index des PGS-Pfads
-			objectArray[index].setMap(null); //GPS-Pfad von der Karte löschen
-			objectArray.splice(index,1); // Löscht das Objekt aus dem Objekt-Array
-		}
-		else {
-			var gpsPath = [];
-			var data = {
-				"task" : "loadGPS",
-				"car" : car,
-				"start" : startTrack,
-				"end" : endTrack
-				};
-			data = $(this).serialize() + "&" + $.param(data);
-			
-			$.ajax({
-				type: "POST",
-				dataType: "json",
-				url: "php/geometry.php",
-				data: data,
-				success: function(data) {
-					for (let value of data) {
-						let gpsCoord = new google.maps.LatLng(value.gps_lat, value.gps_lon);
-						gpsPath.push(gpsCoord);
-					}
-					var gpsPolyline = new google.maps.Polyline({
-						path: gpsPath,
-						strokeOpacity: 0.8,
-						strokeColor: pathColor,
-						strokeWeight: 10,
-						geodesic: true,
-						obj_typ: 'gpsPath',
-						obj_car: car,
-						obj_nummer: objectNummer,
-						map: map
-					});
-					objectArray.push(gpsPolyline);
-					objectNummer += 1;
-				}, //Ende success
-				error: function(xhr, desc, err) {
-					console.log(xhr);
-					console.log("Details: " + desc + "\nError:" + err);
-				} //ende error
-			}); //Ende Ajax
-		} // Ende else-Funktion
-	} //Ende function loadGPS
-
-	function toggleNav(modalID){ //Schließt das off-canvas Menü und blendet ein Modal ein
-		if ($(window).width() < 992) //Überprüft, ob Fenster kleiner als 992px ist (Danach ist kein off-canvas Menü vorhanden)
-		{
-			$('#myNavmenu').offcanvas('toggle');
-			$(modalID).modal('show');
-		}
-		else
-		{
-			$(modalID).modal('show');
-		}
-	}
-
-	function loadProjectObjects(){
-		for (var i = 0; i < objectArray.length; i++ ) {
-			objectArray[i].setMap(null);
-		}
-		objectArray = [];
-		var data = {
-			"task" : "load",
-			"prj_id" : prj_id
-			};
-		data = $(this).serialize() + "&" + $.param(data);
-		
-		$.ajax({
-			type: "POST",
-			dataType: "json",
-			url: "php/geometry.php",
-			data: data,
-			success: function(data) {
-				drawObjects(data);
-			}, //Ende success
-			error: function(xhr, desc, err) {
-				console.log(xhr);
-				console.log("Details: " + desc + "\nError:" + err);
-			} //ende error
-		}); //Ende Ajax
-	} //Ende function loadProjectObjects
-	</script>
+	<link rel="stylesheet" href="css/toastr.min.css" /> <!-- CSS für Script zum dynamischen Anzeigen von Statusmeldungen -->
+	<link href="css/dataTables.bootstrap.min.css" rel="stylesheet">
+	<script src="js/jquery.dataTables.min.js"></script>
+	<script src="js/dataTables.bootstrap.min.js"></script>
+	<script src="js/dataTables.cellEdit.js"></script>
+	<script src="js/OSM.js"></script>
+	<script src="js/users.js"></script>
+	<script src="js/objects.js"></script>
+	<script src="js/messkataster.js"></script>
+	<script src="js/init.js"></script>
 	<script> // Initialfunktion
 	benutzer = []; //Initialisierung
 	optionen = []; //Initialisierung
 	userAL = ""; //Initialisierung
 	userID = 0; //Initialisierung
 	prj_id = 0; //Initialisierung
+	maxRowID = 0; //Initialisierung
+	messpunktNummer = 1; //Initialisierung
+	objectNummer = 1; // Initialisierung
+	metCounter = 1; // Initialisierung
+	activeObject = null; // Initialisierung
 	activeProjectName = "Unbekanntes Projekt";  //Initialisierung
 	loadUser(); // Daten des angemeldeten Benutzers laden
 	updateProjects(); //Verfügbare Projekte aktualisieren
 	updateSharedProjects(); //Verfügbare geteilte Projekte aktualisieren
 	isSharedWith(); //Aktualisieren, mit wem das Projekt geteilt wird
 	updateAllUsers() //Aktulisiert alle verfügbaren Benutzer
-	messpunktNummer = 1; //Initialisierung
-	objectNummer = 1;
-	metCounter = 1; //Zähler für die Anzahl an Freisetzungsmarkern
 	objectArray = []; //Array für temporär erzeugte Objekte
 	deleteArray = []; // Array für temporär gelöschte Objekte
-	activeObject = null;
+	markerArray =[];
 	var selectedShape; //Initialisierung für aktuell markiertes Geometrieobjekt
+
+	function myCallbackFunction (updatedCell, updatedRow, oldValue) { //Callback für das Editieren der Messkatasterzellen
+	    }
 
 	function initMap() { // Erzeugung der Karte
 		loadOSMLayer(); //OSM Kartenbilder laden
@@ -322,6 +70,20 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 		startDrawingManager(map); //Google DrawingManager laden
 		loadProjectObjects();	// Im Projekt gespeicherte Objekte einlesen
 		
+		dataTable = $('#kataster').DataTable({
+			paging: false,
+			scrollY: 400,
+			scrollX: false,
+			 "order": [[ 1, "asc" ]]
+		}).draw();
+
+		dataTable.MakeCellsEditable({
+			"onUpdate": myCallbackFunction,
+        	"columns": [1,2,3,4,5,6]
+    	});
+
+		updateKataster(userID);
+
 		document.getElementById('calcMET').addEventListener('click', function() { // Beim Klick auf "Berechnen" MET-Modell erzeugen
 			generateMET(map);
 		});
@@ -447,248 +209,8 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
         });
 	}//Ende Funktion initMap
 	</script> <!-- Initialfunktion -->
-	<script > // Google DrawingManager laden
-	function startDrawingManager(map){
-		var marker_color = "white"; //Marker standardmäßig als gelbe Marker zeichnen
-		drawingManager = new google.maps.drawing.DrawingManager({
-			drawingMode: google.maps.drawing.OverlayType.null,
-			drawingControl: false,
-			polylineOptions: {
-                    editable: true,
-                    draggable: true
-                },
-                rectangleOptions: {
-                    editable: true,
-                    draggable: true
-                },
-                circleOptions: {
-                    editable: true,
-                    draggable: true
-                },
-                polygonOptions: {
-                    editable: true,
-                    draggable: true
-                }
-		});			
-		drawingManager.setMap(map);
-	
-	// Beim Klick auf Geometriesymbole das jeweilige Werkzeug auswählen
-		$('.setHand').click(function() {
-			drawingManager.setOptions({
-				drawingMode: google.maps.drawing.OverlayType.null
-			});
-		});
-		
-		$('.setMarkWhite').click(function() {
-			drawingManager.setOptions({
-				drawingMode: google.maps.drawing.OverlayType.MARKER,
-				markerOptions: {icon: {url:'images/white.png',anchor: new google.maps.Point(16, 16)}, draggable:true}
-			});
-			marker_color = "white";
-			marker_typ = 'messpunkt';
-		});
-	
-		$('.setCirc').click(function() {
-	 		drawingManager.setOptions({
-		  		drawingMode: google.maps.drawing.OverlayType.CIRCLE
-	  		});
-  		});
-	
-		$('.setPoly').click(function() {
-	  		drawingManager.setOptions({
-		  		drawingMode: google.maps.drawing.OverlayType.POLYGON
-	  		});
-  		});
-	
-		$('.setPath').click(function() {
-	  		drawingManager.setOptions({
-		  		drawingMode: google.maps.drawing.OverlayType.POLYLINE
-	  		});
-  		});
-
-  		$('.deleteActiveObject').click(function() {
-	  		deleteObject(); //Löschfunktion für geladene Objekte
-	  		deleteSelectedShape(); //Löschfunktion für neu erzeugte Objekte
-  		});
-		
-		google.maps.event.addListener(drawingManager, 'overlaycomplete', function(event) { //Funktionen, die nach dem Zeichnen eines Geometrieobjekts aufgerufen werden
-			var newShape = event.overlay;
-			newShape.type = event.type;
-			
-			if (event.type == google.maps.drawing.OverlayType.POLYLINE) {
-				var newObject = event.overlay;
-				newObject.setValues({
-					obj_nummer: objectNummer,
-					obj_parameter: newObject.getPath().getArray(),
-					obj_typ: 'polyline'
-					});
-				objectArray.push(newObject);
-				objectNummer +=1;
-			}
-
-			if (event.type == google.maps.drawing.OverlayType.POLYGON) {
-				var newObject = event.overlay;
-				newObject.setValues({
-					obj_nummer: objectNummer,
-					obj_parameter: newObject.getPath().getArray(),
-					obj_typ: 'polygon'
-					});
-				objectArray.push(newObject);
-				objectNummer +=1;
-			}
-
-			if (event.type == google.maps.drawing.OverlayType.CIRCLE) {
-				var newObject = event.overlay;
-				newObject.setValues({
-					obj_nummer: objectNummer,
-					obj_lat: newObject.getCenter().lat().toFixed(6),
-					obj_lon: newObject.getCenter().lng().toFixed(6),
-					obj_parameter: newObject.getRadius(),
-					obj_typ: 'circle'
-					});
-				objectArray.push(newObject);
-				objectNummer +=1;
-			}
-
-			if (event.type == google.maps.drawing.OverlayType.MARKER && marker_typ == 'metManual') {
-				var newMarker = event.overlay;
-				var latitude= newMarker.getPosition().lat().toFixed(6);
-				var longitude= newMarker.getPosition().lng().toFixed(6);
-				generateMET(map, latitude, longitude);
-				newMarker.setMap(null);
-			}
-
-			if (event.type == google.maps.drawing.OverlayType.MARKER && marker_typ == 'messpunkt') {
-				var newMarker = event.overlay;
-				newMarker.setValues({
-					obj_nummer: messpunktNummer,
-					obj_lat: newMarker.getPosition().lat().toFixed(6),
-					obj_lon: newMarker.getPosition().lng().toFixed(6),
-					obj_farbe: marker_color,
-					obj_typ: 'marker',
-					obj_messwert: '0',
-					obj_hinweis: ' '
-					});
-				newMarker.setLabel({text:newMarker.obj_nummer.toString(), fontWeight: "700"});
-				newMarker.content = '';
-				objectArray.push(newMarker);
-				messpunktNummer += 1; // Messpunktnummer inkrementieren
-
-				google.maps.event.addListener(newMarker,'click',function(){ // Öffnet Infowindow bei Klick auf Marker
-					activeObject = this; // Setzt den aktuell ausgewählten marker als aktiv
-					let index = objectArray.findIndex(x => x.obj_nummer == this.obj_nummer && x.obj_typ == this.obj_typ); // Ermittelt Array-Index des aktuellen Markers
-					this.setValues({messwert: objectArray[index].messwert}); // Aktualisiert den aktullen Messwert aus dem im Array gespeicherten Wert
-					infoWindow.setContent('<h5>Messpunkt '+ objectArray[index].obj_nummer + '</h5><span class="fa fa-map-marker" aria-hidden="true"></span> '+	objectArray[index].obj_lat+', '+ objectArray[index].obj_lon+'<hr>'+
-						'<form><div class="form-group"> <label for="messwert">Messwert [ppm]</label><input type="text" class="form-control" id="messwert" cols="50" value = "'+objectArray[index].obj_messwert+'" onchange="updateMesswert('+objectArray[index].obj_nummer+', this.value);"></div>'+
-						'<div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis('+objectArray[index].obj_nummer+', this.value);" rows="5">'+objectArray[index].obj_hinweis+'</textarea></div></form>'+
-						'<div class="btn-group" role="group" aria-label="Optionen">'+
-						'<button type="button" class="btn btn-default btn-danger btnInfoWindow" id="deleteButton" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button>'+
-						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',1);"><img src="images/white.png"></button>'+
-						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',2);"><img src="images/green.png"></button>'+
-						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',3);"><img src="images/blue.png"></button>'+
-						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',4);"><img src="images/yellow.png"></button>'+
-						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',5);"><img src="images/red.png"></button></div>');
-					infoWindow.open(map,this);
-				});//Ende eventlistener
-				
-				google.maps.event.addListener(newMarker,'dragend', function(){ //Aktualisiert Array und InfoWindow wenn Marker verschoben wird
-					let index = objectArray.findIndex(x => x.obj_nummer == newMarker.obj_nummer  && x.obj_typ == newMarker.obj_typ);  // Ermittelt Array-Index des aktuellen Markers
-					objectArray[index].obj_lat = newMarker.getPosition().lat().toFixed(6); // Aktualisiert geogr. Position im Array
-					objectArray[index].obj_lon = newMarker.getPosition().lng().toFixed(6);// Aktualisiert geogr. Position im Array	
-					infoWindow.setContent('<h5>Messpunkt '+ objectArray[index].obj_nummer + '</h5><span class="fa fa-map-marker" aria-hidden="true"></span> '+	objectArray[index].obj_lat+', '+ objectArray[index].obj_lon+'<hr>'+
-						'<form><div class="form-group"> <label for="messwert">Messwert [ppm]</label><input type="text" class="form-control" id="messwert" cols="50" value = "'+objectArray[index].obj_messwert+'" onchange="updateMesswert('+objectArray[index].obj_nummer+', this.value);"></div>'+
-						'<div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis('+objectArray[index].obj_nummer+', this.value);" rows="5">'+objectArray[index].obj_hinweis+'</textarea></div></form>'+
-						'<div class="btn-group" role="group" aria-label="Optionen">'+
-						'<button type="button" class="btn btn-default btn-danger btnInfoWindow" id="deleteButton" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button>'+
-						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',1);"><img src="images/white.png"></button>'+
-						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',2);"><img src="images/green.png"></button>'+
-						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',3);"><img src="images/blue.png"></button>'+
-						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',4);"><img src="images/yellow.png"></button>'+
-						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',5);"><img src="images/red.png"></button></div>');
-					infoWindow.setPosition(new google.maps.LatLng(newMarker.obj_lat , newMarker.obj_lon));
-					infoWindow.setOptions({pixelOffset: new google.maps.Size(0,-16)});
-					infoWindow.open(map,this);
-				});
-
-				google.maps.event.addListener(newMarker,'dragstart', function(){
-					activeObject = this;
-					infoWindow.setMap(null);
-				});
-				
-				// Add an event listener that selects the newly-drawn shape when the user
-                    // mouses down on it.
-				google.maps.event.addListener(newShape, 'click', function (e) {
-                    if (e.vertex !== undefined) {
-                        if (newShape.type === google.maps.drawing.OverlayType.POLYGON) {
-                            var path = newShape.getPaths().getAt(e.path);
-                            path.removeAt(e.vertex);
-                            if (path.length < 3) {
-                                newShape.setMap(null);
-                            }
-                        }
-                        if (newShape.type === google.maps.drawing.OverlayType.POLYLINE) {
-                            var path = newShape.getPath();
-                            path.removeAt(e.vertex);
-                            if (path.length < 2) {
-                                newShape.setMap(null);
-                            }
-                        }
-                    }
-                    setSelection(newShape);
-                });//Ende eventlistener
-                setSelection(newShape);
-            } //Ende if (marker_typ = messpunkt)
-            else {
-                google.maps.event.addListener(newShape, 'click', function (e) {
-                    setSelection(newShape);
-                });
-                setSelection(newShape);
-            }
-			
-			google.maps.event.addDomListener(document, 'keyup', function (e) { // Durch drücken der Entf-Taste wird ausgewähltes Element gelöscht.
-				var code = (e.keyCode ? e.keyCode : e.which);
-				if (code === 46) {
-					deleteSelectedShape();
-				}
-			});
-		}); //Ende evetlistener drawingmanager
-		google.maps.event.addListener(drawingManager, 'drawingmode_changed', clearSelection);
-		google.maps.event.addListener(map, 'click', clearSelection);
-	}//Ende function startDrawingmanager()
-	
-	function clearSelection() {
-        if (selectedShape) {
-            if (selectedShape.type !== 'marker') {
-                selectedShape.setEditable(false);
-            }
-            selectedShape = null;
-        }
-    }
-
-    function setSelection(shape) {
-        if (shape.type !== 'marker') {
-            clearSelection();
-            shape.setEditable(true);
-        }
-        selectedShape = shape;
-    }
-
-    function deleteSelectedShape() {
-        if (selectedShape) {
-            selectedShape.setMap(null);
-        }
-    }
-
-	function updateMesswert(messwertId, messwertValue){
-		var index = objectArray.findIndex(x => x.obj_nummer == messwertId);
-		objectArray[index].obj_messwert = messwertValue;
-	}
-
-	function updateHinweis(hinweisId, hinweisValue){
-		var index = objectArray.findIndex(x => x.obj_nummer == hinweisId);
-		objectArray[index].obj_hinweis = hinweisValue;
-	}
-	</script> <!-- Google DrawingManager laden -->
+	<script src="js/module.js"></script>
+	<script src="js/googleDrawingManager.js"></script>
 </head>
 <body>
 	<div class="modal fade" id="modal_license" tabindex="-1" role="dialog" aria-labelledby="License">
@@ -720,7 +242,7 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 				</div>
 				<div class="modal-footer">
 					<div class="row">
-						<div class="col-xs-4 text-center"><a href="CHANGELOG.md" target="_blank">Version: 1.4.1</a></div>
+						<div class="col-xs-4 text-center"><a href="CHANGELOG.md" target="_blank">Version: 1.4.2</a></div>
 						<div class="col-xs-4"><a href="https://github.com/cuzcomd/DALUS" target="_blank"><i class="fa fa-github" aria-hidden="true"></i> GitHub Repository</a></div>
 						<div class="col-xs-4"><a href="mailto:kontakt@cuzcomd.de">kontakt@cuzcomd.de</a></div>
 					</div>
@@ -1190,11 +712,10 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 			<div id = "module3" class="module"></div>
 		</div>
 		<div class="nav sidebar-footer">
-			
-		<a href='php/logout' data-toggle="tooltip" data-placement="bottom" title="Abmelden"><span class="fa fa-power-off" aria-hidden="true"></span></a>
-		<a onclick="toggleNav('#modal_license')" data-toggle="tooltip" data-placement="bottom" title="Informationen über Dalus"><span class="fa fa-info-circle" aria-hidden="true"></span></a>
-		<a onclick="toggleNav('#modalOptions')" data-toggle="tooltip" data-placement="bottom" title="Optionen"><span class="fa fa-cogs"></span></a>
-		<a onclick="printMap()"  ata-toggle="tooltip" data-placement="bottom" title="Ansicht drucken"><span class="fa fa-print" aria-hidden="true"></span></a></li>
+			<a href='php/logout' data-toggle="tooltip" data-placement="bottom" title="Abmelden"><span class="fa fa-power-off" aria-hidden="true"></span></a>
+			<a onclick="toggleNav('#modal_license')" data-toggle="tooltip" data-placement="bottom" title="Informationen über Dalus"><span class="fa fa-info-circle" aria-hidden="true"></span></a>
+			<a onclick="toggleNav('#modalOptions')" data-toggle="tooltip" data-placement="bottom" title="Optionen"><span class="fa fa-cogs"></span></a>
+			<a onclick="printMap()"  ata-toggle="tooltip" data-placement="bottom" title="Ansicht drucken"><span class="fa fa-print" aria-hidden="true"></span></a></li>
 		</div>
 	</nav>
 <div class="navbar navbar-default navbar-fixed-top hidden-md hidden-lg text-center">
@@ -1223,471 +744,14 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 	<script src = "js/usng.min.js" defer></script> <!-- Script für Umwandlung von Geokoordinaten in UTM-Ref Koordinaten -->
 	<script src = "js/MET.js" defer></script> <!-- Adresse des MET-Modells durch Eingabemaske oder manuelle Festlegung bestimmen -->
 	<script src = "js/datetimepicker.js"></script>
-	<script src = "js/datetimepicker.de.js"></script>
-	<script> // Datetimepicker
-		var currentdate = new Date(); 
-	    var datetime = currentdate.getFullYear() + "-"
-		    + ("0" + (currentdate.getMonth() + 1)).slice(-2) + "-" 
-		    + ("0" + currentdate.getDate()).slice(-2) + " "  
-		    + ("0" + currentdate.getHours()).slice(-2) + ":"  
-		    + ("0" + currentdate.getMinutes()).slice(-2)+ ":"
-		    + ("0" + currentdate.getSeconds()).slice(-2);
-		$("#startTrackInput").val(datetime);
-		$("#endTrackInput").val(datetime);
-	    $('.form_datetime').datetimepicker({
-	        language:  'de',
-	        weekStart: 1,
-	        todayBtn:  1,
-			autoclose: 1,
-			todayHighlight: 1,
-			startView: 2,
-			forceParse: 0,
-	        showMeridian: 1,
-	        format: 'yyyy-mm-dd hh:ii:ss'
-	    });
-	</script>
-	
-	<script defer> // Fixpunkte aus Datei laden
-	function loadFixpoints(switchMesspunkte){
-		switchMesspunkte.find('i').toggleClass("fa-toggle-off fa-toggle-on"); // Damit Menüpunkt farblich hinterlegt wird
-		if(switchMesspunkte.attr('data-click-state') == 1) { 
-			switchMesspunkte.attr('data-click-state', 0) // Wenn Schalter aktiviert ist, ihn wieder deaktivieren
-			map.data.forEach(function (feature) {map.data.remove(feature);}) // Alle Fixpunkte von der Karte löschen
-		}
-		else {
-			switchMesspunkte.attr('data-click-state', 1); // Wenn Schalter deaktiviert ist, ihn wieder aktivieren
-			map.data.loadGeoJson('js/messpunkte.json'); // Alle Messpunkte aus json-Datei laden
-			map.data.setStyle({icon: 'images/radioactive_flag.png'});
-			
-			map.data.addListener('click', function(event) {
-				var mpNummer = event.feature.getProperty('nummer');
-				var mpName = event.feature.getProperty('name');
-				var mpAdresse = event.feature.getProperty('adresse');
-				var mpODL = event.feature.getProperty('odl');
-				var mpIPS = event.feature.getProperty('ips');
-				var mpLatitude = event.feature.getGeometry().get().lat();
-				var mpLongitude = event.feature.getGeometry().get().lng();
-
-				infoWindow.setContent("<div > Messpunkt "+ mpNummer +' (' + mpName +')<hr><br/><div class="fa fa-home"></div> ' + mpAdresse +
-				'<br/><br/><div class="fa fa-map-marker"></div> ' + mpLatitude +' , ' + mpLongitude +' (' + LLtoUSNG(mpLatitude, mpLongitude, 5) +
-				')<br/><br/> Ortsdosisleistung: ' + mpODL + ' nSv/h <br/>Nullrate: ' + mpIPS + ' Imp/s</div>');
-				infoWindow.setPosition(event.feature.getGeometry().get());
-				infoWindow.setOptions({pixelOffset: new google.maps.Size(0,-16)});
-				infoWindow.open(map);
-			});
-		} //Ende else
-	}//Ende function loadFixpoint
-	</script><!-- Fixpunkte laden -->
-	<script defer> // Projektgeometrie aus Datenbank laden
-	function drawObjects(theArray){
-		for (const value of theArray) {
-			switch(value.obj_farbe) {
-				case 'white':
-				var icon_type = 'images/white.png';
-				var labelColor = "black";
-				break;
-
-				case 'green':
-				var icon_type = 'images/green.png';
-				var labelColor = "white";
-				break;
-
-				case 'blue':
-				var icon_type = 'images/blue.png';
-				var labelColor = "white";
-				break;
-
-				case 'yellow':
-				var icon_type = 'images/yellow.png';
-				var labelColor = "black";
-				break;
-				
-				case 'red':
-				var icon_type = 'images/red.png';
-				var labelColor = "white";
-				break;
-
-				default:
-				var icon_type = 'images/white.png';
-				var labelColor = "black";
-			}
-
-			switch(value.obj_typ) {
-				case 'marker':
-				let geom_obj = new google.maps.Marker({
-				map:map,
-				position: {lat:Number(value.obj_lat), lng:Number(value.obj_lon)},
-				obj_lat: Number(value.obj_lat),
-				obj_lon: Number(value.obj_lon),
-				icon:{url:icon_type, anchor: new google.maps.Point(16,16), },
-				label: {text: value.obj_nummer.toString(), fontWeight: "700", color: labelColor},
-				obj_nummer: Number(value.obj_nummer),
-				obj_farbe: value.obj_farbe,
-				obj_messwert: Number(value.obj_messwert),
-				obj_hinweis: value.obj_hinweis,
-				obj_typ: 'marker',
-				obj_parameter : '',
-				info: infoWindow,
-				content: value.obj_parameter,
-				draggable:true
-				});
-
-				objectArray.push(geom_obj);
-
-				google.maps.event.addListener(geom_obj,'click',function(){ // Öffnet Infowindow bei Klick auf Marker
-					clearSelectionLoad();
-					activeObject = this;
-					var index = objectArray.findIndex(x => x.obj_nummer == this.obj_nummer); // Ermittelt Array-Index des aktuellen Markers
-					this.setValues({messwert: objectArray[index].obj_messwert}); // Aktualisiert den aktullen Messwert aus dem im Array gespeicherten Wert
-					this.info.setContent('<h5>Messpunkt '+ objectArray[index].obj_nummer + '</h5><span class="fa fa-map-marker" aria-hidden="true"></span> '+	objectArray[index].obj_lat+', '+ objectArray[index].obj_lon+'<hr>'+
-						'<form><div class="form-group"> <label for="messwert">Messwert [ppm]</label><input type="text" class="form-control" id="messwert" cols="50" value = "'+objectArray[index].obj_messwert+'" onchange="updateMesswert('+objectArray[index].obj_nummer+', this.value);"></div>'+
-						'<div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis('+objectArray[index].obj_nummer+', this.value);" rows="5">'+objectArray[index].obj_hinweis+'</textarea></div></form>'+
-						'<div class="btn-group" role="group" aria-label="Optionen">'+
-						'<button type="button" class="btn btn-default btn-danger btnInfoWindow" id="deleteButton" onclick="deleteObject();"><i class="fa fa-trash-o"></i></button>'+
-						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',1);"><img src="images/white.png"></button>'+
-						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',2);"><img src="images/green.png"></button>'+
-						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',3);"><img src="images/blue.png"></button>'+
-						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',4);"><img src="images/yellow.png"></button>'+
-						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',5);"><img src="images/red.png"></button></div>');
-					this.info.open(map,this);
-				}); // Ende des Eventlisteners
-
-				google.maps.event.addListener(geom_obj,'dragend', function(){ //Aktualisiert Array und Infowindow wenn Marker verschoben wird
-					let index = objectArray.findIndex(x => x.obj_nummer == this.obj_nummer  && x.obj_typ == this.obj_typ);  // Ermittelt Array-Index des aktuellen Markers
-					objectArray[index].obj_lat = this.getPosition().lat().toFixed(6); // Aktualisiert geogr. Position im Array
-					objectArray[index].obj_lon = this.getPosition().lng().toFixed(6);// Aktualisiert geogr. Position im Array	
-					infoWindow.setContent('<h5>Messpunkt '+ objectArray[index].obj_nummer + '</h5><span class="fa fa-map-marker" aria-hidden="true"></span> '+	objectArray[index].obj_lat+', '+ objectArray[index].obj_lon+'<hr>'+
-						'<form><div class="form-group"> <label for="messwert">Messwert [ppm]</label><input type="text" class="form-control" id="messwert" cols="50" value = "'+objectArray[index].obj_messwert+'" onchange="updateMesswert('+objectArray[index].obj_nummer+', this.value);"></div>'+
-						'<div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis('+objectArray[index].obj_nummer+', this.value);" rows="5">'+objectArray[index].obj_hinweis+'</textarea></div></form>'+
-						'<div class="btn-group" role="group" aria-label="Optionen">'+
-						'<button type="button" class="btn btn-default btn-danger btnInfoWindow" id="deleteButton" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button>'+
-						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',1);"><img src="images/white.png"></button>'+
-						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',2);"><img src="images/green.png"></button>'+
-						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',3);"><img src="images/blue.png"></button>'+
-						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',4);"><img src="images/yellow.png"></button>'+
-						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',5);"><img src="images/red.png"></button></div>');
-					this.info.open(map,this);
-				});
-
-				google.maps.event.addListener(geom_obj,'dragstart', function(){
-					activeObject = this;
-					this.info.close();
-				});
-				break;
-
-				case 'met':
-				value.obj_parameter = JSON.parse(value.obj_parameter); //Parst den Parameter-String in ein verwertbares Objekt
-				let lat = value.obj_lat;
-				let lon = value.obj_lon;
-				let winkel = value.obj_parameter.ausbreitungswinkel;
-				let richtung = value.obj_parameter.windrichtung;
-				let innen = value.obj_parameter.distanz_innen;
-				let aussen = value.obj_parameter.distanz_aussen;
-				let adresse = value.obj_parameter.adresse;
-				let counter = value.obj_nummer; //Zähler für die Anzahl an Freisetzungsmarkern
-				drawPolygon(map, lat, lon, adresse, winkel, richtung, innen, aussen, counter); //Zeichnet das Polygon
-
-				google.maps.event.addListener(value,'click',function(){ // Öffnet Infowindow bei Klick auf Marker
-					clearSelectionLoad();
-					activeObject = this;
-				}); // Ende des Eventlisteners
-				break;
-
-				case 'circle':
-				var circleObj = new google.maps.Circle({
-					map:map,
-					center: {lat:Number(value.obj_lat), lng:Number(value.obj_lon)},
-					obj_lat: Number(value.obj_lat),
-					obj_lon: Number(value.obj_lon),
-					radius: Number(value.obj_parameter),
-					obj_nummer: Number(value.obj_nummer),
-					obj_typ: 'circle',
-					obj_parameter : Number(value.obj_parameter),
-					draggable:true
-				});
-
-				objectArray.push(circleObj);
-
-				google.maps.event.addListener(circleObj,'click',function(){ // Öffnet Infowindow bei Klick auf Marker
-					clearSelectionLoad();
-					activeObject = this;
-					activeObject.setEditable(true);
-				}); // Ende des Eventlisteners
-
-				google.maps.event.addListener(circleObj,'dragend', function(){ //Aktualisiert Array und Infowindow wenn Marker verschoben wird
-					let index = objectArray.findIndex(x => x.obj_nummer == this.obj_nummer  && x.obj_typ == this.obj_typ);  // Ermittelt Array-Index des aktuellen Markers
-					objectArray[index].obj_lat = this.getCenter().lat().toFixed(6); // Aktualisiert geogr. Position im Array
-					objectArray[index].obj_lon = this.getCenter().lng().toFixed(6);// Aktualisiert geogr. Position im Array	
-				});
-
-				google.maps.event.addListener(circleObj,'radius_changed', function(){ //Aktualisiert Array und Infowindow wenn Marker verschoben wird
-					let index = objectArray.findIndex(x => x.obj_nummer == this.obj_nummer  && x.obj_typ == this.obj_typ);  // Ermittelt Array-Index des aktuellen Markers
-					objectArray[index].obj_parameter = this.getRadius(); // Aktualisiert geogr. Position im Array
-				});
-				break;
-
-				case 'polygon':
-				let polygonObj = new google.maps.Polygon({
-					map:map,
-					paths: JSON.parse(value.obj_parameter),
-					obj_nummer: Number(value.obj_nummer),
-					obj_typ: 'polygon',
-					draggable:true
-				});
-				polygonObj.setValues({
-					obj_parameter: polygonObj.getPath().getArray()
-				});
-				objectArray.push(polygonObj);
-
-				google.maps.event.addListener(polygonObj,'click',function(){ // Öffnet Infowindow bei Klick auf Marker
-					clearSelectionLoad();
-					activeObject = this;
-					activeObject.setEditable(true);
-				}); // Ende des Eventlisteners
-
-				google.maps.event.addListener(polygonObj,'dragend', function(){ //Aktualisiert Array und Infowindow wenn Marker verschoben wird
-					let index = objectArray.findIndex(x => x.obj_nummer == this.obj_nummer  && x.obj_typ == this.obj_typ);  // Ermittelt Array-Index des aktuellen Markers
-					objectArray[index].obj_parameter = this.getPath().getArray(); // Aktualisiert geogr. Position im Array
-				});
-				break;
-
-				case 'polyline':
-				let polylineObj = new google.maps.Polyline({
-					map:map,
-					path: JSON.parse(value.obj_parameter),
-					obj_nummer: Number(value.obj_nummer),
-					obj_typ: 'polyline',
-					draggable:true
-				});
-
-				polylineObj.setValues({
-					obj_parameter: polylineObj.getPath().getArray()
-				});
-
-				objectArray.push(polylineObj);
-
-				google.maps.event.addListener(polylineObj,'click',function(){ // Öffnet Infowindow bei Klick auf Marker
-					clearSelectionLoad();
-					activeObject = this;
-					activeObject.setEditable(true);
-				}); // Ende des Eventlisteners
-
-				google.maps.event.addListener(polylineObj,'dragend', function(){ //Aktualisiert Array und Infowindow wenn Marker verschoben wird
-					let index = objectArray.findIndex(x => x.obj_nummer == this.obj_nummer  && x.obj_typ == this.obj_typ);  // Ermittelt Array-Index des aktuellen Markers
-					objectArray[index].obj_parameter = this.getPath().getArray(); // Aktualisiert geogr. Position im Array
-				});
-				break;
-
-				default:
-			} //Ende switch value.obj_typ
-            google.maps.event.addListener(map, 'click', clearSelectionLoad); //Beim Klick auf die Karte wird ausgewähltes Objekt abgewählt
-            google.maps.event.addDomListener(document, 'keyup', function (e) { // Durch drücken der Entf-Taste wird ausgewähltes Objekt gelöscht.
-				var code = (e.keyCode ? e.keyCode : e.which);
-				if (code === 46) {
-					deleteObject();
-				}
-			});
-		}; // Ende der for-Schleife
-	} //Ende function drawObjects
-
-	function clearSelectionLoad() {
-		if (activeObject && activeObject.obj_typ != "marker" && activeObject.obj_typ != "met"){ //Funktion nur ausführen, wenn ein Objektz ausgewählt ist und es kein Marker ist
-			activeObject.setEditable(false);
-		}// Ende if(activeObject)
-		activeObject = null; //Aktives Objekt zurücksetzen
-	} //Ende der Funktion clearSelection()
-
-	function deleteObject(){
-		if(activeObject){ //Führt den Löschvorgang nur aus, wenn ein Objekt ausgewählt wurde
-			var index = objectArray.findIndex(x => x.obj_nummer == activeObject.obj_nummer && x.obj_typ == activeObject.obj_typ);
-			objectArray.splice(index,1); // Löscht das Objekt aus dem Objekt-Array
-			let deleteObject = {nummer:activeObject.obj_nummer, typ:activeObject.obj_typ}; //Erzeugt das zu löschende Objekt
-			deleteArray.push(deleteObject); //Verschiebt das zu löschende Objekt in den Lösch-Array
-
-			if (activeObject.info !== undefined){ // Unterscheidet zwischen neu erzeugtem Marker (.info ist nicht definiert) und beim Laden generierten Marker
-				activeObject.info.setMap(null);// Löscht das Infowindow von der Karte
-			}
-
-			activeObject.setMap(null);// Löscht das Objekt von der Karte
-
-			if (activeObject.poly1 !== undefined && activeObject.poly2 !== undefined){ // Überprüft, ob es sich um einen MET-Marker handelt (dieser besitzt zwei Ausbreitungspolygone)
-				activeObject.poly1.setMap(null);// Löscht das zugehörige Ausbreitungspolygon von der Karte
-				activeObject.poly2.setMap(null);// Löscht das zugehörige Ausbreitungspolygon von der Karte
-				activeObject.centerLine.setMap(null);// Löscht das zugehörige Ausbreitungspolygon von der Karte
-			}
-			activeObject = null; //Aktives Objekt zurücksetzen
-		}// Ende if (activeObject)
-	}// Ende Funktion deleteObject()
-
-	function changeColor(markerNummer, color){
-		var index = objectArray.findIndex(x => x.obj_nummer == activeObject.obj_nummer && x.obj_typ == activeObject.obj_typ);  //ermittelt Array-Index des aktuellen Markers
-		switch(color){
-			case 1:
-			activeObject.setIcon({url:'images/white.png', anchor: new google.maps.Point(16,16)});
-			activeObject.setLabel({text: activeObject.obj_nummer.toString(), color: "black", fontWeight: "700"});
-			objectArray[index].obj_farbe = "white";
-			break;
-
-			case 2:
-			activeObject.setIcon({url:'images/green.png', anchor: new google.maps.Point(16,16)});
-			activeObject.setLabel({text: activeObject.obj_nummer.toString(), color: "white", fontWeight: "700"});
-			objectArray[index].obj_farbe = "green";
-			break;
-
-			case 3:
-			activeObject.setIcon({url:'images/blue.png', anchor: new google.maps.Point(16,16)});
-			activeObject.setLabel({text: activeObject.obj_nummer.toString(), color: "white", fontWeight: "700"});
-			objectArray[index].obj_farbe = "blue";
-			break;
-
-			case 4:
-			activeObject.setIcon({url:'images/yellow.png', anchor: new google.maps.Point(16,16)});
-			activeObject.setLabel({text: activeObject.obj_nummer.toString(), color: "black", fontWeight: "700"});
-			objectArray[index].obj_farbe = "yellow";
-			break;
-
-			case 5:
-			activeObject.setIcon({url:'images/red.png', anchor: new google.maps.Point(16,16)});
-			activeObject.setLabel({text: activeObject.obj_nummer.toString(), color: "white", fontWeight: "700"});
-			objectArray[index].obj_farbe = "red";
-			break;
-
-			default:
-		}//Ende switch(color)	
-	}//Ende Funktion changeColor()
-
-	function deleteProject(){ // Löscht das aktuelle Projekt, sowie alle dazugehörigen Geometrieobjekte
-		var data = {
-			"action": "delete",
-			"prj_id": prj_id
-		};
-		data = $(this).serialize() + "&" + $.param(data);
-		alertify.confirm("Soll das Projekt wirklich gelöscht werden?", function (e) {
-		    if (e) {
-		    	 $.ajax({
-					type: "POST",
-					dataType: "json",
-					url: "php/projects.php",
-					data: data,
-					success: function(data) {
-						$("#activeProject").html("&nbsp; Kein Projekt geöffnet");
-						$('#editProject').hide(); // Menüpunkt 'Projekt bearbeiten' anzeigen
-						$('#saveProject').hide(); // Menüpunkt 'Projekt speichern' anzeigen
-						$('#deleteProject').hide(); // Menüpunkt 'Projekt speichern' anzeigen
-						prj_id = 0;
-						clearMap();
-						loadProjectObjects();
-						updateProjects();
-						updateSharedProjects();
-						isSharedWith();
-						updateAllUsers()
-					},
-					error: function(xhr, desc, err) {
-						console.log(xhr);
-						console.log("Details: " + desc + "\nError:" + err);
-					}
-				}); //Ende ajax
-				toastr.error('Projekt gelöscht.');
-				return false;
-			} // Ende if
-		}); // Ende alerify
-	} //Ende Funktion deleteProject()
-
-	function printMap(){
-        html2canvas($('#map'), {
-        	useCORS: true,
-        	onrendered: function (canvas) {
-        		var img = canvas.toDataURL("image/png");
-        		img = img.replace('data:image/png;base64,', '');
-            	var finalImageSrc = 'data:image/png;base64,' + img;
-            	window.open(finalImageSrc, 'Screenshot');
-            }
-    	});
-    }//Ende Funktion printMap
-
-	function clearMap(){
-		for (var i = 0; i < objectArray.length; i++ ) {
-			objectArray[i].setMap(null);
-			if (objectArray[i].poly1 !== undefined && objectArray[i].poly2 !== undefined){ // Überprüft, ob es sich um einen MET-Marker handelt (dieser besitzt zwei Ausbreitungspolygone)
-				objectArray[i].poly1.setMap(null);// Löscht das zugehörige Ausbreitungspolygon von der Karte
-				objectArray[i].poly2.setMap(null);// Löscht das zugehörige Ausbreitungspolygon von der Karte
-				objectArray[i].centerLine.setMap(null);// Löscht das zugehörige Ausbreitungspolygon von der Karte
-			}//Ende if-Statement
-		}//Ende for-Schleife
-		objectArray = [];
-		deleteArray = [];
-	} //Ende Funktion clearMap()
-	</script><!-- Projektgeometrie laden -->
+	<script src = "js/datetimepicker.de.js" defer></script>
+	<script src = "js/datetimepickerOptions.js" defer></script>
+	<script src = "js/project.js" defer></script>
+	<script src = "js/helpers.js" defer></script>
 	<script src = "js/ajaxCalls.js" defer> // Ajax aufruf für Projekte </script>
-	<script defer> // Ajax für Speichern und Löschen von Objekten
-		function saveProjectStatus(){ // Erzeugt neue Messpunkte oder aktualisiert Vorhandene in der Datenbank
-			objectArray.forEach(function(entry) {
-				if (entry.obj_typ != "polygon1" && entry.obj_typ != "polygon2" && entry.obj_typ != "polygonCenter" )
-				{
-					var obj_farbe = entry.obj_farbe;
-					var obj_lat = entry.obj_lat;
-					var obj_lon = entry.obj_lon;
-					var obj_typ = entry.obj_typ;
-					var obj_nummer = entry.obj_nummer;
-					var obj_hinweis = entry.obj_hinweis;
-					var obj_messwert = entry.obj_messwert;
-					var obj_parameter =JSON.stringify(entry.obj_parameter);
-					var data = {
-						"task" : "save",
-						"obj_prj_id" : prj_id,
-						"obj_color" : obj_farbe,
-						"obj_lat" : obj_lat,
-						"obj_lon" : obj_lon,
-						"obj_nummer" : obj_nummer,
-						"obj_hinweis" : obj_hinweis,
-						"obj_messwert" : obj_messwert,
-						"obj_parameter" : obj_parameter,
-						"obj_typ" : obj_typ
-					};
-					data = $(this).serialize() + "&" + $.param(data);
-					$.ajax({
-						type: "POST",
-						dataType: "json",
-						url: "php/geometry.php",
-						data:data,
-						success: function(data) {
-						},
-						error: function(xhr, desc, err) {
-							console.log(xhr);
-							console.log("Details: " + desc + "\nError:" + err);
-						}
-					}); //Ende ajax
-					return false;
-				} //Ende if-Anweisung
-			});//Ende forEach()
-
-			deleteArray.forEach(function(entry) {
-				var obj_typ = entry.typ;
-				var obj_nummer = entry.nummer;
-				data = {"task" : "delete", "objekt_nummer": obj_nummer, "projekt_id": prj_id , "objekt_typ": obj_typ};
-				data = $(this).serialize() + "&" + $.param(data);
-				$.ajax({
-					type: "POST",
-					dataType: "json",
-					url: "php/geometry.php",
-					data:data,
-					success: function(data) {
-					},
-					error: function(xhr, desc, err) {
-						console.log(xhr);
-						console.log("Details: " + desc + "\nError:" + err);
-					}
-				});//Ende ajax
-				return false;
-			});//Ende forEach()
-			setTimeout(function() {
-	  			toastr.success('Projekt gespeichert. <span class="label label-info"><span class="fa fa-pencil" aria-hidden="true"></span> '+ objectArray.length+'</span> <span class="label label-danger"><span class="fa fa-trash" aria-hidden="true"></span> '+ deleteArray.length+'</span>'); //Zeigt an, wie viele Objekte gespeichert und gelöscht wurden
-	  			deleteArray.length = 0; // Leert den Array der zu löschenden Elemente nach dem Speichern des Projekts
-			}, 100);//Ende setTimeout
-		}// Ende Funktiobn saveProjectStatus
-	</script>
-	<script src="js/xmlwriter.js" defer></script>
-	<script src="js/exportKml.js" defer></script>
-	<script src="js/alertify.min.js" defer></script>
+	<script src = "js/xmlwriter.js" defer></script>
+	<script src = "js/exportKml.js" defer></script>
+	<script src = "js/alertify.min.js" defer></script>
+	<script src = "js/toastr.min.js" defer></script> <!-- Script zum dynamischen Anzeigen von Statusmeldungen -->
 </body>
 </html>

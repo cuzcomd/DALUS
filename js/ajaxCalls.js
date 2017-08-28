@@ -168,12 +168,12 @@
 								break;
 
 							case 'noAdmin':
-							toastr.warning('Sie verfügen nicht über die notwendigen Rechte, um diese Aktion auszuführen. Wenden Sie sich an einen Administrator.');
-							break;
+								toastr.warning('Sie verfügen nicht über die notwendigen Rechte, um diese Aktion auszuführen. Wenden Sie sich an einen Administrator.');
+								break;
 
 							default:
-							toastr.warning('Fehler aufgetreten.');
-							break;
+								toastr.warning('Fehler aufgetreten.');
+								break;
 						}
 
 					},
@@ -198,21 +198,21 @@
 				success: function(data) {
 					switch(data){
 						case 'ok':
-						toastr.success('Nutzer gelöscht.');
-						loadUser(); //Lädt neue Nutzerdaten
-						updateProjects(); //Verfügbare Projekte aktualiseren
-						updateSharedProjects(); //Verfügbare mit dem Benutzer geteilte Projekte aktualiseren
-						isSharedWith(); //Aktualisieren, mit wem das geöffnete Projekt geteilt ist
-						updateAllUsers()
-						break;
+							toastr.success('Nutzer gelöscht.');
+							loadUser(); //Lädt neue Nutzerdaten
+							updateProjects(); //Verfügbare Projekte aktualiseren
+							updateSharedProjects(); //Verfügbare mit dem Benutzer geteilte Projekte aktualiseren
+							isSharedWith(); //Aktualisieren, mit wem das geöffnete Projekt geteilt ist
+							updateAllUsers()
+							break;
 
 						case 'noAdmin':
-						toastr.warning('Sie verfügen nicht über die notwendigen Rechte, um diese Aktion auszuführen. Wenden Sie sich an einen Administrator.');
-						break;
+							toastr.warning('Sie verfügen nicht über die notwendigen Rechte, um diese Aktion auszuführen. Wenden Sie sich an einen Administrator.');
+							break;
 
 						default:
-						toastr.warning('Fehler aufgetreten.');
-						break;
+							toastr.warning('Fehler aufgetreten.');
+							break;
 
 					}
 				},

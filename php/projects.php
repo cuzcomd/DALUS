@@ -19,7 +19,7 @@ function is_ajax() {
   return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
 }
 
-function createProject(){
+function createProject(){ //Erzeugt eine neues Projekt
 	include("config.php");
 	$project_owner = (!empty($_POST['username']) ? $_POST['username']:'');
 	$project_shared = (!empty($_POST['shared']) ? implode(",", $_POST['shared']):''); //Erzeugt kommaseparierten String aus Array von ausgewählten Benutzernamen
@@ -28,8 +28,8 @@ function createProject(){
 
 	$stmt = $pdo->prepare("INSERT INTO projects (prj_owner, prj_shared, prj_name, prj_created_at, prj_updated_at) VALUES (:project_owner, :project_shared, :project_name, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) ON DUPLICATE KEY UPDATE prj_updated_at = CURRENT_TIMESTAMP");
 	$stmt->bindParam(':project_owner', $project_owner, PDO::PARAM_INT);
-	$stmt->bindParam(':project_shared', $project_shared, PDO::PARAM_STR, 12);
-	$stmt->bindParam(':project_name', $project_name, PDO::PARAM_STR, 12);
+	$stmt->bindParam(':project_shared', $project_shared, PDO::PARAM_STR);
+	$stmt->bindParam(':project_name', $project_name, PDO::PARAM_STR);
 	$stmt->execute();
 	
 	$projekt_id = $pdo->lastInsertId();
@@ -38,15 +38,15 @@ function createProject(){
   	echo json_encode($returnvalues);
   }
 
-function editProject(){
+function editProject(){ //Aktualisiert das aktuell geöffnete Projekt
 	include("config.php");
 	$project_shared = (!empty($_POST['shared']) ? implode(",", $_POST['shared']):''); //Erzeugt kommaseparierten String aus Array von ausgewählten Benutzernamen
 	$project_name = (!empty($_POST['projekttitel']) ? $_POST['projekttitel']:'');
 	$project_id = (!empty($_POST['current_project_id']) ? $_POST['current_project_id']:'0');
 	
 	$stmt = $pdo->prepare("UPDATE projects SET prj_shared = :project_shared, prj_name = :project_name, prj_updated_at = CURRENT_TIMESTAMP WHERE prj_id = :project_id");
-	$stmt->bindParam(':project_shared', $project_shared, PDO::PARAM_STR, 12);
-	$stmt->bindParam(':project_name', $project_name, PDO::PARAM_STR, 12);
+	$stmt->bindParam(':project_shared', $project_shared, PDO::PARAM_STR);
+	$stmt->bindParam(':project_name', $project_name, PDO::PARAM_STR);
 	$stmt->bindParam(':project_id', $project_id, PDO::PARAM_INT);
 	$stmt->execute();
 
@@ -54,7 +54,7 @@ function editProject(){
 	echo json_encode($_POST);
 }
 
-function deleteProject(){
+function deleteProject(){ //Löscht dads aktuell geöffnete Projekt
 	include("config.php");
 	$project_id = (!empty($_POST['prj_id']) ? $_POST['prj_id']:'0');
 
@@ -66,7 +66,7 @@ function deleteProject(){
 	$stmt2->bindParam(':project_id', $project_id, PDO::PARAM_INT);
 	$stmt2->execute();
 
-		$_POST["json"] = json_encode($_POST);
+	$_POST["json"] = json_encode($_POST);
 	echo json_encode($_POST);
 }
 
@@ -76,7 +76,7 @@ include("config.php");
 $projectName = (!empty($_POST['project_open']) ? $_POST['project_open']:'');
 
 $stmt = $pdo->prepare("SELECT * FROM projects WHERE prj_name = :prjName");
-$stmt->bindParam(':prjName', $projectName, PDO::PARAM_STR, 12);
+$stmt->bindParam(':prjName', $projectName, PDO::PARAM_STR);
 $stmt->execute();
 
 $projekt = $stmt->fetch(PDO::FETCH_OBJ);//Daten des angemeldeten Benutzers abfragen
@@ -89,22 +89,27 @@ $stmt2->execute();
 $max = $stmt2->fetch(PDO::FETCH_ASSOC);
 $maxNumber = $max['maxNummer'];
 
+if (is_null($maxNumber)) // Überprüft, ob bereits Messpunkte gespeichert sind und legt den Zähler anderenfalls auf 0 fest
+{
+	$maxNumber = 0;
+}
+
 $returnvalues = array('projektID' => $projektID,'projektName' => $projektName, 'maxNum' => $maxNumber);
   	echo json_encode($returnvalues);
 }
 
-function updateProjects(){
+function updateProjects(){ // Lädt die Projekte, die der angemeldete Benutzer erstellt hat.
 	require('session.php');
 	include("config.php");
 	$stmt = $pdo->prepare("SELECT * FROM projects WHERE prj_owner = :prjOwner");
-	$stmt->bindParam(':prjOwner', $userid, PDO::PARAM_STR, 12);
+	$stmt->bindParam(':prjOwner', $userid, PDO::PARAM_STR);
 	$stmt->execute();
 
 	$projekte = $stmt->fetchAll();
 	echo json_encode($projekte);
 }
 
-function updateSharedProjects(){
+function updateSharedProjects(){ //Lädt die Projekte, die für den angemeldeten Benutzer freigegeben sind
 	require('session.php');
 	include("config.php");
 	$stmt = $pdo->prepare("SELECT * FROM projects WHERE prj_shared LIKE '%".$userid."%'");
@@ -114,7 +119,7 @@ function updateSharedProjects(){
 	echo json_encode($projekte);
 }
 
-function isSharedWith(){
+function isSharedWith(){ //Lädt alle Benutzer, für die das aktuell geöffnete Projekt freigegeben wurde.
 	require('session.php');
 	include("config.php");
 	
