@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 28. Jul 2017 um 17:37
+-- Erstellungszeit: 28. Aug 2017 um 15:11
 -- Server-Version: 10.1.22-MariaDB
 -- PHP-Version: 7.1.4
 
@@ -80,8 +80,9 @@ CREATE TABLE `objects` (
 --
 
 CREATE TABLE `options` (
-  `opt_userid` int(10) UNSIGNED NOT NULL,
-  `opt_cars` varchar(255) COLLATE latin1_german1_ci NOT NULL
+  `opt_UID` int(10) UNSIGNED NOT NULL,
+  `opt_cars` varchar(255) COLLATE latin1_german1_ci NOT NULL,
+  `opt_kataster` longtext COLLATE latin1_german1_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
 -- --------------------------------------------------------
@@ -143,7 +144,7 @@ ALTER TABLE `objects`
 -- Indizes für die Tabelle `options`
 --
 ALTER TABLE `options`
-  ADD UNIQUE KEY `opt_userid` (`opt_userid`);
+  ADD UNIQUE KEY `opt_userid` (`opt_UID`);
 
 --
 -- Indizes für die Tabelle `projects`
