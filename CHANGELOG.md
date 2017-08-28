@@ -1,5 +1,10 @@
 ## Changelog
 
+### 1.4.2 (28.08.2017)
+* Feature: Administratoren udn Editoren können das Messkataster zentral bearbeiten 
+* Bug: Geteilte Projekte ohne gespeicherte Messpunkte erzeugten einen Fehler bei der Nummerierung
+* Code: Auslagerung aller Javascript-Funktionen in eigene Dateien.
+
 ### 1.4.1 (31.07.2017)
 * Feature: Die Adresssuche lässt sich durch einen Klick auf die Lupe starten. 
 * Style: Anpassung der Nutzeroberfläche
