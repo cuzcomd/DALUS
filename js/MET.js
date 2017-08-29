@@ -20,7 +20,7 @@ function generateMET(resultsMap, manualLat, manualLon) {
 			new google.maps.Geocoder().geocode({'location': latlng}, function(results, status) {
 				if (status === google.maps.GeocoderStatus.OK) {
 					resultsMap.setCenter(results[0].geometry.location);
-					var adresse = results[1].formatted_address;
+					var adresse = results[0].formatted_address;
 					drawPolygon(resultsMap, latitude, longitude, adresse, winkel, richtung, innen, aussen);
 				} 
 				else 

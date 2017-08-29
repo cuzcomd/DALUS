@@ -24,7 +24,7 @@ include("config.php");
 	$stmt = $pdo->prepare("DELETE FROM objects WHERE obj_nummer = :obj_nummer AND obj_prj_id = :obj_prj_id AND obj_typ = :obj_typ");
 	$stmt->bindParam(':obj_prj_id', $obj_prj_id, PDO::PARAM_INT);
 	$stmt->bindParam(':obj_nummer', $obj_nummer, PDO::PARAM_INT);
-	$stmt->bindParam(':obj_typ', $obj_typ, PDO::PARAM_STR, 12);
+	$stmt->bindParam(':obj_typ', $obj_typ, PDO::PARAM_STR);
 	$stmt->execute();
 
 	$_POST["json"] = json_encode($_POST);
@@ -42,20 +42,22 @@ include("config.php");
 	$obj_hinweis= (!empty($_POST['obj_hinweis']) ? $_POST['obj_hinweis']:'');
 	$obj_messwert= (!empty($_POST['obj_messwert']) ? $_POST['obj_messwert']:'');
 	$obj_parameter= (!empty($_POST['obj_parameter']) ? $_POST['obj_parameter']:'');
+	$obj_label= (!empty($_POST['obj_label']) ? $_POST['obj_label']:'');
 	
-	$stmt = $pdo->prepare("INSERT INTO objects (obj_typ, obj_nummer, obj_prj_id, obj_lat, obj_lon, obj_farbe, obj_hinweis, obj_messwert, obj_parameter)
-	VALUES (:obj_typ, :obj_nummer, :obj_prj_id, :obj_lat, :obj_lon, :obj_color, :obj_hinweis, :obj_messwert, :obj_parameter) 
-	ON DUPLICATE KEY UPDATE obj_typ = :obj_typ, obj_nummer = :obj_nummer, obj_prj_id = :obj_prj_id, obj_lat = :obj_lat, obj_lon = :obj_lon, obj_farbe = :obj_color, obj_hinweis = :obj_hinweis, obj_messwert = :obj_messwert, obj_parameter = :obj_parameter");
+	$stmt = $pdo->prepare("INSERT INTO objects (obj_typ, obj_nummer, obj_prj_id, obj_lat, obj_lon, obj_farbe, obj_hinweis, obj_messwert, obj_parameter, obj_label)
+	VALUES (:obj_typ, :obj_nummer, :obj_prj_id, :obj_lat, :obj_lon, :obj_color, :obj_hinweis, :obj_messwert, :obj_parameter, :obj_label) 
+	ON DUPLICATE KEY UPDATE obj_typ = :obj_typ, obj_nummer = :obj_nummer, obj_prj_id = :obj_prj_id, obj_lat = :obj_lat, obj_lon = :obj_lon, obj_farbe = :obj_color, obj_hinweis = :obj_hinweis, obj_messwert = :obj_messwert, obj_parameter = :obj_parameter, obj_label = :obj_label");
 	
-	$stmt->bindParam(':obj_typ', $obj_typ, PDO::PARAM_STR, 12);
+	$stmt->bindParam(':obj_typ', $obj_typ, PDO::PARAM_STR);
 	$stmt->bindParam(':obj_nummer', $obj_nummer, PDO::PARAM_INT);
 	$stmt->bindParam(':obj_prj_id', $obj_prj_id, PDO::PARAM_INT);
-	$stmt->bindParam(':obj_lat', $obj_lat, PDO::PARAM_STR, 12);
-	$stmt->bindParam(':obj_lon', $obj_lon, PDO::PARAM_STR, 12);
-	$stmt->bindParam(':obj_color', $obj_color, PDO::PARAM_STR, 12);
-	$stmt->bindParam(':obj_hinweis', $obj_hinweis, PDO::PARAM_STR, 12);
-	$stmt->bindParam(':obj_messwert', $obj_messwert, PDO::PARAM_STR, 12);
-	$stmt->bindParam(':obj_parameter', $obj_parameter, PDO::PARAM_STR, 255);
+	$stmt->bindParam(':obj_lat', $obj_lat, PDO::PARAM_STR);
+	$stmt->bindParam(':obj_lon', $obj_lon, PDO::PARAM_STR);
+	$stmt->bindParam(':obj_color', $obj_color, PDO::PARAM_STR);
+	$stmt->bindParam(':obj_hinweis', $obj_hinweis, PDO::PARAM_STR);
+	$stmt->bindParam(':obj_messwert', $obj_messwert, PDO::PARAM_STR);
+	$stmt->bindParam(':obj_parameter', $obj_parameter, PDO::PARAM_STR);
+	$stmt->bindParam(':obj_label', $obj_label, PDO::PARAM_STR);
 	
 	$stmt->execute();
 
@@ -79,9 +81,9 @@ function loadGPS(){
 	$end = (!empty($_POST['end']) ? $_POST['end']:'');
 
 	$stmt = $pdo->prepare("SELECT * FROM gps WHERE gps_car_id = :car AND gps_time BETWEEN :startTime AND :stopTime");
-	$stmt->bindParam(':car', $car, PDO::PARAM_STR, 12);
-	$stmt->bindParam(':startTime', $start, PDO::PARAM_STR, 12);
-	$stmt->bindParam(':stopTime', $end, PDO::PARAM_STR, 12);
+	$stmt->bindParam(':car', $car, PDO::PARAM_STR);
+	$stmt->bindParam(':startTime', $start, PDO::PARAM_STR);
+	$stmt->bindParam(':stopTime', $end, PDO::PARAM_STR);
 	$stmt->execute();
 	$rows = $stmt->fetchAll(PDO::FETCH_OBJ);
   	echo json_encode($rows);

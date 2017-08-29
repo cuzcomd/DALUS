@@ -718,8 +718,8 @@
 			<a onclick="printMap()"  ata-toggle="tooltip" data-placement="bottom" title="Ansicht drucken"><span class="fa fa-print" aria-hidden="true"></span></a></li>
 		</div>
 	</nav>
-<div class="navbar navbar-default navbar-fixed-top hidden-md hidden-lg text-center">
-<span class="werkzeuge-top">
+	<div class="navbar navbar-default navbar-fixed-top hidden-md hidden-lg text-center">
+		<span class="werkzeuge-top">
 			<ul class="nav nav-pills nav-werkzeuge">
 				<li class="setHand" data-toggle="tooltip" data-placement="bottom" title="Auswahl" role="button"><a data-toggle="tab"><i class="fa fa-mouse-pointer"></i></a></li>
 				<li class="setMarkWhite" data-toggle="tooltip" data-placement="bottom" title="Auswahl" role="button"><a data-toggle="tab"><i class="fa fa-flag-o"></i></a></li>
@@ -729,17 +729,17 @@
 				<li class="deleteActiveObject" data-toggle="tooltip" data-placement="bottom" title="Objekt löschen" role="button"><a data-toggle="tab"><i class="fa fa-trash"></i></a></li>
 			</ul>
 		</span> <!-- Ende Werkzeuge -->
-  <button type="button" class="navbar-toggle" data-toggle="offcanvas" data-target="#myNavmenu" data-canvas="body">
-    <span class="icon-bar"></span>
-    <span class="icon-bar"></span>
-    <span class="icon-bar"></span>
-  </button>
-</div>
+	  	<button type="button" class="navbar-toggle" data-toggle="offcanvas" data-target="#myNavmenu" data-canvas="body">
+		    <span class="icon-bar"></span>
+		    <span class="icon-bar"></span>
+		    <span class="icon-bar"></span>
+	  	</button>
+	</div>
 	<div id="map"></div>
 	<textarea id="kmlString"></textarea>
 	<script src = "https://maps.googleapis.com/maps/api/js?libraries=geometry,drawing,places&callback=initMap" async defer></script> <!-- GooleAPI laden. Hier muss der API-Schlüssel eingetragen werden. -->
 	<script src = "js/bootstrap.min.js"></script> <!-- Bootstrap.js laden -->
-	<script src="js/jasny-bootstrap.min.js"></script>
+	<script src = "js/jasny-bootstrap.min.js"></script>
 	<script src = "js/html2canvas.min.js" defer></script>
 	<script src = "js/usng.min.js" defer></script> <!-- Script für Umwandlung von Geokoordinaten in UTM-Ref Koordinaten -->
 	<script src = "js/MET.js" defer></script> <!-- Adresse des MET-Modells durch Eingabemaske oder manuelle Festlegung bestimmen -->
@@ -753,5 +753,6 @@
 	<script src = "js/exportKml.js" defer></script>
 	<script src = "js/alertify.min.js" defer></script>
 	<script src = "js/toastr.min.js" defer></script> <!-- Script zum dynamischen Anzeigen von Statusmeldungen -->
+	<script src = "js/geocoder.js" defer></script> <!-- Script zum dynamischen Anzeigen von Statusmeldungen -->
 </body>
 </html>
