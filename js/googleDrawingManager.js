@@ -56,6 +56,14 @@ function startDrawingManager(map){
   		});
 	});
 
+	$('.setComment').click(function() {
+		drawingManager.setOptions({
+			drawingMode: google.maps.drawing.OverlayType.MARKER,
+			markerOptions: {icon: {url:'images/comment.png',anchor: new google.maps.Point(16, 16), draggable:true}}
+		});
+		marker_typ = 'comment';
+	});
+
 	$('.deleteActiveObject').click(function() {
 		deleteObject(); //Löschfunktion für geladene Objekte
 		deleteSelectedShape(); //Löschfunktion für neu erzeugte Objekte
@@ -107,6 +115,85 @@ function startDrawingManager(map){
 			newShape.setMap(null);
 		}
 
+		if (event.type == google.maps.drawing.OverlayType.MARKER && marker_typ == 'comment') {
+			newShape.setValues({
+				obj_nummer: objectNummer,
+				obj_lat: newShape.getPosition().lat().toFixed(6),
+				obj_lon: newShape.getPosition().lng().toFixed(6),
+				obj_typ: 'comment',
+				obj_hinweis: '',
+				zIndex:10
+			});
+			objectArray.push(newShape);
+			objectNummer += 1;
+
+			google.maps.event.addListener(newShape,'click',function(){ // Öffnet Infowindow bei Klick auf Marker
+				activeObject = this; // Setzt den aktuell ausgewählten marker als aktiv
+				let index = objectArray.findIndex(x => x.obj_nummer == this.obj_nummer && x.obj_typ == this.obj_typ); // Ermittelt Array-Index des aktuellen Markers
+				
+				reverseGeocode(objectArray[index].position, function(result)
+			    {
+			        if (result === 0)
+			        {
+				        infoWindow.setContent('<span class="fa fa-map-marker" aria-hidden="true"></span> <b>'+	objectArray[index].obj_lat+', '+ objectArray[index].obj_lon+'</b> ('+LLtoUSNG(objectArray[index].obj_lat, objectArray[index].obj_lon, 5)+')'+
+						'<br/> Adresse nicht gefunden <hr>'+
+						'<form><div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis('+objectArray[index].obj_nummer+',\'comment\', this.value);" rows="5">'+objectArray[index].obj_hinweis+'</textarea></div></form>'+
+						'<div class="btn-group" role="group" aria-label="Optionen">'+
+						'<button type="button" class="btn btn-default btn-danger btnInfoWindow" id="deleteButton" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button></div>');
+						infoWindow.open(map,activeObject);
+					}
+			        else
+			        {
+				        var adresse = result;
+
+				        infoWindow.setContent('<span class="fa fa-map-marker" aria-hidden="true"></span> <b>'+	objectArray[index].obj_lat+', '+ objectArray[index].obj_lon+'</b> ('+LLtoUSNG(objectArray[index].obj_lat, objectArray[index].obj_lon, 5)+')'+
+						'<br/>'+adresse+
+						'<hr><form><div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis('+objectArray[index].obj_nummer+',\'comment\', this.value);" rows="5">'+objectArray[index].obj_hinweis+'</textarea></div></form>'+
+						'<div class="btn-group" role="group" aria-label="Optionen">'+
+						'<button type="button" class="btn btn-default btn-danger btnInfoWindow" id="deleteButton" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button></div>');
+						infoWindow.open(map,activeObject);
+			        }
+			    }); // Ende reverseGeocode()
+			}); // Ende eventlistener
+			
+			google.maps.event.addListener(newShape,'dragend', function(){ //Aktualisiert Array und InfoWindow wenn Marker verschoben wird
+				activeObject = this;
+				let index = objectArray.findIndex(x => x.obj_nummer == newShape.obj_nummer  && x.obj_typ == newShape.obj_typ);  // Ermittelt Array-Index des aktuellen Markers
+				objectArray[index].obj_lat = newShape.getPosition().lat().toFixed(6); // Aktualisiert geogr. Position im Array
+				objectArray[index].obj_lon = newShape.getPosition().lng().toFixed(6);// Aktualisiert geogr. Position im Array
+
+				reverseGeocode(objectArray[index].position, function(result)
+			    {
+			        if (result === 0)
+			        {
+				        infoWindow.setContent('<span class="fa fa-map-marker" aria-hidden="true"></span> <b>'+	objectArray[index].obj_lat+', '+ objectArray[index].obj_lon+'</b> ('+LLtoUSNG(objectArray[index].obj_lat, objectArray[index].obj_lon, 5)+')'+
+						'<br/> Adresse nicht gefunden <hr>'+
+						'<form><div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis('+objectArray[index].obj_nummer+',\'comment\', this.value);" rows="5">'+objectArray[index].obj_hinweis+'</textarea></div></form>'+
+						'<div class="btn-group" role="group" aria-label="Optionen">'+
+						'<button type="button" class="btn btn-default btn-danger btnInfoWindow" id="deleteButton" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button></div>');
+						infoWindow.open(map,activeObject);
+					}
+			        else
+			        {
+				        var adresse = result;
+
+				        infoWindow.setContent('<span class="fa fa-map-marker" aria-hidden="true"></span> <b>'+	objectArray[index].obj_lat+', '+ objectArray[index].obj_lon+'</b> ('+LLtoUSNG(objectArray[index].obj_lat, objectArray[index].obj_lon, 5)+')'+
+						'<br/>'+adresse+
+						'<hr><form><div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis('+objectArray[index].obj_nummer+',\'comment\', this.value);" rows="5">'+objectArray[index].obj_hinweis+'</textarea></div></form>'+
+						'<div class="btn-group" role="group" aria-label="Optionen">'+
+						'<button type="button" class="btn btn-default btn-danger btnInfoWindow" id="deleteButton" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button></div>');
+						infoWindow.open(map,activeObject);
+			        }
+			    }); // Ende reverseGeocode()
+			}); // Ende Eventlistener
+
+			google.maps.event.addListener(newShape,'dragstart', function(){
+				activeObject = this;
+				infoWindow.setMap(null);
+			});
+
+		} // Ende if typ = comment
+
 		if (event.type == google.maps.drawing.OverlayType.MARKER && marker_typ == 'messpunkt') {
 			newShape.setValues({
 				obj_nummer: messpunktNummer,
@@ -137,7 +224,7 @@ function startDrawingManager(map){
 						'<br/><br/><span class="fa fa-map-marker" aria-hidden="true"></span> <b>'+	objectArray[index].obj_lat+', '+ objectArray[index].obj_lon+'</b> ('+LLtoUSNG(objectArray[index].obj_lat, objectArray[index].obj_lon, 5)+')'+
 						'<br/> Adresse nicht gefunden <hr>'+
 						'<form><div class="form-group"> <label for="messwert">Messwert [ppm]</label><input type="text" class="form-control" id="messwert" cols="50" value = "'+objectArray[index].obj_messwert+'" onchange="updateMesswert('+objectArray[index].obj_nummer+', this.value);"></div>'+
-						'<div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis('+objectArray[index].obj_nummer+', this.value);" rows="5">'+objectArray[index].obj_hinweis+'</textarea></div></form>'+
+						'<div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis('+objectArray[index].obj_nummer+',\'marker\', this.value);" rows="5">'+objectArray[index].obj_hinweis+'</textarea></div></form>'+
 						'<div class="btn-group" role="group" aria-label="Optionen">'+
 						'<button type="button" class="btn btn-default btn-danger btnInfoWindow" id="deleteButton" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button>'+
 						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',1);"><img src="images/white.png"></button>'+
@@ -154,7 +241,7 @@ function startDrawingManager(map){
 						'<br/><br/><span class="fa fa-map-marker" aria-hidden="true"></span> <b>'+	objectArray[index].obj_lat+', '+ objectArray[index].obj_lon+'</b> ('+LLtoUSNG(objectArray[index].obj_lat, objectArray[index].obj_lon, 5)+')'+
 						'<br/>'+adresse+
 						'<hr><form><div class="form-group"> <label for="messwert">Messwert [ppm]</label><input type="text" class="form-control" id="messwert" cols="50" value = "'+objectArray[index].obj_messwert+'" onchange="updateMesswert('+objectArray[index].obj_nummer+', this.value);"></div>'+
-						'<div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis('+objectArray[index].obj_nummer+', this.value);" rows="5">'+objectArray[index].obj_hinweis+'</textarea></div></form>'+
+						'<div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis('+objectArray[index].obj_nummer+',\'marker\', this.value);" rows="5">'+objectArray[index].obj_hinweis+'</textarea></div></form>'+
 						'<div class="btn-group" role="group" aria-label="Optionen">'+
 						'<button type="button" class="btn btn-default btn-danger btnInfoWindow" id="deleteButton" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button>'+
 						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',1);"><img src="images/white.png"></button>'+
@@ -181,7 +268,7 @@ function startDrawingManager(map){
 							'<br/><br/><span class="fa fa-map-marker" aria-hidden="true"></span> <b>'+	objectArray[index].obj_lat+', '+ objectArray[index].obj_lon+'</b> ('+LLtoUSNG(objectArray[index].obj_lat, objectArray[index].obj_lon, 5)+')'+
 							'<br/> Adresse nicht gefunden <hr>'+
 							'<form><div class="form-group"> <label for="messwert">Messwert [ppm]</label><input type="text" class="form-control" id="messwert" cols="50" value = "'+objectArray[index].obj_messwert+'" onchange="updateMesswert('+objectArray[index].obj_nummer+', this.value);"></div>'+
-							'<div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis('+objectArray[index].obj_nummer+', this.value);" rows="5">'+objectArray[index].obj_hinweis+'</textarea></div></form>'+
+							'<div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis('+objectArray[index].obj_nummer+',\'marker\', this.value);" rows="5">'+objectArray[index].obj_hinweis+'</textarea></div></form>'+
 							'<div class="btn-group" role="group" aria-label="Optionen">'+
 							'<button type="button" class="btn btn-default btn-danger btnInfoWindow" id="deleteButton" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button>'+
 							'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',1);"><img src="images/white.png"></button>'+
@@ -200,7 +287,7 @@ function startDrawingManager(map){
 							'<br/><br/><span class="fa fa-map-marker" aria-hidden="true"></span> <b>'+	objectArray[index].obj_lat+', '+ objectArray[index].obj_lon+'</b> ('+LLtoUSNG(objectArray[index].obj_lat, objectArray[index].obj_lon, 5)+')'+
 							'<br/>'+adresse+
 							'<hr><form><div class="form-group"> <label for="messwert">Messwert [ppm]</label><input type="text" class="form-control" id="messwert" cols="50" value = "'+objectArray[index].obj_messwert+'" onchange="updateMesswert('+objectArray[index].obj_nummer+', this.value);"></div>'+
-							'<div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis('+objectArray[index].obj_nummer+', this.value);" rows="5">'+objectArray[index].obj_hinweis+'</textarea></div></form>'+
+							'<div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis('+objectArray[index].obj_nummer+',\'marker\', this.value);" rows="5">'+objectArray[index].obj_hinweis+'</textarea></div></form>'+
 							'<div class="btn-group" role="group" aria-label="Optionen">'+
 							'<button type="button" class="btn btn-default btn-danger btnInfoWindow" id="deleteButton" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button>'+
 							'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',1);"><img src="images/white.png"></button>'+
@@ -284,14 +371,14 @@ function deleteSelectedShape() {
     }
 }
 
-function updateMesswert(messwertId, messwertValue){
-	var index = objectArray.findIndex(x => x.obj_nummer == messwertId);
-	objectArray[index].obj_messwert = messwertValue;
+function updateMesswert(ID, value){
+	var index = objectArray.findIndex(x => x.obj_nummer == ID);
+	objectArray[index].obj_messwert = value;
 }
 
-function updateHinweis(hinweisId, hinweisValue){
-	var index = objectArray.findIndex(x => x.obj_nummer == hinweisId);
-	objectArray[index].obj_hinweis = hinweisValue;
+function updateHinweis(ID, type, value){
+	var index = objectArray.findIndex(x => x.obj_nummer == ID && x.obj_typ == type);
+	objectArray[index].obj_hinweis = value;
 }
 
 function updateLabel(ID, value){

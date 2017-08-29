@@ -242,7 +242,7 @@
 				</div>
 				<div class="modal-footer">
 					<div class="row">
-						<div class="col-xs-4 text-center"><a href="CHANGELOG.md" target="_blank">Version: 1.4.2</a></div>
+						<div class="col-xs-4 text-center"><a href="CHANGELOG.md" target="_blank">Version: 1.4.3</a></div>
 						<div class="col-xs-4"><a href="https://github.com/cuzcomd/DALUS" target="_blank"><i class="fa fa-github" aria-hidden="true"></i> GitHub Repository</a></div>
 						<div class="col-xs-4"><a href="mailto:kontakt@cuzcomd.de">kontakt@cuzcomd.de</a></div>
 					</div>
@@ -638,10 +638,17 @@
 		<div class="werkzeuge hidden-sm hidden-xs">
 			<ul class="nav nav-pills nav-werkzeuge">
 				<li class="setHand" data-toggle="tooltip" data-placement="bottom" title="Auswahl" role="button"><a data-toggle="tab"><i class="fa fa-mouse-pointer"></i></a></li>
-				<li class="setMarkWhite" data-toggle="tooltip" data-placement="bottom" title="Auswahl" role="button"><a data-toggle="tab"><i class="fa fa-flag-o"></i></a></li>
-				<li class="setCirc" data-toggle="tooltip" data-placement="bottom" title="Kreis zeichnen" role="button"><a data-toggle="tab"><i class="fa fa-circle-thin"></i></a></li>
-				<li class="setPoly" data-toggle="tooltip" data-placement="bottom" title="Polygon zeichnen" role="button"><a data-toggle="tab"><i class="fa fa-bookmark-o"></i></a></li>
-				<li class="setPath" data-toggle="tooltip" data-placement="bottom" title="Pfad zeichnen" role="button"><a data-toggle="tab"><i class="fa fa-pencil"></i></a></li>
+				<li class="setMarkWhite" data-toggle="tooltip" data-placement="bottom" title="Messpunkt" role="button"><a data-toggle="tab"><i class="fa fa-flag-o"></i></a></li>
+				<li class="setComment" data-toggle="tooltip" data-placement="bottom" title="Kommentar" role="button"><a data-toggle="tab"><i class="fa fa-commenting-o"></i></a></li>
+				<li class="dropdown">
+				    <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-pencil"></i>
+				    <span class="caret"></span></a>
+				    <ul class="dropdown-menu">
+				      	<li class="setCirc" data-toggle="tooltip" data-placement="bottom" title="Kreis zeichnen" role="button"><a data-toggle="tab"><i class="fa fa-circle-thin"></i> Kreis</a></li>
+						<li class="setPoly" data-toggle="tooltip" data-placement="bottom" title="Polygon zeichnen" role="button"><a data-toggle="tab"><i class="fa fa-bookmark-o"></i> Polygon</a></li>
+						<li class="setPath" data-toggle="tooltip" data-placement="bottom" title="Pfad zeichnen" role="button"><a data-toggle="tab"><i class="fa fa-pencil"></i> Pfad</a></li>
+				    </ul>
+				</li>
 				<li class="deleteActiveObject" data-toggle="tooltip" data-placement="bottom" title="Objekt löschen" role="button"><a data-toggle="tab"><i class="fa fa-trash"></i></a></li>
 			</ul>
 		</div> <!-- Ende Werkzeuge -->
@@ -722,10 +729,17 @@
 		<span class="werkzeuge-top">
 			<ul class="nav nav-pills nav-werkzeuge">
 				<li class="setHand" data-toggle="tooltip" data-placement="bottom" title="Auswahl" role="button"><a data-toggle="tab"><i class="fa fa-mouse-pointer"></i></a></li>
-				<li class="setMarkWhite" data-toggle="tooltip" data-placement="bottom" title="Auswahl" role="button"><a data-toggle="tab"><i class="fa fa-flag-o"></i></a></li>
-				<li class="setCirc" data-toggle="tooltip" data-placement="bottom" title="Kreis zeichnen" role="button"><a data-toggle="tab"><i class="fa fa-circle-thin"></i></a></li>
-				<li class="setPoly" data-toggle="tooltip" data-placement="bottom" title="Polygon zeichnen" role="button"><a data-toggle="tab"><i class="fa fa-bookmark-o"></i></a></li>
-				<li class="setPath" data-toggle="tooltip" data-placement="bottom" title="Pfad zeichnen" role="button"><a data-toggle="tab"><i class="fa fa-pencil"></i></a></li>
+				<li class="setMarkWhite" data-toggle="tooltip" data-placement="bottom" title="Messpunkt" role="button"><a data-toggle="tab"><i class="fa fa-flag-o"></i></a></li>
+				<li class="setComment" data-toggle="tooltip" data-placement="bottom" title="Kommentar" role="button"><a data-toggle="tab"><i class="fa fa-commenting-o"></i></a></li>
+				<li class="dropdown">
+				    <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-pencil"></i>
+				    <span class="caret"></span></a>
+				    <ul class="dropdown-menu">
+				      	<li class="setCirc" data-toggle="tooltip" data-placement="bottom" title="Kreis zeichnen" role="button"><a data-toggle="tab"><i class="fa fa-circle-thin"></i> Kreis</a></li>
+						<li class="setPoly" data-toggle="tooltip" data-placement="bottom" title="Polygon zeichnen" role="button"><a data-toggle="tab"><i class="fa fa-bookmark-o"></i> Polygon</a></li>
+						<li class="setPath" data-toggle="tooltip" data-placement="bottom" title="Pfad zeichnen" role="button"><a data-toggle="tab"><i class="fa fa-pencil"></i> Pfad</a></li>
+				    </ul>
+				</li>
 				<li class="deleteActiveObject" data-toggle="tooltip" data-placement="bottom" title="Objekt löschen" role="button"><a data-toggle="tab"><i class="fa fa-trash"></i></a></li>
 			</ul>
 		</span> <!-- Ende Werkzeuge -->

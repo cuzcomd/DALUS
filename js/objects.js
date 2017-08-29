@@ -78,7 +78,7 @@ function drawObjects(theArray){
 			google.maps.event.addListener(geom_obj,'click',function(){ // Öffnet Infowindow bei Klick auf Marker
 				clearSelectionLoad();
 				activeObject = this;
-				var index = objectArray.findIndex(x => x.obj_nummer == this.obj_nummer); // Ermittelt Array-Index des aktuellen Markers
+				var index = objectArray.findIndex(x => x.obj_nummer == this.obj_nummer && x.obj_typ == this.obj_typ); // Ermittelt Array-Index des aktuellen Markers
 				activeObject.setValues({messwert: objectArray[index].obj_messwert}); // Aktualisiert den aktullen Messwert aus dem im Array gespeicherten Wert
 
 				reverseGeocode(objectArray[index].position, function(result)
@@ -164,6 +164,88 @@ function drawObjects(theArray){
 			}); // Ende eventlistener
 
 			google.maps.event.addListener(geom_obj,'dragstart', function(){
+				activeObject = this;
+				activeObject.info.close();
+			});
+			break;
+
+			case 'comment':
+			let comment_obj = new google.maps.Marker({
+			map:map,
+			position: {lat:Number(value.obj_lat), lng:Number(value.obj_lon)},
+			obj_lat: Number(value.obj_lat),
+			obj_lon: Number(value.obj_lon),
+			icon:{url:'images/comment.png', anchor: new google.maps.Point(16,16)},
+			obj_nummer: Number(value.obj_nummer),
+			obj_hinweis: value.obj_hinweis,
+			obj_typ: 'comment',
+			info: infoWindow,
+			draggable:true,
+			zIndex:10
+			});
+
+			objectArray.push(comment_obj);
+
+			google.maps.event.addListener(comment_obj,'click',function(){ // Öffnet Infowindow bei Klick auf Marker
+				clearSelectionLoad();
+				activeObject = this;
+				var index = objectArray.findIndex(x => x.obj_nummer == this.obj_nummer && x.obj_typ == this.obj_typ); // Ermittelt Array-Index des aktuellen Markers
+
+				reverseGeocode(objectArray[index].position, function(result)
+			    {
+			        if (result === 0)
+			        {
+				        activeObject.info.setContent('<span class="fa fa-map-marker" aria-hidden="true"></span> <b>'+	objectArray[index].obj_lat+', '+ objectArray[index].obj_lon+'</b> ('+LLtoUSNG(objectArray[index].obj_lat, objectArray[index].obj_lon, 5)+')'+
+						'<br/> Adresse nicht gefunden <hr>'+
+						'<form><div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis('+objectArray[index].obj_nummer+',\'comment\', this.value);" rows="5">'+objectArray[index].obj_hinweis+'</textarea></div></form>'+
+						'<div class="btn-group" role="group" aria-label="Optionen">'+
+						'<button type="button" class="btn btn-default btn-danger btnInfoWindow" id="deleteButton" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button></div>');
+						activeObject.info.open(map,activeObject);
+					}
+			        else
+			        {
+				        var adresse = result;
+				        activeObject.info.setContent('<span class="fa fa-map-marker" aria-hidden="true"></span> <b>'+	objectArray[index].obj_lat+', '+ objectArray[index].obj_lon+'</b> ('+LLtoUSNG(objectArray[index].obj_lat, objectArray[index].obj_lon, 5)+')'+
+						'<br/>'+adresse+
+						'<hr><form><div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis('+objectArray[index].obj_nummer+',\'comment\', this.value);" rows="5">'+objectArray[index].obj_hinweis+'</textarea></div></form>'+
+						'<div class="btn-group" role="group" aria-label="Optionen">'+
+						'<button type="button" class="btn btn-default btn-danger btnInfoWindow" id="deleteButton" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button></div>');
+						activeObject.info.open(map,activeObject);
+			        }
+			    }); // Ende reverseGeocode()
+			}); // Ende des Eventlisteners
+
+			google.maps.event.addListener(comment_obj,'dragend', function(){ //Aktualisiert Array und Infowindow wenn Marker verschoben wird
+				activeObject = this;
+				let index = objectArray.findIndex(x => x.obj_nummer == this.obj_nummer  && x.obj_typ == this.obj_typ);  // Ermittelt Array-Index des aktuellen Markers
+				objectArray[index].obj_lat = this.getPosition().lat().toFixed(6); // Aktualisiert geogr. Position im Array
+				objectArray[index].obj_lon = this.getPosition().lng().toFixed(6);// Aktualisiert geogr. Position im Array	
+				
+				reverseGeocode(objectArray[index].position, function(result)
+			    {
+			        if (result === 0)
+			        {
+				        activeObject.info.setContent('<span class="fa fa-map-marker" aria-hidden="true"></span> <b>'+	objectArray[index].obj_lat+', '+ objectArray[index].obj_lon+'</b> ('+LLtoUSNG(objectArray[index].obj_lat, objectArray[index].obj_lon, 5)+')'+
+						'<br/> Adresse nicht gefunden <hr>'+
+						'<form><div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis('+objectArray[index].obj_nummer+',\'comment\', this.value);" rows="5">'+objectArray[index].obj_hinweis+'</textarea></div></form>'+
+						'<div class="btn-group" role="group" aria-label="Optionen">'+
+						'<button type="button" class="btn btn-default btn-danger btnInfoWindow" id="deleteButton" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button></div>');
+						activeObject.info.open(map,activeObject);
+					}
+			        else
+			        {
+				        var adresse = result;
+				        activeObject.info.setContent('<span class="fa fa-map-marker" aria-hidden="true"></span> <b>'+	objectArray[index].obj_lat+', '+ objectArray[index].obj_lon+'</b> ('+LLtoUSNG(objectArray[index].obj_lat, objectArray[index].obj_lon, 5)+')'+
+						'<br/>'+adresse+
+						'<hr><form><div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis('+objectArray[index].obj_nummer+',\'comment\', this.value);" rows="5">'+objectArray[index].obj_hinweis+'</textarea></div></form>'+
+						'<div class="btn-group" role="group" aria-label="Optionen">'+
+						'<button type="button" class="btn btn-default btn-danger btnInfoWindow" id="deleteButton" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button></div>');
+						activeObject.info.open(map,activeObject);
+			        }
+			    }); // Ende reverseGeocode()
+			}); // Ende eventlistener
+
+			google.maps.event.addListener(comment_obj,'dragstart', function(){
 				activeObject = this;
 				activeObject.info.close();
 			});
@@ -288,7 +370,7 @@ function drawObjects(theArray){
 } //Ende function drawObjects
 
 function clearSelectionLoad() {
-	if (activeObject && activeObject.obj_typ != "marker" && activeObject.obj_typ != "met"){ //Funktion nur ausführen, wenn ein Objektz ausgewählt ist und es kein Marker ist
+	if (activeObject && activeObject.obj_typ != "marker" && activeObject.obj_typ != "met" && activeObject.obj_typ != "comment"){ //Funktion nur ausführen, wenn ein Objekt ausgewählt ist und es kein Marker ist
 		activeObject.setEditable(false);
 	}// Ende if(activeObject)
 	activeObject = null; //Aktives Objekt zurücksetzen

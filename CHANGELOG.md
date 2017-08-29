@@ -1,5 +1,12 @@
 ## Changelog
 
+### 1.4.3 (29.08.2017)
+* Feature: Infowindows tragen jetzt ein Label, das vom Benutzer individuell festgelegt werden kann
+* Feature: Infowindows zeigen jetzt die Adresse an
+* Feature: Kommentarfelder können beliebig auf der Karte platziert werden
+* Style: Überarbeitung der Werkzeusymbolleiste
+* Bug: Messpunkte werden jetzt immer auf einer höheren Ebene platziert als andere Objekte, sodass sie jederzeit sicher ausgewählt werden können.
+
 ### 1.4.2 (28.08.2017)
 * Feature: Administratoren udn Editoren können das Messkataster zentral bearbeiten 
 * Bug: Geteilte Projekte ohne gespeicherte Messpunkte erzeugten einen Fehler bei der Nummerierung
