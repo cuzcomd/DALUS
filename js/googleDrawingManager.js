@@ -69,7 +69,8 @@ function startDrawingManager(map){
 			newShape.setValues({
 				obj_nummer: objectNummer,
 				obj_parameter: newShape.getPath().getArray(),
-				obj_typ: 'polyline'
+				obj_typ: 'polyline',
+				zIndex:1
 				});
 			objectArray.push(newShape);
 			objectNummer += 1;
@@ -79,7 +80,8 @@ function startDrawingManager(map){
 			newShape.setValues({
 				obj_nummer: objectNummer,
 				obj_parameter: newShape.getPath().getArray(),
-				obj_typ: 'polygon'
+				obj_typ: 'polygon',
+				zIndex:1
 				});
 			objectArray.push(newShape);
 			objectNummer += 1;
@@ -91,7 +93,8 @@ function startDrawingManager(map){
 				obj_lat: newShape.getCenter().lat().toFixed(6),
 				obj_lon: newShape.getCenter().lng().toFixed(6),
 				obj_parameter: newShape.getRadius(),
-				obj_typ: 'circle'
+				obj_typ: 'circle',
+				zIndex:1
 				});
 			objectArray.push(newShape);
 			objectNummer += 1;
@@ -113,7 +116,8 @@ function startDrawingManager(map){
 				obj_typ: 'marker',
 				obj_messwert: '0',
 				obj_label: messpunktNummer,
-				obj_hinweis: ' '
+				obj_hinweis: ' ',
+				zIndex:10
 				});
 			newShape.setLabel({text:newShape.obj_label.toString(), fontWeight: "700"});
 			newShape.content = '';

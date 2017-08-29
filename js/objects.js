@@ -69,7 +69,8 @@ function drawObjects(theArray){
 			obj_label: value.obj_label,
 			info: infoWindow,
 			content: value.obj_parameter,
-			draggable:true
+			draggable:true,
+			zIndex:10
 			});
 
 			objectArray.push(geom_obj);
@@ -196,7 +197,8 @@ function drawObjects(theArray){
 				obj_nummer: Number(value.obj_nummer),
 				obj_typ: 'circle',
 				obj_parameter : Number(value.obj_parameter),
-				draggable:true
+				draggable:true,
+				zIndex:1
 			});
 
 			objectArray.push(circleObj);
@@ -225,7 +227,8 @@ function drawObjects(theArray){
 				paths: JSON.parse(value.obj_parameter),
 				obj_nummer: Number(value.obj_nummer),
 				obj_typ: 'polygon',
-				draggable:true
+				draggable:true,
+				zIndex:1
 			});
 			polygonObj.setValues({
 				obj_parameter: polygonObj.getPath().getArray()
@@ -250,7 +253,8 @@ function drawObjects(theArray){
 				path: JSON.parse(value.obj_parameter),
 				obj_nummer: Number(value.obj_nummer),
 				obj_typ: 'polyline',
-				draggable:true
+				draggable:true,
+				zIndex:1
 			});
 
 			polylineObj.setValues({

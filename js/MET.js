@@ -138,7 +138,8 @@ function drawPolygon(map, lat, lon, geoAdresse, winkel, richtung, innen, aussen,
 		fillOpacity: 0.1,
 		geodesic: true,
 		obj_nummer : metCounter,
-		obj_typ : 'polygon2'
+		obj_typ : 'polygon2',
+		zIndex:0
 	});
 	objectArray.push(polygon2);
 
@@ -163,7 +164,8 @@ function drawPolygon(map, lat, lon, geoAdresse, winkel, richtung, innen, aussen,
 		fillOpacity: 0.1,
 		geodesic: true,
 		obj_nummer : metCounter,
-		obj_typ : 'polygon1'
+		obj_typ : 'polygon1',
+		zIndex:0
 	});
 	objectArray.push(polygon1);
 	
@@ -177,7 +179,8 @@ function drawPolygon(map, lat, lon, geoAdresse, winkel, richtung, innen, aussen,
 			map: map,
 			geodesic:true,
 			obj_nummer : metCounter,
-			obj_typ : 'polygonCenter'
+			obj_typ : 'polygonCenter',
+			zIndex:0
 		});
 		objectArray.push(line);
 	}
@@ -192,12 +195,13 @@ function drawPolygon(map, lat, lon, geoAdresse, winkel, richtung, innen, aussen,
 		obj_typ: 'met',
 		obj_nummer: metCounter,
 		obj_farbe: 'black',
-			map: map,
-			title: 'Freisetzungsort',
-			draggable:false,
-			poly1: polygon1,
-			poly2: polygon2,
-			centerLine:line
+		map: map,
+		title: 'Freisetzungsort',
+		draggable:false,
+		poly1: polygon1,
+		poly2: polygon2,
+		centerLine:line,
+		zIndex:10
 	});
 
 		objectArray.push(marker);
