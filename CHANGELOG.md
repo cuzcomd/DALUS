@@ -1,5 +1,13 @@
 ## Changelog
 
+### 1.5.0
+* Feature: Benutzer können jetzt Messtrupps erstellen und Ihnen Messpunkte zuweisen
+* Feature: Der Benutzerlevel "Editor" ist entfallen. Dafür können Nutzer jetzt individuelle Anpassungen am Messkataster und anderen Optionen vornehmen.
+* Style: Komplette Überarbeitung des Optionsmenüs
+* Style: Komplette Überarbeitung des Infowindows
+* Bug: Style-Datei der Datentabellen wurde nicht geladen
+* Bug: Rechtschreibkorrekturen
+
 ### 1.4.3 (29.08.2017)
 * Feature: Infowindows tragen jetzt ein Label, das vom Benutzer individuell festgelegt werden kann
 * Feature: Infowindows zeigen jetzt die Adresse an

@@ -11,13 +11,6 @@ SET time_zone = "+00:00";
 CREATE DATABASE IF NOT EXISTS `dalus` DEFAULT CHARACTER SET latin1 COLLATE latin1_german1_ci;
 USE `dalus`;
 
-CREATE TABLE `cars` (
-  `car_id` int(10) UNSIGNED NOT NULL,
-  `car_key` varchar(255) COLLATE latin1_german1_ci NOT NULL,
-  `car_name` varchar(255) COLLATE latin1_german1_ci NOT NULL,
-  `car_color` varchar(255) COLLATE latin1_german1_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
-
 CREATE TABLE `gps` (
   `gps_car_id` varchar(10) COLLATE latin1_german1_ci NOT NULL,
   `gps_lat` double NOT NULL,
@@ -39,13 +32,14 @@ CREATE TABLE `objects` (
   `obj_farbe` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `obj_parameter` varchar(8000) COLLATE utf8_unicode_ci NOT NULL,
   `obj_label` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `obj_messtrupp` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
   `obj_prj_id` int(10) UNSIGNED NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE `options` (
   `opt_UID` int(10) UNSIGNED NOT NULL,
-  `opt_cars` varchar(255) COLLATE latin1_german1_ci NOT NULL,
+  `opt_cars` longtext COLLATE latin1_german1_ci NOT NULL,
   `opt_kataster` longtext COLLATE latin1_german1_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
@@ -70,9 +64,6 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
-ALTER TABLE `cars`
-  ADD PRIMARY KEY (`car_id`);
-
 ALTER TABLE `gps`
   ADD PRIMARY KEY (`gps_id`);
 
@@ -92,8 +83,6 @@ ALTER TABLE `users`
   ADD UNIQUE KEY `benutzername` (`benutzername`);
 
 
-ALTER TABLE `cars`
-  MODIFY `car_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 ALTER TABLE `gps`
   MODIFY `gps_id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `objects`

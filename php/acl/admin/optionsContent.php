@@ -57,8 +57,45 @@
 	</form>
 </div> <!-- Ende deleteUser -->
 
-<div id="adminSettings" class="tab-pane fade">
-    <div id = "optCars">
-    	Hier erscheinen die Einstellungen, die an der Datenbank vorgenommen werden können.
-    </div>
-</div> <!-- Ende deleteUser -->
+<div id="messkatasterGlobal" class="tab-pane fade">
+	Das Messkataster listet vordefinierte Messpunkte auf, die Benutzer in der Karte einblenden können.<br>
+	Administratoren haben die Möglichkeit, diese Punkte global für alle Benutzer zu verändern.
+    <table id="katasterGlobal" class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nummer</th>
+                <th>Bezeichnung</th>
+                <th>Adresse</th>
+                <th>ODL</th>
+                <th>IPS</th>
+                <th>Koordinaten</th>
+                <th></th>
+            </tr>
+        </thead>
+       <tbody>
+       </tbody>
+    </table>
+    <button id="addRow" role="button" class="btn btn-primary" onclick ="addRow(dataTable2,'dataTable2')"><i class="fa fa-plus-square"></i> Neuen Messpunkt hinzufügen</button>
+    <button id="loadTableAdmin" role="button" class="btn btn-primary" onclick="updateKataster(0, dataTable2)"><i class="fa fa-refresh"></i> Vorlage laden</button>
+    <button id="saveTableAdmin" role="button" class="btn btn-danger" onclick="saveKataster(0, '#katasterGlobal')"><i class="fa fa-floppy-o"></i> Vorlage überschreiben</button>
+</div> <!-- Ende messkatasterGlobal -->
+
+<div id="truppsGlobal" class="tab-pane fade">
+    <table id="messtruppsGlobal" class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Abkürzung</th>
+                <th>Bezeichnung</th>
+                <th>Farbe</th>
+                <th></th>
+            </tr>
+        </thead>
+       <tbody>
+       </tbody>
+    </table>
+    <button id="addRow" role="button" class="btn btn-primary" onclick ="addRowMesstrupps(dataTable4,'dataTable4')"><i class="fa fa-plus-square"></i> Neuen Messtrupp hinzufügen</button>
+    <button id="loadTableAdmin" role="button" class="btn btn-primary" onclick="updateMesstrupps(0, dataTable4)"><i class="fa fa-refresh"></i> Vorlage laden</button>
+    <button id="saveTableAdmin" role="button" class="btn btn-danger" onclick="saveMesstrupps(0, '#messtruppsGlobal')"><i class="fa fa-floppy-o"></i> Vorlage überschreiben</button>
+</div> <!-- Ende messkatasterGlobal -->

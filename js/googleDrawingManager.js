@@ -59,7 +59,7 @@ function startDrawingManager(map){
 	$('.setComment').click(function() {
 		drawingManager.setOptions({
 			drawingMode: google.maps.drawing.OverlayType.MARKER,
-			markerOptions: {icon: {url:'images/comment.png',anchor: new google.maps.Point(16, 16), draggable:true}}
+			markerOptions: {icon: {url:'images/comment.png',anchor: new google.maps.Point(16, 16)}, draggable:true}
 		});
 		marker_typ = 'comment';
 	});
@@ -127,7 +127,7 @@ function startDrawingManager(map){
 			objectArray.push(newShape);
 			objectNummer += 1;
 
-			google.maps.event.addListener(newShape,'click',function(){ // Öffnet Infowindow bei Klick auf Marker
+			google.maps.event.addListener(newShape,'click',function(){ // Öffnet Infowindow bei Klick auf Kommentarmarker
 				activeObject = this; // Setzt den aktuell ausgewählten marker als aktiv
 				let index = objectArray.findIndex(x => x.obj_nummer == this.obj_nummer && x.obj_typ == this.obj_typ); // Ermittelt Array-Index des aktuellen Markers
 				
@@ -135,24 +135,19 @@ function startDrawingManager(map){
 			    {
 			        if (result === 0)
 			        {
-				        infoWindow.setContent('<span class="fa fa-map-marker" aria-hidden="true"></span> <b>'+	objectArray[index].obj_lat+', '+ objectArray[index].obj_lon+'</b> ('+LLtoUSNG(objectArray[index].obj_lat, objectArray[index].obj_lon, 5)+')'+
-						'<br/> Adresse nicht gefunden <hr>'+
-						'<form><div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis('+objectArray[index].obj_nummer+',\'comment\', this.value);" rows="5">'+objectArray[index].obj_hinweis+'</textarea></div></form>'+
-						'<div class="btn-group" role="group" aria-label="Optionen">'+
-						'<button type="button" class="btn btn-default btn-danger btnInfoWindow" id="deleteButton" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button></div>');
-						infoWindow.open(map,activeObject);
+				        var adresse = ' Adresse nicht gefunden '
 					}
 			        else
 			        {
 				        var adresse = result;
-
-				        infoWindow.setContent('<span class="fa fa-map-marker" aria-hidden="true"></span> <b>'+	objectArray[index].obj_lat+', '+ objectArray[index].obj_lon+'</b> ('+LLtoUSNG(objectArray[index].obj_lat, objectArray[index].obj_lon, 5)+')'+
+				    }
+					var commentContent = '<span class="fa fa-map-marker" aria-hidden="true"></span> <b>'+	objectArray[index].obj_lat+', '+ objectArray[index].obj_lon+'</b> ('+LLtoUSNG(objectArray[index].obj_lat, objectArray[index].obj_lon, 5)+')'+
 						'<br/>'+adresse+
 						'<hr><form><div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis('+objectArray[index].obj_nummer+',\'comment\', this.value);" rows="5">'+objectArray[index].obj_hinweis+'</textarea></div></form>'+
 						'<div class="btn-group" role="group" aria-label="Optionen">'+
-						'<button type="button" class="btn btn-default btn-danger btnInfoWindow" id="deleteButton" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button></div>');
-						infoWindow.open(map,activeObject);
-			        }
+						'<button type="button" class="btn btn-default btn-danger btnInfoWindow" id="deleteButton" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button></div>';
+					infoWindow.setContent(commentContent);
+					infoWindow.open(map,activeObject)
 			    }); // Ende reverseGeocode()
 			}); // Ende eventlistener
 			
@@ -166,24 +161,20 @@ function startDrawingManager(map){
 			    {
 			        if (result === 0)
 			        {
-				        infoWindow.setContent('<span class="fa fa-map-marker" aria-hidden="true"></span> <b>'+	objectArray[index].obj_lat+', '+ objectArray[index].obj_lon+'</b> ('+LLtoUSNG(objectArray[index].obj_lat, objectArray[index].obj_lon, 5)+')'+
-						'<br/> Adresse nicht gefunden <hr>'+
-						'<form><div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis('+objectArray[index].obj_nummer+',\'comment\', this.value);" rows="5">'+objectArray[index].obj_hinweis+'</textarea></div></form>'+
-						'<div class="btn-group" role="group" aria-label="Optionen">'+
-						'<button type="button" class="btn btn-default btn-danger btnInfoWindow" id="deleteButton" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button></div>');
-						infoWindow.open(map,activeObject);
+				        var adresse = ' Adresse nicht gefunden '
 					}
 			        else
 			        {
 				        var adresse = result;
-
-				        infoWindow.setContent('<span class="fa fa-map-marker" aria-hidden="true"></span> <b>'+	objectArray[index].obj_lat+', '+ objectArray[index].obj_lon+'</b> ('+LLtoUSNG(objectArray[index].obj_lat, objectArray[index].obj_lon, 5)+')'+
+				    }
+					var commentContent = '<span class="fa fa-map-marker" aria-hidden="true"></span> <b>'+	objectArray[index].obj_lat+', '+ objectArray[index].obj_lon+'</b> ('+LLtoUSNG(objectArray[index].obj_lat, objectArray[index].obj_lon, 5)+')'+
 						'<br/>'+adresse+
 						'<hr><form><div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis('+objectArray[index].obj_nummer+',\'comment\', this.value);" rows="5">'+objectArray[index].obj_hinweis+'</textarea></div></form>'+
 						'<div class="btn-group" role="group" aria-label="Optionen">'+
-						'<button type="button" class="btn btn-default btn-danger btnInfoWindow" id="deleteButton" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button></div>');
-						infoWindow.open(map,activeObject);
-			        }
+						'<button type="button" class="btn btn-default btn-danger btnInfoWindow" id="deleteButton" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button></div>';
+					infoWindow.setContent(commentContent);
+					infoWindow.setPosition(new google.maps.LatLng(newShape.obj_lat , newShape.obj_lon));
+					infoWindow.open(map,activeObject)
 			    }); // Ende reverseGeocode()
 			}); // Ende Eventlistener
 
@@ -220,37 +211,51 @@ function startDrawingManager(map){
 			    {
 			        if (result === 0)
 			        {
-				          infoWindow.setContent('<label for="messpunktLabel">Messpunkt</label><input type="text" class="form-control" id="messpunktLabel" value = "'+objectArray[index].obj_label+'" onchange="updateLabel('+objectArray[index].obj_nummer+', this.value);">'+
-						'<br/><br/><span class="fa fa-map-marker" aria-hidden="true"></span> <b>'+	objectArray[index].obj_lat+', '+ objectArray[index].obj_lon+'</b> ('+LLtoUSNG(objectArray[index].obj_lat, objectArray[index].obj_lon, 5)+')'+
-						'<br/> Adresse nicht gefunden <hr>'+
-						'<form><div class="form-group"> <label for="messwert">Messwert [ppm]</label><input type="text" class="form-control" id="messwert" cols="50" value = "'+objectArray[index].obj_messwert+'" onchange="updateMesswert('+objectArray[index].obj_nummer+', this.value);"></div>'+
-						'<div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis('+objectArray[index].obj_nummer+',\'marker\', this.value);" rows="5">'+objectArray[index].obj_hinweis+'</textarea></div></form>'+
-						'<div class="btn-group" role="group" aria-label="Optionen">'+
-						'<button type="button" class="btn btn-default btn-danger btnInfoWindow" id="deleteButton" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button>'+
-						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',1);"><img src="images/white.png"></button>'+
-						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',2);"><img src="images/green.png"></button>'+
-						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',3);"><img src="images/blue.png"></button>'+
-						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',4);"><img src="images/yellow.png"></button>'+
-						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',5);"><img src="images/red.png"></button></div>');
-						infoWindow.open(map,activeObject);
+			        	var adresse = 'Adresse enicht gefunden';
 					}
 			        else
 			        {
-				        var adresse = result;
-				        infoWindow.setContent('<label for="messpunktLabel">Messpunkt</label><input type="text" class="form-control" id="messpunktLabel" value = "'+objectArray[index].obj_label+'" onchange="updateLabel('+objectArray[index].obj_nummer+', this.value);">'+
-						'<br/><br/><span class="fa fa-map-marker" aria-hidden="true"></span> <b>'+	objectArray[index].obj_lat+', '+ objectArray[index].obj_lon+'</b> ('+LLtoUSNG(objectArray[index].obj_lat, objectArray[index].obj_lon, 5)+')'+
-						'<br/>'+adresse+
-						'<hr><form><div class="form-group"> <label for="messwert">Messwert [ppm]</label><input type="text" class="form-control" id="messwert" cols="50" value = "'+objectArray[index].obj_messwert+'" onchange="updateMesswert('+objectArray[index].obj_nummer+', this.value);"></div>'+
-						'<div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis('+objectArray[index].obj_nummer+',\'marker\', this.value);" rows="5">'+objectArray[index].obj_hinweis+'</textarea></div></form>'+
-						'<div class="btn-group" role="group" aria-label="Optionen">'+
-						'<button type="button" class="btn btn-default btn-danger btnInfoWindow" id="deleteButton" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button>'+
-						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',1);"><img src="images/white.png"></button>'+
-						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',2);"><img src="images/green.png"></button>'+
-						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',3);"><img src="images/blue.png"></button>'+
-						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',4);"><img src="images/yellow.png"></button>'+
-						'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',5);"><img src="images/red.png"></button></div>');
-						infoWindow.open(map,activeObject);
+				        var adresse = result;   
 			        }
+			        var markerContent =
+			        '<div class="text-center "id="messpunktLabel"><b>'+objectArray[index].obj_label+'</b> <i class="pull-right fa fa-pencil" style="color:#ccc;"></i></div><br>'+
+			        '<div class="header" style="display:inline-block">'+
+			        	'<div class="col-xs-6">'+
+			        		'<div class="col-xs-1 fa fa-home" aria-hidden="true"></div><div class="col-xs-10" >'+adresse+'</div><hr>'+
+			        		'<div class="col-xs-1 fa fa-map-marker" aria-hidden="true"></div><div class="col-xs-10" >'+objectArray[index].obj_lat+', '+ objectArray[index].obj_lon+'<br>'+
+			        		'('+LLtoUSNG(objectArray[index].obj_lat, objectArray[index].obj_lon, 5)+')</div>'+
+			       			
+			       		'</div>'+
+			        	'<div class="col-xs-6"><label for="markerMesstrupp">Zugewiesener Messtrupp</label><select id="markerMesstrupp" onchange="setMesstrupp('+objectArray[index].obj_nummer+', this.value)"></select><br><br>'+
+				        	'<div class="btn-group" role="group" aria-label="Optionen">'+
+								'<button type="button" class="btn btn-default btn-danger btnInfoWindow" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button>'+
+								'<div class="btn-group"><button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Farbe <span class="caret"></span></button>'+
+									'<ul class="dropdown-menu" role="menu">'+
+					      				'<li onclick="changeColor('+activeObject.obj_nummer+',1);"><a href="#"><img src="images/white.png"></a></li>'+
+					      				'<li onclick="changeColor('+activeObject.obj_nummer+',2);"><a href="#"><img src="images/green.png"></a></li>'+
+					      				'<li onclick="changeColor('+activeObject.obj_nummer+',3);"><a href="#"><img src="images/blue.png"></a></li>'+
+					      				'<li onclick="changeColor('+activeObject.obj_nummer+',4);"><a href="#"><img src="images/yellow.png"></a></li>'+
+					      				'<li onclick="changeColor('+activeObject.obj_nummer+',5);"><a href="#"><img src="images/red.png"></a></li>'+
+	   								'</ul>'+
+	   							'</div>'+
+	   						'</div>'+
+				        '</div>'+
+			        '</div><br>'+
+			        '<hr> Geräte<br><form><div class="form-group"> <label for="messwert">Messwert [ppm]</label><input type="text" class="form-control" id="messwert" cols="50" value = "'+objectArray[index].obj_messwert+'" onchange="updateMesswert('+objectArray[index].obj_nummer+', this.value);"></div></form>'+
+			        '<form><div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis('+objectArray[index].obj_nummer+',\'marker\', this.value);" rows="5">'+objectArray[index].obj_hinweis+'</textarea></div></form>';
+
+					infoWindow.setContent(markerContent);
+					updateMesstruppsMarker(); // Aktualisiert die auswählbaren Messtrupps
+					infoWindow.open(map,activeObject);
+					$('#messpunktLabel').editable({
+						type: 'text',
+						title: 'Bezeichnung',
+						placement: 'bottom',
+						mode: 'popup',
+						success: function(response, newValue) {
+							updateLabel(objectArray[index].obj_nummer, newValue);
+						}
+					}); // Ende editable()
 			    }); // Ende reverseGeocode()
 			}); // Ende eventlistener
 			
@@ -264,41 +269,53 @@ function startDrawingManager(map){
 			    {
 			        if (result === 0)
 			        {
-						infoWindow.setContent('<label for="messpunktLabel">Messpunkt</label><input type="text" class="form-control" id="messpunktLabel" value = "'+objectArray[index].obj_label+'" onchange="updateLabel('+objectArray[index].obj_nummer+', this.value);">'+
-							'<br/><br/><span class="fa fa-map-marker" aria-hidden="true"></span> <b>'+	objectArray[index].obj_lat+', '+ objectArray[index].obj_lon+'</b> ('+LLtoUSNG(objectArray[index].obj_lat, objectArray[index].obj_lon, 5)+')'+
-							'<br/> Adresse nicht gefunden <hr>'+
-							'<form><div class="form-group"> <label for="messwert">Messwert [ppm]</label><input type="text" class="form-control" id="messwert" cols="50" value = "'+objectArray[index].obj_messwert+'" onchange="updateMesswert('+objectArray[index].obj_nummer+', this.value);"></div>'+
-							'<div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis('+objectArray[index].obj_nummer+',\'marker\', this.value);" rows="5">'+objectArray[index].obj_hinweis+'</textarea></div></form>'+
-							'<div class="btn-group" role="group" aria-label="Optionen">'+
-							'<button type="button" class="btn btn-default btn-danger btnInfoWindow" id="deleteButton" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button>'+
-							'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',1);"><img src="images/white.png"></button>'+
-							'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',2);"><img src="images/green.png"></button>'+
-							'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',3);"><img src="images/blue.png"></button>'+
-							'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',4);"><img src="images/yellow.png"></button>'+
-							'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',5);"><img src="images/red.png"></button></div>');
-						infoWindow.setPosition(new google.maps.LatLng(newShape.obj_lat , newShape.obj_lon));
-						infoWindow.setOptions({pixelOffset: new google.maps.Size(0,-16)});
-						infoWindow.open(map,activeObject);
+						var adresse = 'Adresse enicht gefunden';
 					}
 			        else
 			        {
 				        var adresse = result;
-				        infoWindow.setContent('<label for="messpunktLabel">Messpunkt</label><input type="text" class="form-control" id="messpunktLabel" value = "'+objectArray[index].obj_label+'" onchange="updateLabel('+objectArray[index].obj_nummer+', this.value);">'+
-							'<br/><br/><span class="fa fa-map-marker" aria-hidden="true"></span> <b>'+	objectArray[index].obj_lat+', '+ objectArray[index].obj_lon+'</b> ('+LLtoUSNG(objectArray[index].obj_lat, objectArray[index].obj_lon, 5)+')'+
-							'<br/>'+adresse+
-							'<hr><form><div class="form-group"> <label for="messwert">Messwert [ppm]</label><input type="text" class="form-control" id="messwert" cols="50" value = "'+objectArray[index].obj_messwert+'" onchange="updateMesswert('+objectArray[index].obj_nummer+', this.value);"></div>'+
-							'<div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis('+objectArray[index].obj_nummer+',\'marker\', this.value);" rows="5">'+objectArray[index].obj_hinweis+'</textarea></div></form>'+
-							'<div class="btn-group" role="group" aria-label="Optionen">'+
-							'<button type="button" class="btn btn-default btn-danger btnInfoWindow" id="deleteButton" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button>'+
-							'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',1);"><img src="images/white.png"></button>'+
-							'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',2);"><img src="images/green.png"></button>'+
-							'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',3);"><img src="images/blue.png"></button>'+
-							'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',4);"><img src="images/yellow.png"></button>'+
-							'<button type="button" class="btn btn-default" onclick="changeColor('+this.obj_nummer+',5);"><img src="images/red.png"></button></div>');
-				        infoWindow.setPosition(new google.maps.LatLng(newShape.obj_lat , newShape.obj_lon));
-						infoWindow.setOptions({pixelOffset: new google.maps.Size(0,-16)});
-						infoWindow.open(map,activeObject);
 					}
+
+					var markerContent =
+			        '<div class="text-center "id="messpunktLabel"><b>'+objectArray[index].obj_label+'</b> <i class="pull-right fa fa-pencil" style="color:#ccc;"></i></div><br>'+
+			        '<div class="header" style="display:inline-block">'+
+			        	'<div class="col-xs-6">'+
+			        		'<div class="col-xs-1 fa fa-home" aria-hidden="true"></div><div class="col-xs-10" >'+adresse+'</div><hr>'+
+			        		'<div class="col-xs-1 fa fa-map-marker" aria-hidden="true"></div><div class="col-xs-10" >'+objectArray[index].obj_lat+', '+ objectArray[index].obj_lon+'<br>'+
+			        		'('+LLtoUSNG(objectArray[index].obj_lat, objectArray[index].obj_lon, 5)+')</div>'+
+			       			
+			       		'</div>'+
+			        	'<div class="col-xs-6"><label for="markerMesstrupp">Zugewiesener Messtrupp</label><select id="markerMesstrupp" onchange="setMesstrupp('+objectArray[index].obj_nummer+', this.value)"></select><br><br>'+
+				        	'<div class="btn-group" role="group" aria-label="Optionen">'+
+								'<button type="button" class="btn btn-default btn-danger btnInfoWindow" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button>'+
+								'<div class="btn-group"><button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Farbe <span class="caret"></span></button>'+
+									'<ul class="dropdown-menu" role="menu">'+
+					      				'<li onclick="changeColor('+activeObject.obj_nummer+',1);"><a href="#"><img src="images/white.png"></a></li>'+
+					      				'<li onclick="changeColor('+activeObject.obj_nummer+',2);"><a href="#"><img src="images/green.png"></a></li>'+
+					      				'<li onclick="changeColor('+activeObject.obj_nummer+',3);"><a href="#"><img src="images/blue.png"></a></li>'+
+					      				'<li onclick="changeColor('+activeObject.obj_nummer+',4);"><a href="#"><img src="images/yellow.png"></a></li>'+
+					      				'<li onclick="changeColor('+activeObject.obj_nummer+',5);"><a href="#"><img src="images/red.png"></a></li>'+
+	   								'</ul>'+
+	   							'</div>'+
+	   						'</div>'+
+				        '</div>'+
+			        '</div><br>'+
+			        '<hr> Geräte<br><form><div class="form-group"> <label for="messwert">Messwert [ppm]</label><input type="text" class="form-control" id="messwert" cols="50" value = "'+objectArray[index].obj_messwert+'" onchange="updateMesswert('+objectArray[index].obj_nummer+', this.value);"></div></form>'+
+			        '<form><div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis('+objectArray[index].obj_nummer+',\'marker\', this.value);" rows="5">'+objectArray[index].obj_hinweis+'</textarea></div></form>';
+
+					infoWindow.setContent(markerContent);
+					updateMesstruppsMarker(); // Aktualisiert die auswählbaren Messtrupps
+					infoWindow.setPosition(new google.maps.LatLng(newShape.obj_lat , newShape.obj_lon));
+					infoWindow.open(map,activeObject);
+					$('#messpunktLabel').editable({
+						type: 'text',
+						title: 'Bezeichnung',
+						placement: 'bottom',
+						mode: 'popup',
+						success: function(response, newValue) {
+							updateLabel(objectArray[index].obj_nummer, newValue);
+						}
+					}); // Ende editable()
 				}); // Ende reverseGeocode()
 			}); // Ende Eventlistener
 
@@ -385,4 +402,9 @@ function updateLabel(ID, value){
 	var index = objectArray.findIndex(x => x.obj_nummer == ID);
 	objectArray[index].obj_label = value;
 	objectArray[index].setLabel({text:value.toString(), fontWeight: "700"});
+}
+
+function setMesstrupp(ID, value){
+var index = objectArray.findIndex(x => x.obj_nummer == ID);
+	objectArray[index].obj_messtrupp = value;
 }

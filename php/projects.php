@@ -134,7 +134,6 @@ function isSharedWith(){ //Lädt alle Benutzer, für die das aktuell geöffnete 
 		}
 
 	$stmt2 = $pdo->prepare("SELECT * FROM users ");
-	$stmt2->bindParam(':userID', $userid, PDO::PARAM_INT);
 	$stmt2->execute();
 	$result = $stmt2->fetchAll();
 

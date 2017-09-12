@@ -1,6 +1,9 @@
-function updateKataster(UID){ //Aktualisiert die Punkte im Messkataster
-	katasterArray = [];
-	dataTable.clear(); // Leert die Liste aller verfügbaren Optionen
+function updateKataster(UID, tableName){ //Aktualisiert die Punkte im Messkataster
+	if(UID != "0")
+	{
+		katasterArray = [];
+	}
+	tableName.clear(); // Leert die Liste aller verfügbaren Optionen
 	var data = [];
 	data = $(this).serialize() + "&" + $.param(data);
 	$.ajax({
@@ -12,12 +15,20 @@ function updateKataster(UID){ //Aktualisiert die Punkte im Messkataster
 			var obj = JSON.parse(data[0]);
 			
 			$.each(obj, function (key, value) {
-				dataTable.row.add([value.ID, value.Nummer, value.Bezeichnung, value.Adresse, value.ODL, value.IPS, value.Koordinaten,"<div role='button' class='btn btn-default' onclick='deleteRow(dataTable.row($(this).parents(\"tr\")))'><span class='fa fa-trash'></span></div>"]).draw();
+				tableName.row.add([value.ID, value.Nummer, value.Bezeichnung, value.Adresse, value.ODL, value.IPS, value.Koordinaten,"<div role='button' class='btn btn-default btn-del-row'><span class='fa fa-trash'></span></div>"]).draw();
+			 	
 			 	let kat_point = {ID: value.ID, Nummer: value.Nummer, Bezeichnung: value.Bezeichnung, Adresse: value.Adresse, ODL: value.ODL, IPS: value.IPS, Koordinaten: value.Koordinaten};
-			 	katasterArray.push(kat_point);
-			 });
 
-			//maxRowID = Math.max.apply(Math,obj.map(function(o){return o.ID;})); //Liest die größte gespeicherte ID aus
+			 	maxRowID = Math.max.apply(Math,obj.map(function(o){return o.ID;})); //Liest die größte gespeicherte ID aus
+			 	if(UID != "0")
+			 	{
+			 		katasterArray.push(kat_point);
+			 	}
+			});
+
+			$('.btn-del-row').click(function(){
+			 	tableName.row($(this).parents('tr')).remove().draw();
+			});
 		},
 		error: function(xhr, desc, err) {
 			console.log(xhr);
@@ -26,13 +37,13 @@ function updateKataster(UID){ //Aktualisiert die Punkte im Messkataster
 	});//Ende Ajax
 }//Ende Funktion updateKataster
 
-function saveKataster(UID){ //Speichert das Messkataster
-	 var data = [];
+function saveKataster(UID, tableID){ //Speichert das Messkataster
+	var data = [];
 	var headers = [];
-	$('#kataster > thead th').not(':last').each(function(index, item) {
+	$(tableID+'> thead th').not(':last').each(function(index, item) {
     	headers[index] = $(item).text();
 	});
-	$('#kataster > tbody tr').has('td').each(function() {
+	$(tableID+'> tbody tr').has('td').each(function() {
         var arrayItem = {};
         $('td', $(this)).not(':last').each(function(index, item) {
             arrayItem[headers[index]] = $(item).html();
@@ -47,7 +58,6 @@ function saveKataster(UID){ //Speichert das Messkataster
 		url: "php/options.php",
 		data: {"action": "saveKataster", "data": data, "UID": UID} ,
 		success: function(data) {
-			updateKataster(userID);
 			toastr.success('Änderungen gespeichert.');
 		},
 		error: function(xhr, desc, err) {
@@ -57,13 +67,9 @@ function saveKataster(UID){ //Speichert das Messkataster
 	});//Ende Ajax 
 }//Ende Funktion saveKataster
 
-function deleteRow(parent){ //Löscht eine zeile aus dem Messkataster
-	parent.remove().draw();
-}
-
-function addRow(){ //Fügt eine neue Zeile in das Messkataster ein
+function addRow(tableName, tableNameString){ //Fügt eine neue Zeile in das Messkataster ein
 	maxRowID += 1;
-	dataTable.row.add([ maxRowID, '','','','','','',"<div role='button' class='btn btn-default' data-id='"+maxRowID+"' onclick='deleteRow(this, dataTable.row($(this).parents(\"tr\")))'><span class='fa fa-trash'></span></div>"]).draw();
+	tableName.row.add([ maxRowID, '','','','','','',"<div role='button' class='btn btn-default' onclick='"+tableNameString+".row($(this).parents(\"tr\")).remove().draw();'><span class='fa fa-trash'></span></div>"]).draw();
 }
 
 function loadFixpoints(switchMesspunkte){ // Zeigt das Messkataster auf der Karte an

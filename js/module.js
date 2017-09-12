@@ -1,7 +1,7 @@
-function loadGPS(elementID, car, pathColor){
+function loadGPS(elem, car, pathColor){
 	let startTrack = $("#startTrackInput").val();
 	let endTrack = $("#endTrackInput").val();
-	if(elementID.checked === false) { 
+	if(elem.checked == false) { 
 		var gpsPath = [];
 		let index = objectArray.findIndex(x => x.obj_car == car); // Ermittelt Array-Index des PGS-Pfads
 		objectArray[index].setMap(null); //GPS-Pfad von der Karte löschen

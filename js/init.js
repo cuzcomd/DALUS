@@ -77,3 +77,86 @@ function isSharedWith(){ //Aktualisiert die Liste der Projekte, die für den ang
 		}
 	});//Ende Ajax
 }//Ende Funktion isSharedWith
+
+function updateMesstruppsMarker(){ //Aktualisiert die Punkte im Messkataster
+	$('#markerMesstrupp').children('option').remove();
+	$.ajax({
+		type: "POST",
+		dataType: "json",
+		url: "php/options.php",
+		data: {"action": "loadMesstrupps", "UID": userID},
+		success: function(data) {
+			var obj = JSON.parse(data['0']);
+			$.each(obj, function (key, value) {
+				if(value.Abkürzung != activeObject.obj_messtrupp) // Überprüft, ob der Messtrupp bereits ausgewählt wurde und setzt ihn dann als aktiv
+				{
+				 	$('#markerMesstrupp') // Fügt eine neue Option hinzu
+				 	.append($('<option></option>') 
+				 	.attr('value', value.Abkürzung)
+				 	.text(value.Bezeichnung));
+				 }
+				 else if(value.Abkürzung == activeObject.obj_messtrupp)
+				 {
+				 	$('#markerMesstrupp') // Fügt eine neue Option hinzu
+				 	.append($('<option selected selected="selected"></option>') 
+				 	.attr('value', value.Abkürzung)
+				 	.text(value.Bezeichnung));
+				 }
+			});
+		},
+		error: function(xhr, desc, err) {
+			console.log(xhr);
+			console.log("Details: " + desc + "\nError:" + err);
+		}
+	});//Ende Ajax
+}//Ende Funktion updateMesstruppsMarker
+
+function dataTables(){
+	dataTable = $('#kataster').DataTable({
+		paging: false,
+		scrollY: 400,
+		scrollX: false,
+		 "order": [[ 1, "asc" ]]
+	}).draw();
+
+	dataTable.MakeCellsEditable({
+		"onUpdate": myCallbackFunction,
+    	"columns": [1,2,3,4,5,6]
+	});
+
+	dataTable2 = $('#katasterGlobal').DataTable({
+		paging: false,
+		scrollY: 400,
+		scrollX: false,
+		 "order": [[ 1, "asc" ]]
+	}).draw();
+
+	dataTable2.MakeCellsEditable({
+		"onUpdate": myCallbackFunction,
+    	"columns": [1,2,3,4,5,6]
+	});
+
+	dataTable3 = $('#messtrupps').DataTable({
+		paging: false,
+		scrollY: 400,
+		scrollX: false,
+		 "order": [[ 0, "asc" ]]
+	}).draw();
+
+	dataTable3.MakeCellsEditable({
+		"onUpdate": myCallbackFunction,
+    	"columns": [1,2,3]
+	});
+
+	dataTable4 = $('#messtruppsGlobal').DataTable({
+		paging: false,
+		scrollY: 400,
+		scrollX: false,
+		 "order": [[ 0, "asc" ]]
+	}).draw();
+
+	dataTable4.MakeCellsEditable({
+		"onUpdate": myCallbackFunction,
+    	"columns": [1,2,3]
+	});
+}

@@ -11,6 +11,7 @@ function saveProjectStatus(){ // Erzeugt neue Messpunkte oder aktualisiert Vorha
 			var obj_messwert = entry.obj_messwert;
 			var obj_parameter =JSON.stringify(entry.obj_parameter);
 			var obj_label = entry.obj_label;
+			var obj_messtrupp = entry.obj_messtrupp;
 			var data = {
 				"task" : "save",
 				"obj_prj_id" : prj_id,
@@ -22,7 +23,8 @@ function saveProjectStatus(){ // Erzeugt neue Messpunkte oder aktualisiert Vorha
 				"obj_messwert" : obj_messwert,
 				"obj_parameter" : obj_parameter,
 				"obj_typ" : obj_typ,
-				"obj_label" : obj_label
+				"obj_label" : obj_label,
+				"obj_messtrupp" : obj_messtrupp
 			};
 			data = $(this).serialize() + "&" + $.param(data);
 			$.ajax({

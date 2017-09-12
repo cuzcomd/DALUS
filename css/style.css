@@ -43,6 +43,11 @@ a{
 	display:none;
 }
 
+#messpunktLabel{
+	line-height:30px;
+	font-size:30px;
+	padding-bottom: 5px;
+}
 #pac-input {
 	text-overflow: ellipsis;
 	background: rgba(0,0,0,0.4);
@@ -88,10 +93,6 @@ a{
 	padding:0;
 }
 
-.btnInfoWindow{
-	height: 46px;
-}
-
 .dalus-logo{
 	padding-left: 3px;
 	margin:3px auto;
@@ -104,6 +105,10 @@ a{
 
 .dropdown-menu>li>a{
 	padding:10px 20px;
+}
+
+.dropdown-options{
+	background:#eee;
 }
 
 .fa-toggle-on{
@@ -245,10 +250,6 @@ a{
  	padding:15px;
  }
 
-.navmenu-nav a{
-	color: #ddd!important;
-}
-
 .navmenu-nav a:hover{
 	color: #27a04f!important;
 }
@@ -261,6 +262,11 @@ a{
 	margin:0;
 }
 
+.nav-pills>li.active>a, .nav-pills>li.active>a:focus, .nav-pills>li.active>a:hover {
+    color: #333;
+    background-color: #eee;
+}
+
 .nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover{
 	color:#a3bcd3;
 	background-color:#345;
@@ -270,6 +276,12 @@ a{
 	overflow:hidden;
 }
 
+.nav-subheading{
+	padding:10px 15px;
+	background:#334455;
+	color:#eee;
+	font-weight:700;
+}
 .pac-container {
 	font-family: Roboto;
 	z-index:9999;

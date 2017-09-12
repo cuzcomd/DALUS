@@ -28,3 +28,45 @@
 			<button type='submit' class='btn btn-primary'><span class='fa fa-check-square-o'></span> Änderung speichern</button>
 	</form>
 </div>
+
+<div id="editKataster" class="tab-pane fade">
+Das Messkataster listet vordefinierte Messpunkte auf, die Benutzer in der Karte einblenden können.
+    <table id="kataster" class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nummer</th>
+                <th>Bezeichnung</th>
+                <th>Adresse</th>
+                <th>ODL</th>
+                <th>IPS</th>
+                <th>Koordinaten</th>
+                <th></th>
+            </tr>
+        </thead>
+       <tbody>
+       </tbody>
+    </table>
+    <button id="addRow" role="button" class="btn btn-primary" onclick ="addRow(dataTable,'dataTable')"><i class="fa fa-plus-square"></i> Neuen Messpunkt hinzufügen</button>
+    <button id="saveTable" role="button" class="btn btn-primary" onclick="saveKataster(userID, '#kataster')"><i class="fa fa-floppy-o"></i> Speichern</button>
+    <button id="loadTableAdmin" role="button" class="btn btn-danger" onclick="updateKataster(0, dataTable)"><i class="fa fa-refresh"></i> Globale Vorlage laden</button>
+</div> <!-- Ende editKataster -->
+
+<div id="editMesstrupps" class="tab-pane fade">
+    <table id="messtrupps" class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Abkürzung</th>
+                <th>Bezeichnung</th>
+                <th>Farbe</th>
+                <th></th>
+            </tr>
+        </thead>
+       <tbody>
+       </tbody>
+    </table>
+    <button id="addRow" role="button" class="btn btn-primary" onclick ="addRowMesstrupps(dataTable3,'dataTable3')"><i class="fa fa-plus-square"></i> Neuen Messtrupp hinzufügen</button>
+    <button id="saveTable" role="button" class="btn btn-primary" onclick="saveMesstrupps(userID, '#messtrupps')"><i class="fa fa-floppy-o"></i> Speichern</button>
+    <button id="loadTableAdmin" role="button" class="btn btn-danger" onclick="updateMesstrupps(0, dataTable3)"><i class="fa fa-refresh"></i> Globale Vorlage laden</button>
+</div> <!-- Ende editKataster -->

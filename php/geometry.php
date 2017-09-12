@@ -43,10 +43,11 @@ include("config.php");
 	$obj_messwert= (!empty($_POST['obj_messwert']) ? $_POST['obj_messwert']:'');
 	$obj_parameter= (!empty($_POST['obj_parameter']) ? $_POST['obj_parameter']:'');
 	$obj_label= (!empty($_POST['obj_label']) ? $_POST['obj_label']:'');
+	$obj_messtrupp= (!empty($_POST['obj_messtrupp']) ? $_POST['obj_messtrupp']:'');
 	
-	$stmt = $pdo->prepare("INSERT INTO objects (obj_typ, obj_nummer, obj_prj_id, obj_lat, obj_lon, obj_farbe, obj_hinweis, obj_messwert, obj_parameter, obj_label)
-	VALUES (:obj_typ, :obj_nummer, :obj_prj_id, :obj_lat, :obj_lon, :obj_color, :obj_hinweis, :obj_messwert, :obj_parameter, :obj_label) 
-	ON DUPLICATE KEY UPDATE obj_typ = :obj_typ, obj_nummer = :obj_nummer, obj_prj_id = :obj_prj_id, obj_lat = :obj_lat, obj_lon = :obj_lon, obj_farbe = :obj_color, obj_hinweis = :obj_hinweis, obj_messwert = :obj_messwert, obj_parameter = :obj_parameter, obj_label = :obj_label");
+	$stmt = $pdo->prepare("INSERT INTO objects (obj_typ, obj_nummer, obj_prj_id, obj_lat, obj_lon, obj_farbe, obj_hinweis, obj_messwert, obj_parameter, obj_label, obj_messtrupp)
+	VALUES (:obj_typ, :obj_nummer, :obj_prj_id, :obj_lat, :obj_lon, :obj_color, :obj_hinweis, :obj_messwert, :obj_parameter, :obj_label, :obj_messtrupp) 
+	ON DUPLICATE KEY UPDATE obj_typ = :obj_typ, obj_nummer = :obj_nummer, obj_prj_id = :obj_prj_id, obj_lat = :obj_lat, obj_lon = :obj_lon, obj_farbe = :obj_color, obj_hinweis = :obj_hinweis, obj_messwert = :obj_messwert, obj_parameter = :obj_parameter, obj_label = :obj_label, obj_messtrupp = :obj_messtrupp");
 	
 	$stmt->bindParam(':obj_typ', $obj_typ, PDO::PARAM_STR);
 	$stmt->bindParam(':obj_nummer', $obj_nummer, PDO::PARAM_INT);
@@ -58,6 +59,7 @@ include("config.php");
 	$stmt->bindParam(':obj_messwert', $obj_messwert, PDO::PARAM_STR);
 	$stmt->bindParam(':obj_parameter', $obj_parameter, PDO::PARAM_STR);
 	$stmt->bindParam(':obj_label', $obj_label, PDO::PARAM_STR);
+	$stmt->bindParam(':obj_messtrupp', $obj_messtrupp, PDO::PARAM_STR);
 	
 	$stmt->execute();
 

@@ -5,9 +5,10 @@
 <head>
 	<meta charset="UTF-8"/>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, shrink-to-fit=no">
 	<title>DALUS</title>
 	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<link href="css/bootstrap-editable.css" rel="stylesheet"/>
 	<link href="css/jasny-bootstrap.min.css" rel="stylesheet" media="screen">
 	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -26,6 +27,7 @@
 	<link rel="stylesheet" href="css/font-awesome.min.css">
 	<link type="text/css" rel="stylesheet" href="css/style.css">
 	<script src="js/jquery.min.js"></script>
+	<link rel="stylesheet" href="css/jquery.dataTables.min.css">
 	<link rel="stylesheet" href="css/datetimepicker.css">
 	<link rel="stylesheet" href="css/alertify/alertify.core.css" />
 	<link rel="stylesheet" href="css/alertify/alertify.bootstrap.css" />
@@ -38,7 +40,9 @@
 	<script src="js/users.js"></script>
 	<script src="js/objects.js"></script>
 	<script src="js/messkataster.js"></script>
+	<script src="js/messtrupps.js"></script>
 	<script src="js/init.js"></script>
+
 	<script> // Initialfunktion
 	benutzer = []; //Initialisierung
 	optionen = []; //Initialisierung
@@ -69,22 +73,10 @@
 		infoWindow = new google.maps.InfoWindow(); //Globale Initialisierung des Infowindows
 		startDrawingManager(map); //Google DrawingManager laden
 		loadProjectObjects();	// Im Projekt gespeicherte Objekte einlesen
-		
-		dataTable = $('#kataster').DataTable({
-			paging: false,
-			scrollY: 400,
-			scrollX: false,
-			 "order": [[ 1, "asc" ]]
-		}).draw();
+		dataTables(); // Lädt die Optionen der datatables
+		updateKataster(userID, dataTable); // Lädt die Messpunkte
 
-		dataTable.MakeCellsEditable({
-			"onUpdate": myCallbackFunction,
-        	"columns": [1,2,3,4,5,6]
-    	});
-
-		updateKataster(userID);
-
-		document.getElementById('calcMET').addEventListener('click', function() { // Beim Klick auf "Berechnen" MET-Modell erzeugen
+		document.getElementById('calcMET').addEventListener('click', function() { // Beim Klick auf "Zeichnen" MET-Modell erzeugen
 			generateMET(map);
 		});
 		
@@ -107,26 +99,18 @@
 			}
 			else {
 				$('#switchGPS').attr('data-click-state', 1) // Wenn Schalter aktiviert ist, ihn wieder deaktivieren
-				var data = {
-					"action" : "loadCars",
-					"cars" : optionen.opt_cars
-				};
-				data = $(this).serialize() + "&" + $.param(data);
 				$.ajax({
 					type: "POST",
 					dataType: "json",
 					url: "php/options.php",
-					data: data,
+					data: {"action": "loadMesstrupps", "UID": userID},
 					success: function(data) {
-						for (var key in data) {
-						    if (!data.hasOwnProperty(key)) continue; // skip loop if the property is from prototype
-						    var obj = data[key];
-						    for (var prop in obj) {
-						        if(!obj.hasOwnProperty(prop)) continue; // skip loop if the property is from prototype
-						        $('<div class=row"><div class="checkbox"><label class="col-xs-10"><input type="checkbox" name="car" onchange="loadGPS(this,\''+obj[prop].car_key+'\',\''+obj[prop].car_color+'\');">'+obj[prop].car_name+' </label><div style="background:'+obj[prop].car_color+';" class="col-xs-1">&nbsp;</div></div></div>').appendTo('#gpsLoadedCars');
-						    } //Ende for
-						} // Ende for 
-					}, //Ende success
+						var obj = JSON.parse(data[0]);
+						
+						$.each(obj, function (key, value) {
+							$('<div class=row"><div class="checkbox"><label class="col-xs-10"><input type="checkbox" name="car" onchange="loadGPS(this,\''+value.Abkürzung+'\',\''+value.Farbe+'\');">'+value.Bezeichnung+' </label><div style="background:'+value.Farbe+';" class="col-xs-1">&nbsp;</div></div></div>').appendTo('#gpsLoadedCars');
+						});
+					},					
 					error: function(xhr, desc, err) {
 						console.log(xhr);
 						console.log("Details: " + desc + "\nError:" + err);
@@ -207,6 +191,18 @@
 	            ].join(' ');
 	        }
         });
+
+        $('.dropdown.keep-open').on({
+    "shown.bs.dropdown": function() { this.closable = false; },
+    "click":             function() { this.closable = true; },
+    "hide.bs.dropdown":  function() { return this.closable; }
+});
+
+        $('.dropdown.stay .dropdown-menu ').on({
+	"click":function(e){
+      e.stopPropagation();
+    }
+});
 	}//Ende Funktion initMap
 	</script> <!-- Initialfunktion -->
 	<script src="js/module.js"></script>
@@ -242,7 +238,7 @@
 				</div>
 				<div class="modal-footer">
 					<div class="row">
-						<div class="col-xs-4 text-center"><a href="CHANGELOG.md" target="_blank">Version: 1.4.3</a></div>
+						<div class="col-xs-4 text-center"><a href="CHANGELOG.md" target="_blank">Version: 1.5.0</a></div>
 						<div class="col-xs-4"><a href="https://github.com/cuzcomd/DALUS" target="_blank"><i class="fa fa-github" aria-hidden="true"></i> GitHub Repository</a></div>
 						<div class="col-xs-4"><a href="mailto:kontakt@cuzcomd.de">kontakt@cuzcomd.de</a></div>
 					</div>
@@ -593,10 +589,6 @@
 								 	{
 								  		include_once('php/acl/admin/optionsPanel.php'); //Optionen für ACL "admin" laden
 								  	}
-								  	if ($accessLevel == 'editor' || $accessLevel == 'admin')
-								  	{
-								  		include_once('php/acl/editor/optionsPanel.php'); //Optionen für ACL "editor" laden
-								  	}
 								?>
 							</ul>
 						</div> <!-- Ende adminPanel -->
@@ -607,10 +599,6 @@
 									if ($accessLevel == 'admin')
 									{
 										include_once('php/acl/admin/optionsContent.php'); //Optionen für ACL "admin" laden
-									}
-									if ($accessLevel == 'editor' || $accessLevel == 'admin')
-									{
-									  	include_once('php/acl/editor/optionsContent.php'); //Optionen für ACL "editor" laden
 									}
 								?>
 							</div> <!-- Ende tab-content -->
@@ -653,7 +641,7 @@
 			</ul>
 		</div> <!-- Ende Werkzeuge -->
 		<ul class="nav navmenu-nav">
-			<li class="dropdown open" id ="project_options" role="presentation" data-toggle="tooltip" data-placement="bottom" title="Projekt">
+			<li class="dropdown stay keep-open" id ="project_options" role="presentation" data-toggle="tooltip" data-placement="bottom" title="Projekt">
 				<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bars" aria-hidden="true"></i> Projekt
 				<span class="caret"></span></a>
 				<ul class="dropdown-menu navmenu-nav" role="menu">
@@ -665,8 +653,8 @@
 					<li id="exportKML" onclick="toKML()" ><a id="download-link" href="data:;base64," download><i class="fa fa-floppy-o" aria-hidden="true"></i> kml-Datei exportieren</a></li>	
 				</ul>
 			</li>
-			<li class="dropdown" id ="parameter" role="presentation" data-toggle="tooltip" data-placement="bottom" title="Ansicht">
-				<a class="dropdown-toggle" data-toggle="dropdown"role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-eye-slash" aria-hidden="true"></i> Ansicht
+			<li class="dropdown stay keep-open" id ="parameter" role="presentation" data-toggle="tooltip" data-placement="bottom" title="Ansicht">
+				<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-eye-slash" aria-hidden="true"></i> Ansicht
 				<span class="caret"></span></a>
 				<ul class="dropdown-menu navmenu-nav" role="menu" >
 					<li id = "switchMesskataster" data-click-state="0" role="button"><a><i class="fa fa-toggle-off" aria-hidden="true"></i> Messkataster</a></li>
@@ -674,7 +662,7 @@
 					<li id = "switchGPS" data-click-state="0" role="button"><a><i class="fa fa-toggle-off" aria-hidden="true"></i> GPS Tracking</a></li>
 				</ul>
 			</li>
-			<li class="dropdown" id ="modelle" role="presentation" data-toggle="tooltip" data-placement="bottom" title="Ausbreitungsmodelle">
+			<li class="dropdown stay keep-open" id ="modelle" role="presentation" data-toggle="tooltip" data-placement="bottom" title="Ausbreitungsmodelle">
 				<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-location-arrow" aria-hidden="true"></i> Ausbreitungsmodelle
 				<span class="caret"></span></a>
 				<ul class="dropdown-menu navmenu-nav" role="menu" >
@@ -753,6 +741,7 @@
 	<textarea id="kmlString"></textarea>
 	<script src = "https://maps.googleapis.com/maps/api/js?libraries=geometry,drawing,places&callback=initMap" async defer></script> <!-- GooleAPI laden. Hier muss der API-Schlüssel eingetragen werden. -->
 	<script src = "js/bootstrap.min.js"></script> <!-- Bootstrap.js laden -->
+	<script src = "js/bootstrap-editable.min.js"></script>
 	<script src = "js/jasny-bootstrap.min.js"></script>
 	<script src = "js/html2canvas.min.js" defer></script>
 	<script src = "js/usng.min.js" defer></script> <!-- Script für Umwandlung von Geokoordinaten in UTM-Ref Koordinaten -->
