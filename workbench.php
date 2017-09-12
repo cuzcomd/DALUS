@@ -710,7 +710,7 @@
 			<a href='php/logout' data-toggle="tooltip" data-placement="bottom" title="Abmelden"><span class="fa fa-power-off" aria-hidden="true"></span></a>
 			<a onclick="toggleNav('#modal_license')" data-toggle="tooltip" data-placement="bottom" title="Informationen über Dalus"><span class="fa fa-info-circle" aria-hidden="true"></span></a>
 			<a onclick="toggleNav('#modalOptions')" data-toggle="tooltip" data-placement="bottom" title="Optionen"><span class="fa fa-cogs"></span></a>
-			<a onclick="printMap()"  ata-toggle="tooltip" data-placement="bottom" title="Ansicht drucken"><span class="fa fa-print" aria-hidden="true"></span></a></li>
+			<a onclick="printMap()" data-toggle="tooltip" data-placement="bottom" title="Ansicht drucken"><span class="fa fa-print" aria-hidden="true"></span></a></li>
 		</div>
 	</nav>
 	<div class="navbar navbar-default navbar-fixed-top hidden-md hidden-lg text-center">

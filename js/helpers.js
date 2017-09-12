@@ -1,13 +1,31 @@
 function printMap(){
-    html2canvas($('#map'), {
+	var transform=$(".gm-style>div:first>div").css("transform")
+	var comp=transform.split(",") //split up the transform matrix
+	var mapleft=parseFloat(comp[4]) //get left value
+	var maptop=parseFloat(comp[5])  //get top value
+	$(".gm-style>div:first>div").css({ //get the map container. not sure if stable
+	  "transform":"none",
+	  "left":mapleft,
+	  "top":maptop,
+	})
+
+	html2canvas($('#map'), {
     	useCORS: true,
     	onrendered: function (canvas) {
-    		var img = canvas.toDataURL("image/png");
-    		img = img.replace('data:image/png;base64,', '');
-        	var finalImageSrc = 'data:image/png;base64,' + img;
-        	window.open(finalImageSrc, 'Screenshot');
+    		var img = canvas.toDataURL('application/stream');
+        	var win = window.open();
+        	win.document.open();
+        	win.document.write('<style>body{margin:0;}</style>');
+        	win.document.write('<iframe src="' + img + '" width= "100%" height="100%" frameborder="0" style="border:0; margin:0;" allowfullscreen></iframe>');
+        	win.document.close();
+
+			$(".gm-style>div:first>div").css({
+			    left:0,
+			    top:0,
+			    "transform":transform
+			})
         }
-	});
+	}); //Ende html2canvas
 }//Ende Funktion printMap
 
 function clearMap(){
