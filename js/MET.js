@@ -212,16 +212,22 @@ function drawPolygon(map, lat, lon, geoAdresse, winkel, richtung, innen, aussen,
 					});
 
 	marker.addListener('click', function() {//Informationsfenster bei Klick auf Marker öffnen
-	activeObject = this; // Setzt den aktuell ausgewählten marker als aktiv
-	infoWindow.setContent('<h5>Freisetzungsort</h5>'+
-		'<div class="fa fa-home"></div> '+adresse+'<br/><hr>' +
-		'<div class="fa fa-map-marker"></div> ' + this.obj_lat +' , ' + this.obj_lon +'<br/> (' + utm_koord + ')<br/><br/>'+
-		'Gef&auml;hrdung im Geb&auml;ude: ' + distanz_innen + ' m<br/>' +
-		'Gef&auml;hrdung im Freien: ' + distanz_aussen + ' m<br/><br/>' +
-		'Windrichtung: ' + windrichtung_initial + '&deg;' + '<br/>' +
-		'Ausbreitungswinkel: ' + ausbreitungswinkel + ' &deg;'  + '<br/><br/>'+
-		'<div class="btn-group" role="group" aria-label="Optionen">'+
-		'<button type="button" class="btn btn-default btn-danger" id="deleteButton" ontouchstart="deleteObject()" onclick="deleteObject()"><i class="fa fa-trash-o"></i></button>')
+		clearSelectionLoad();
+		if (selectedShape)
+		{
+			selectedShape.setEditable(false);
+			selectedShape = null;
+		}
+		activeObject = this; // Setzt den aktuell ausgewählten marker als aktiv
+		infoWindow.setContent(`<h5>Freisetzungsort</h5>
+		<div class="fa fa-home"></div> ${adresse}<br/><hr>
+		<div class="fa fa-map-marker"></div> ${this.obj_lat} , ${this.obj_lon}<br/> (${utm_koord})<br/><br/>
+		Gefährdung im Gebäude: ${distanz_innen} m<br/>
+		Gefährdung im Freien: ${distanz_aussen} m<br/><br/>
+		Windrichtung: ${windrichtung_initial}&deg;<br/>
+		Ausbreitungswinkel: ${ausbreitungswinkel} &deg;<br/><br/>
+		<div class="btn-group" role="group" aria-label="Optionen">
+		<button type="button" class="btn btn-default btn-danger" id="deleteButton" ontouchstart="deleteObject()" onclick="deleteObject()"><i class="fa fa-trash-o"></i></button>`)
 	infoWindow.open(map,marker);
 	});
 } //Ende function drawPolygon()

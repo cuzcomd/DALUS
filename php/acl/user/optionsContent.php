@@ -1,26 +1,26 @@
 <div id="editProfile" class="tab-pane fade in active">
 	<form id ="editUSerProfile" action='' method='POST' class='ajax_edit_user form-horizontal' role='form'>
 		<div class="form-group">
-			<label for="username" class="col-xs-5 control-label">Benutzername</label>
-			<div class="col-xs-7">
+			<label for="username" class="col-xs-3 control-label">Benutzername</label>
+			<div class="col-xs-4">
 				<input class="form-control" id="username" type="text" placeholder="Benutzername" name="username" required>
 			</div>
 		</div>
 		<div class="form-group">
-			<label for="passwordOld" class="col-xs-5 control-label">Aktuelles Passwort</label>
-			<div class="col-xs-7">     	
+			<label for="passwordOld" class="col-xs-3 control-label">Aktuelles Passwort</label>
+			<div class="col-xs-4">     	
 				<input type="password" id="passwordOld" name="oldPassword" class="form-control" placeholder="Aktuelles Passwort" required>
 			</div>
 		</div>
 		<div class="form-group">
-			<label for="password1" class="col-xs-5 control-label">Neues Passwort</label> 
-			<div class="col-xs-7">    	
+			<label for="password1" class="col-xs-3 control-label">Neues Passwort</label> 
+			<div class="col-xs-4">    	
 				<input type="password" id="password1" name="password1" class="form-control" placeholder="Neues Passwort">
 			</div>
 		</div>
 		<div class="form-group">
-			<label for="password2" class="col-xs-5 control-label">Passwort wiederholen</label>
-			<div class="col-xs-7">
+			<label for="password2" class="col-xs-3 control-label">Passwort wiederholen</label>
+			<div class="col-xs-4">
 				<input type="password" id="password1" name="password2" class="form-control" placeholder="Neues Passwort">
 			</div>
 		</div>
@@ -31,7 +31,7 @@
 
 <div id="editKataster" class="tab-pane fade">
 Das Messkataster listet vordefinierte Messpunkte auf, die Benutzer in der Karte einblenden können.
-    <table id="kataster" class="table table-striped table-bordered">
+    <table id="kataster" class="display" cellspacing="0" width="100%">
         <thead>
             <tr>
                 <th>ID</th>
@@ -53,7 +53,7 @@ Das Messkataster listet vordefinierte Messpunkte auf, die Benutzer in der Karte 
 </div> <!-- Ende editKataster -->
 
 <div id="editMesstrupps" class="tab-pane fade">
-    <table id="messtrupps" class="table table-striped table-bordered">
+    <table id="messtrupps" class="display" cellspacing="0" width="100%">
         <thead>
             <tr>
                 <th>ID</th>

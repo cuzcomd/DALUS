@@ -70,7 +70,9 @@
 
 	function initMap() { // Erzeugung der Karte
 		loadOSMLayer(); //OSM Kartenbilder laden
-		infoWindow = new google.maps.InfoWindow(); //Globale Initialisierung des Infowindows
+		infoWindow = new google.maps.InfoWindow({
+			maxWidth: 500
+		}); //Globale Initialisierung des Infowindows
 		startDrawingManager(map); //Google DrawingManager laden
 		loadProjectObjects();	// Im Projekt gespeicherte Objekte einlesen
 		dataTables(); // Lädt die Optionen der datatables
@@ -89,36 +91,13 @@
 			$('#module2').toggle();
 		});
 
-		document.getElementById('switchGPS').addEventListener('click', function() {// GPS-Tracking ein-/ausblenden
-			$('#switchGPS').find('i').toggleClass('fa-toggle-off fa-toggle-on');
-			$('#module1').toggle();
+		<?php
+		  	if ($accessLevel == 'admin')
+		 	{
+		  		include_once('php/acl/admin/GPSlistener.php'); //Listener für GPS-Logging laden
+		  	}
+		?>
 
-			if($('#switchGPS').attr('data-click-state') == 1) { 
-				$('#switchGPS').attr('data-click-state', 0) // Wenn Schalter aktiviert ist, ihn wieder deaktivieren
-				$('#gpsLoadedCars').children().remove();
-			}
-			else {
-				$('#switchGPS').attr('data-click-state', 1) // Wenn Schalter aktiviert ist, ihn wieder deaktivieren
-				$.ajax({
-					type: "POST",
-					dataType: "json",
-					url: "php/options.php",
-					data: {"action": "loadMesstrupps", "UID": userID},
-					success: function(data) {
-						var obj = JSON.parse(data[0]);
-						
-						$.each(obj, function (key, value) {
-							$('<div class=row"><div class="checkbox"><label class="col-xs-10"><input type="checkbox" name="car" onchange="loadGPS(this,\''+value.Abkürzung+'\',\''+value.Farbe+'\');">'+value.Bezeichnung+' </label><div style="background:'+value.Farbe+';" class="col-xs-1">&nbsp;</div></div></div>').appendTo('#gpsLoadedCars');
-						});
-					},					
-					error: function(xhr, desc, err) {
-						console.log(xhr);
-						console.log("Details: " + desc + "\nError:" + err);
-					} //ende error
-				}); //Ende Ajax
-			} //Ende else
-		}); // Ende eventlistener
-		
 		document.getElementById('saveProject').addEventListener('click', function() { // Beim Klick auf "Speichern", aktuelle Änderungen speichern
 			saveProjectStatus();	
 		});
@@ -361,14 +340,14 @@
 				</div>
 				<div class="modal-body">
 					<div id="METWrapper" class="row">
-						<div id="METPanel" class="col-xs-4">
+						<div id="METPanel" class="col-xs-3">
 							<ul class="nav nav-pills nav-stacked">
 								<li class="active"><a data-toggle="pill" href="#metAuto">An Adresse zeichnen</a></li>
 								<li><a data-toggle="pill" href="#metMan">Manuell zeichnen</a></li>
 								<li><a data-toggle="pill" href="#metWinkel">Winkel bestimmen</a></li>
 							</ul>
 						</div> <!-- Ende adminPanel -->
-						<div id="adminContent" class="col-xs-8">
+						<div id="adminContent" class="col-xs-6">
 							<div class="tab-content">
 								<div id="metAuto" class="tab-pane fade in active ">
 									<div id="geocoder">
@@ -581,7 +560,7 @@
 				</div>
 				<div class="modal-body">
 					<div id="adminWrapper" class="row">
-						<div id="adminPanel" class="col-xs-4">
+						<div id="adminPanel" class="col-xs-3">
 							<ul class="nav nav-pills nav-stacked">
 								<?php
 									include_once('php/acl/user/optionsPanel.php'); //Optionen für ACL "user" laden
@@ -592,7 +571,7 @@
 								?>
 							</ul>
 						</div> <!-- Ende adminPanel -->
-						<div id="adminContent" class="col-xs-8">
+						<div id="adminContent" class="col-xs-9">
 							<div class="tab-content">
 								<?php
 									include_once('php/acl/user/optionsContent.php'); //Optionen für ACL "user" laden
@@ -659,7 +638,12 @@
 				<ul class="dropdown-menu navmenu-nav" role="menu" >
 					<li id = "switchMesskataster" data-click-state="0" role="button"><a><i class="fa fa-toggle-off" aria-hidden="true"></i> Messkataster</a></li>
 					<li id = "switchKompass" data-click-state="0" role="button"><a><i class="fa fa-toggle-off" aria-hidden="true"></i> Kompass</a></li>
-					<li id = "switchGPS" data-click-state="0" role="button"><a><i class="fa fa-toggle-off" aria-hidden="true"></i> GPS Tracking</a></li>
+					<?php
+						if ($accessLevel == 'admin') // GPS-Logging nur für Admins einblenden
+						{
+							echo '<li id = "switchGPS" data-click-state="0" role="button"><a><i class="fa fa-toggle-off" aria-hidden="true"></i> GPS Tracking</a></li>';
+						}
+					?>
 				</ul>
 			</li>
 			<li class="dropdown stay keep-open" id ="modelle" role="presentation" data-toggle="tooltip" data-placement="bottom" title="Ausbreitungsmodelle">

@@ -115,8 +115,11 @@ function dataTables(){
 	dataTable = $('#kataster').DataTable({
 		paging: false,
 		scrollY: 400,
-		scrollX: false,
-		 "order": [[ 1, "asc" ]]
+		 "order": [[ 1, "asc" ]],
+		 "columnDefs": [ {
+      "targets": 7,
+      "orderable": false
+    } ]
 	}).draw();
 
 	dataTable.MakeCellsEditable({
@@ -128,7 +131,11 @@ function dataTables(){
 		paging: false,
 		scrollY: 400,
 		scrollX: false,
-		 "order": [[ 1, "asc" ]]
+		 "order": [[ 1, "asc" ]],
+		 "columnDefs": [ {
+      "targets": 7,
+      "orderable": false
+    } ]
 	}).draw();
 
 	dataTable2.MakeCellsEditable({
@@ -140,7 +147,11 @@ function dataTables(){
 		paging: false,
 		scrollY: 400,
 		scrollX: false,
-		 "order": [[ 0, "asc" ]]
+		 "order": [[ 0, "asc" ]],
+		 "columnDefs": [ {
+      "targets": 4,
+      "orderable": false
+    } ]
 	}).draw();
 
 	dataTable3.MakeCellsEditable({
@@ -152,7 +163,11 @@ function dataTables(){
 		paging: false,
 		scrollY: 400,
 		scrollX: false,
-		 "order": [[ 0, "asc" ]]
+		 "order": [[ 0, "asc" ]],
+		 "columnDefs": [ {
+      "targets": 4,
+      "orderable": false
+    } ]
 	}).draw();
 
 	dataTable4.MakeCellsEditable({

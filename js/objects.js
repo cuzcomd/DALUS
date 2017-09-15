@@ -62,7 +62,6 @@ function drawObjects(theArray){
 			obj_parameter : '',
 			obj_label: value.obj_label,
 			obj_messtrupp: value.obj_messtrupp,
-			info: infoWindow,
 			content: value.obj_parameter,
 			draggable:true,
 			zIndex:10
@@ -72,11 +71,12 @@ function drawObjects(theArray){
 
 			google.maps.event.addListener(geom_obj,'click',function(){ // Öffnet Infowindow bei Klick auf Marker
 				clearSelectionLoad();
-				activeObject = this;
-				var index = objectArray.findIndex(x => x.obj_nummer == this.obj_nummer && x.obj_typ == this.obj_typ); // Ermittelt Array-Index des aktuellen Markers
-				activeObject.setValues({messwert: objectArray[index].obj_messwert}); // Aktualisiert den aktullen Messwert aus dem im Array gespeicherten Wert
-
-				reverseGeocode(objectArray[index].position, function(result)
+				activeObject = this; // Setzt den aktuell ausgewählten marker als aktiv
+				let index = objectArray.findIndex(x => x.obj_nummer == activeObject.obj_nummer && x.obj_typ == activeObject.obj_typ); // Ermittelt Array-Index des aktuellen Markers
+				var object = objectArray[index];
+				activeObject.setValues({messwert: object.messwert}); // Aktualisiert den aktullen Messwert aus dem im Array gespeicherten Wert
+				
+				reverseGeocode(object.position, function(result)
 			    {
 			        if (result === 0)
 			        {
@@ -87,31 +87,30 @@ function drawObjects(theArray){
 				        var adresse = result;   
 			        }
 			        var markerContent =
-			        '<div class="text-center "id="messpunktLabel"><b>'+objectArray[index].obj_label+'</b> <i class="pull-right fa fa-pencil" style="color:#ccc;"></i></div><br>'+
-			        '<div class="header" style="display:inline-block">'+
-			        	'<div class="col-xs-6">'+
-			        		'<div class="col-xs-1 fa fa-home" aria-hidden="true"></div><div class="col-xs-10" >'+adresse+'</div><hr>'+
-			        		'<div class="col-xs-1 fa fa-map-marker" aria-hidden="true"></div><div class="col-xs-10" >'+objectArray[index].obj_lat+', '+ objectArray[index].obj_lon+'<br>'+
-			        		'('+LLtoUSNG(objectArray[index].obj_lat, objectArray[index].obj_lon, 5)+')</div>'+
-			       			
-			       		'</div>'+
-			        	'<div class="col-xs-6"><label for="markerMesstrupp">Zugewiesener Messtrupp</label><select id="markerMesstrupp" onchange="setMesstrupp('+objectArray[index].obj_nummer+', this.value)"></select><br><br>'+
-				        	'<div class="btn-group" role="group" aria-label="Optionen">'+
-								'<button type="button" class="btn btn-default btn-danger btnInfoWindow" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button>'+
-								'<div class="btn-group"><button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Farbe <span class="caret"></span></button>'+
-									'<ul class="dropdown-menu" role="menu">'+
-					      				'<li onclick="changeColor('+activeObject.obj_nummer+',1);"><a href="#"><img src="images/white.png"></a></li>'+
-					      				'<li onclick="changeColor('+activeObject.obj_nummer+',2);"><a href="#"><img src="images/green.png"></a></li>'+
-					      				'<li onclick="changeColor('+activeObject.obj_nummer+',3);"><a href="#"><img src="images/blue.png"></a></li>'+
-					      				'<li onclick="changeColor('+activeObject.obj_nummer+',4);"><a href="#"><img src="images/yellow.png"></a></li>'+
-					      				'<li onclick="changeColor('+activeObject.obj_nummer+',5);"><a href="#"><img src="images/red.png"></a></li>'+
-	   								'</ul>'+
-	   							'</div>'+
-	   						'</div>'+
-				        '</div>'+
-			        '</div><br>'+
-			        '<hr> Geräte<br><form><div class="form-group"> <label for="messwert">Messwert [ppm]</label><input type="text" class="form-control" id="messwert" cols="50" value = "'+objectArray[index].obj_messwert+'" onchange="updateMesswert('+objectArray[index].obj_nummer+', this.value);"></div></form>'+
-			        '<form><div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis('+objectArray[index].obj_nummer+',\'marker\', this.value);" rows="5">'+objectArray[index].obj_hinweis+'</textarea></div></form>';
+			        `<div class="text-center "id="messpunktLabel"><b>${object.obj_label}</b> <i class="pull-right fa fa-pencil" style="color:#ccc;"></i></div><br>
+			        <div class="header" style="display:inline-block">
+			        	<div class="col-xs-6">
+			        		<div class="col-xs-1 fa fa-home" aria-hidden="true"></div><div class="col-xs-10" >${adresse}</div><hr>
+			        		<div class="col-xs-1 fa fa-map-marker" aria-hidden="true"></div><div class="col-xs-10" >${object.obj_lat}, ${object.obj_lon}<br>
+			        		(${LLtoUSNG(object.obj_lat, object.obj_lon, 5)})</div>
+			       		</div>
+			        	<div class="col-xs-6"><label for="markerMesstrupp">Zugewiesener Messtrupp</label><select id="markerMesstrupp" onchange="setMesstrupp(${object.obj_nummer}, this.value)"></select><br><br>
+				        	<div class="btn-group" role="group" aria-label="Optionen">
+								<button type="button" class="btn btn-default btn-danger btnInfoWindow" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button>
+								<div class="btn-group"><button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Farbe <span class="caret"></span></button>
+									<ul class="dropdown-menu" role="menu">
+					      				<li onclick="changeColor(${activeObject.obj_nummer},1);"><a href="#"><img src="images/white.png"></a></li>
+					      				<li onclick="changeColor(${activeObject.obj_nummer},2);"><a href="#"><img src="images/green.png"></a></li>
+					      				<li onclick="changeColor(${activeObject.obj_nummer},3);"><a href="#"><img src="images/blue.png"></a></li>
+					      				<li onclick="changeColor(${activeObject.obj_nummer},4);"><a href="#"><img src="images/yellow.png"></a></li>
+					      				<li onclick="changeColor(${activeObject.obj_nummer},5);"><a href="#"><img src="images/red.png"></a></li>
+	   								</ul>
+	   							</div>
+	   						</div>
+				        </div>
+			        </div><br>
+			        <hr> Geräte<br><form><div class="form-group"> <label for="messwert">Messwert [ppm]</label><input type="text" class="form-control" id="messwert" cols="50" value = "${object.obj_messwert}" onchange="updateMesswert(${object.obj_nummer}, this.value);"></div></form>
+			        <form><div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis(${object.obj_nummer},'marker', this.value);" rows="5">${object.obj_hinweis}</textarea></div></form>`;
 
 					infoWindow.setContent(markerContent);
 					updateMesstruppsMarker(); // Aktualisiert die auswählbaren Messtrupps
@@ -122,7 +121,7 @@ function drawObjects(theArray){
 						placement: 'bottom',
 						mode: 'popup',
 						success: function(response, newValue) {
-							updateLabel(objectArray[index].obj_nummer, newValue);
+							updateLabel(object.obj_nummer, newValue);
 						}
 					}); // Ende editable()
 			    }); // Ende reverseGeocode()
@@ -130,11 +129,12 @@ function drawObjects(theArray){
 
 			google.maps.event.addListener(geom_obj,'dragend', function(){ //Aktualisiert Array und Infowindow wenn Marker verschoben wird
 				activeObject = this;
-				let index = objectArray.findIndex(x => x.obj_nummer == this.obj_nummer  && x.obj_typ == this.obj_typ);  // Ermittelt Array-Index des aktuellen Markers
-				objectArray[index].obj_lat = this.getPosition().lat().toFixed(6); // Aktualisiert geogr. Position im Array
-				objectArray[index].obj_lon = this.getPosition().lng().toFixed(6);// Aktualisiert geogr. Position im Array	
-				
-				reverseGeocode(objectArray[index].position, function(result)
+				let index = objectArray.findIndex(x => x.obj_nummer == activeObject.obj_nummer  && x.obj_typ == activeObject.obj_typ);  // Ermittelt Array-Index des aktuellen Markers
+				var object = objectArray[index];
+				object.obj_lat = activeObject.getPosition().lat().toFixed(6); // Aktualisiert geogr. Position im Array
+				object.obj_lon = activeObject.getPosition().lng().toFixed(6);// Aktualisiert geogr. Position im Array
+
+				reverseGeocode(object.position, function(result)
 			    {
 			        if (result === 0)
 			        {
@@ -146,35 +146,34 @@ function drawObjects(theArray){
 					}
 
 					var markerContent =
-			        '<div class="text-center "id="messpunktLabel"><b>'+objectArray[index].obj_label+'</b> <i class="pull-right fa fa-pencil" style="color:#ccc;"></i></div><br>'+
-			        '<div class="header" style="display:inline-block">'+
-			        	'<div class="col-xs-6">'+
-			        		'<div class="col-xs-1 fa fa-home" aria-hidden="true"></div><div class="col-xs-10" >'+adresse+'</div><hr>'+
-			        		'<div class="col-xs-1 fa fa-map-marker" aria-hidden="true"></div><div class="col-xs-10" >'+objectArray[index].obj_lat+', '+ objectArray[index].obj_lon+'<br>'+
-			        		'('+LLtoUSNG(objectArray[index].obj_lat, objectArray[index].obj_lon, 5)+')</div>'+
-			       			
-			       		'</div>'+
-			        	'<div class="col-xs-6"><label for="markerMesstrupp">Zugewiesener Messtrupp</label><select id="markerMesstrupp" onchange="setMesstrupp('+objectArray[index].obj_nummer+', this.value)"></select><br><br>'+
-				        	'<div class="btn-group" role="group" aria-label="Optionen">'+
-								'<button type="button" class="btn btn-default btn-danger btnInfoWindow" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button>'+
-								'<div class="btn-group"><button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Farbe <span class="caret"></span></button>'+
-									'<ul class="dropdown-menu" role="menu">'+
-					      				'<li onclick="changeColor('+activeObject.obj_nummer+',1);"><a href="#"><img src="images/white.png"></a></li>'+
-					      				'<li onclick="changeColor('+activeObject.obj_nummer+',2);"><a href="#"><img src="images/green.png"></a></li>'+
-					      				'<li onclick="changeColor('+activeObject.obj_nummer+',3);"><a href="#"><img src="images/blue.png"></a></li>'+
-					      				'<li onclick="changeColor('+activeObject.obj_nummer+',4);"><a href="#"><img src="images/yellow.png"></a></li>'+
-					      				'<li onclick="changeColor('+activeObject.obj_nummer+',5);"><a href="#"><img src="images/red.png"></a></li>'+
-	   								'</ul>'+
-	   							'</div>'+
-	   						'</div>'+
-				        '</div>'+
-			        '</div><br>'+
-			        '<hr> Geräte<br><form><div class="form-group"> <label for="messwert">Messwert [ppm]</label><input type="text" class="form-control" id="messwert" cols="50" value = "'+objectArray[index].obj_messwert+'" onchange="updateMesswert('+objectArray[index].obj_nummer+', this.value);"></div></form>'+
-			        '<form><div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis('+objectArray[index].obj_nummer+',\'marker\', this.value);" rows="5">'+objectArray[index].obj_hinweis+'</textarea></div></form>';
+			         `<div class="text-center "id="messpunktLabel"><b>${object.obj_label}</b> <i class="pull-right fa fa-pencil" style="color:#ccc;"></i></div><br>
+			        <div class="header" style="display:inline-block">
+			        	<div class="col-xs-6">
+			        		<div class="col-xs-1 fa fa-home" aria-hidden="true"></div><div class="col-xs-10" >${adresse}</div><hr>
+			        		<div class="col-xs-1 fa fa-map-marker" aria-hidden="true"></div><div class="col-xs-10" >${object.obj_lat}, ${object.obj_lon}<br>
+			        		(${LLtoUSNG(object.obj_lat, object.obj_lon, 5)})</div>
+			       		</div>
+			        	<div class="col-xs-6"><label for="markerMesstrupp">Zugewiesener Messtrupp</label><select id="markerMesstrupp" onchange="setMesstrupp(${object.obj_nummer}, this.value)"></select><br><br>
+				        	<div class="btn-group" role="group" aria-label="Optionen">
+								<button type="button" class="btn btn-default btn-danger btnInfoWindow" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button>
+								<div class="btn-group"><button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Farbe <span class="caret"></span></button>
+									<ul class="dropdown-menu" role="menu">
+					      				<li onclick="changeColor(${activeObject.obj_nummer},1);"><a href="#"><img src="images/white.png"></a></li>
+					      				<li onclick="changeColor(${activeObject.obj_nummer},2);"><a href="#"><img src="images/green.png"></a></li>
+					      				<li onclick="changeColor(${activeObject.obj_nummer},3);"><a href="#"><img src="images/blue.png"></a></li>
+					      				<li onclick="changeColor(${activeObject.obj_nummer},4);"><a href="#"><img src="images/yellow.png"></a></li>
+					      				<li onclick="changeColor(${activeObject.obj_nummer},5);"><a href="#"><img src="images/red.png"></a></li>
+	   								</ul>
+	   							</div>
+	   						</div>
+				        </div>
+			        </div><br>
+			        <hr> Geräte<br><form><div class="form-group"> <label for="messwert">Messwert [ppm]</label><input type="text" class="form-control" id="messwert" cols="50" value = "${object.obj_messwert}" onchange="updateMesswert(${object.obj_nummer}, this.value);"></div></form>
+			        <form><div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis(${object.obj_nummer},'marker', this.value);" rows="5">${object.obj_hinweis}</textarea></div></form>`;
 
 					infoWindow.setContent(markerContent);
 					updateMesstruppsMarker(); // Aktualisiert die auswählbaren Messtrupps
-					infoWindow.setPosition(new google.maps.LatLng(geom_obj.obj_lat , geom_obj.obj_lon));
+					infoWindow.setPosition(new google.maps.LatLng(activeObject.obj_lat , activeObject.obj_lon));
 					infoWindow.open(map,activeObject);
 					$('#messpunktLabel').editable({
 						type: 'text',
@@ -182,7 +181,7 @@ function drawObjects(theArray){
 						placement: 'bottom',
 						mode: 'popup',
 						success: function(response, newValue) {
-							updateLabel(objectArray[index].obj_nummer, newValue);
+							updateLabel(object.obj_nummer, newValue);
 						}
 					}); // Ende editable()
 				}); // Ende reverseGeocode()
@@ -190,7 +189,7 @@ function drawObjects(theArray){
 
 			google.maps.event.addListener(geom_obj,'dragstart', function(){
 				activeObject = this;
-				activeObject.info.close();
+				infoWindow.setMap(null);
 			});
 			break;
 
@@ -204,7 +203,6 @@ function drawObjects(theArray){
 			obj_nummer: Number(value.obj_nummer),
 			obj_hinweis: value.obj_hinweis,
 			obj_typ: 'comment',
-			info: infoWindow,
 			draggable:true,
 			zIndex:10
 			});
@@ -213,66 +211,81 @@ function drawObjects(theArray){
 
 			google.maps.event.addListener(comment_obj,'click',function(){ // Öffnet Infowindow bei Klick auf Marker
 				clearSelectionLoad();
-				activeObject = this;
-				var index = objectArray.findIndex(x => x.obj_nummer == this.obj_nummer && x.obj_typ == this.obj_typ); // Ermittelt Array-Index des aktuellen Markers
+				activeObject = this; // Setzt den aktuell ausgewählten marker als aktiv
+				let index = objectArray.findIndex(x => x.obj_nummer == activeObject.obj_nummer && x.obj_typ == activeObject.obj_typ); // Ermittelt Array-Index des aktuellen Markers
+				var object = objectArray[index];
 
-				reverseGeocode(objectArray[index].position, function(result)
+				reverseGeocode(object.position, function(result)
 			    {
 			        if (result === 0)
 			        {
-				        activeObject.info.setContent('<span class="fa fa-map-marker" aria-hidden="true"></span> <b>'+	objectArray[index].obj_lat+', '+ objectArray[index].obj_lon+'</b> ('+LLtoUSNG(objectArray[index].obj_lat, objectArray[index].obj_lon, 5)+')'+
-						'<br/> Adresse nicht gefunden <hr>'+
-						'<form><div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis('+objectArray[index].obj_nummer+',\'comment\', this.value);" rows="5">'+objectArray[index].obj_hinweis+'</textarea></div></form>'+
-						'<div class="btn-group" role="group" aria-label="Optionen">'+
-						'<button type="button" class="btn btn-default btn-danger btnInfoWindow" id="deleteButton" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button></div>');
-						activeObject.info.open(map,activeObject);
+				        var adresse = ' Adresse nicht gefunden '
 					}
 			        else
 			        {
 				        var adresse = result;
-				        activeObject.info.setContent('<span class="fa fa-map-marker" aria-hidden="true"></span> <b>'+	objectArray[index].obj_lat+', '+ objectArray[index].obj_lon+'</b> ('+LLtoUSNG(objectArray[index].obj_lat, objectArray[index].obj_lon, 5)+')'+
-						'<br/>'+adresse+
-						'<hr><form><div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis('+objectArray[index].obj_nummer+',\'comment\', this.value);" rows="5">'+objectArray[index].obj_hinweis+'</textarea></div></form>'+
-						'<div class="btn-group" role="group" aria-label="Optionen">'+
-						'<button type="button" class="btn btn-default btn-danger btnInfoWindow" id="deleteButton" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button></div>');
-						activeObject.info.open(map,activeObject);
-			        }
+				    }
+					var commentContent = `<span class="fa fa-map-marker" aria-hidden="true"></span> <b> ${object.obj_lat} ,${object.obj_lon}</b><br>
+						(${LLtoUSNG(objectArray[index].obj_lat, objectArray[index].obj_lon, 5)})<br/>
+						${adresse}
+						<hr>
+						<form>
+							<div class="form-group">
+								<label for="hinweis">Hinweise</label>
+								<textarea id="hinweis" class="form-control" onchange="updateHinweis(${object.obj_nummer},'comment', this.value);" rows="5">
+									${object.obj_hinweis}
+								</textarea>
+							</div>
+						</form>
+						<div class="btn-group" role="group" aria-label="Optionen">
+							<button type="button" class="btn btn-default btn-danger btnInfoWindow" id="deleteButton" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button>
+						</div>`;
+					infoWindow.setContent(commentContent);
+					infoWindow.open(map,activeObject)
 			    }); // Ende reverseGeocode()
 			}); // Ende des Eventlisteners
 
 			google.maps.event.addListener(comment_obj,'dragend', function(){ //Aktualisiert Array und Infowindow wenn Marker verschoben wird
 				activeObject = this;
-				let index = objectArray.findIndex(x => x.obj_nummer == this.obj_nummer  && x.obj_typ == this.obj_typ);  // Ermittelt Array-Index des aktuellen Markers
-				objectArray[index].obj_lat = this.getPosition().lat().toFixed(6); // Aktualisiert geogr. Position im Array
-				objectArray[index].obj_lon = this.getPosition().lng().toFixed(6);// Aktualisiert geogr. Position im Array	
-				
-				reverseGeocode(objectArray[index].position, function(result)
+				let index = objectArray.findIndex(x => x.obj_nummer == activeObject.obj_nummer  && x.obj_typ == activeObject.obj_typ);  // Ermittelt Array-Index des aktuellen Markers
+				var object = objectArray[index];
+				object.obj_lat = activeObject.getPosition().lat().toFixed(6); // Aktualisiert geogr. Position im Array
+				object.obj_lon = activeObject.getPosition().lng().toFixed(6);// Aktualisiert geogr. Position im Array
+
+				reverseGeocode(object.position, function(result)
 			    {
 			        if (result === 0)
 			        {
-				        activeObject.info.setContent('<span class="fa fa-map-marker" aria-hidden="true"></span> <b>'+	objectArray[index].obj_lat+', '+ objectArray[index].obj_lon+'</b> ('+LLtoUSNG(objectArray[index].obj_lat, objectArray[index].obj_lon, 5)+')'+
-						'<br/> Adresse nicht gefunden <hr>'+
-						'<form><div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis('+objectArray[index].obj_nummer+',\'comment\', this.value);" rows="5">'+objectArray[index].obj_hinweis+'</textarea></div></form>'+
-						'<div class="btn-group" role="group" aria-label="Optionen">'+
-						'<button type="button" class="btn btn-default btn-danger btnInfoWindow" id="deleteButton" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button></div>');
-						activeObject.info.open(map,activeObject);
+				        var adresse = ' Adresse nicht gefunden '
 					}
 			        else
 			        {
 				        var adresse = result;
-				        activeObject.info.setContent('<span class="fa fa-map-marker" aria-hidden="true"></span> <b>'+	objectArray[index].obj_lat+', '+ objectArray[index].obj_lon+'</b> ('+LLtoUSNG(objectArray[index].obj_lat, objectArray[index].obj_lon, 5)+')'+
-						'<br/>'+adresse+
-						'<hr><form><div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis('+objectArray[index].obj_nummer+',\'comment\', this.value);" rows="5">'+objectArray[index].obj_hinweis+'</textarea></div></form>'+
-						'<div class="btn-group" role="group" aria-label="Optionen">'+
-						'<button type="button" class="btn btn-default btn-danger btnInfoWindow" id="deleteButton" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button></div>');
-						activeObject.info.open(map,activeObject);
-			        }
+				    }
+					var commentContent = `<span class="fa fa-map-marker" aria-hidden="true"></span> <b> ${object.obj_lat} ,${object.obj_lon}</b><br>
+						(${LLtoUSNG(object.obj_lat, object.obj_lon, 5)})<br/>
+						${adresse}
+						<hr>
+						<form>
+							<div class="form-group">
+								<label for="hinweis">Hinweise</label>
+								<textarea id="hinweis" class="form-control" onchange="updateHinweis(${object.obj_nummer},'comment', this.value);" rows="5">
+									${object.obj_hinweis}
+								</textarea>
+							</div>
+						</form>
+						<div class="btn-group" role="group" aria-label="Optionen">
+							<button type="button" class="btn btn-default btn-danger btnInfoWindow" id="deleteButton" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button>
+						</div>`;
+					infoWindow.setContent(commentContent);
+					infoWindow.setPosition(new google.maps.LatLng(activeObject.obj_lat , activeObject.obj_lon));
+					infoWindow.open(map,activeObject)
 			    }); // Ende reverseGeocode()
 			}); // Ende eventlistener
 
 			google.maps.event.addListener(comment_obj,'dragstart', function(){
 				activeObject = this;
-				activeObject.info.close();
+				infoWindow.setMap(null);
 			});
 			break;
 
@@ -287,11 +300,6 @@ function drawObjects(theArray){
 			let adresse = value.obj_parameter.adresse;
 			let counter = value.obj_nummer; //Zähler für die Anzahl an Freisetzungsmarkern
 			drawPolygon(map, lat, lon, adresse, winkel, richtung, innen, aussen, counter); //Zeichnet das Polygon
-
-			google.maps.event.addListener(value,'click',function(){ // Öffnet Infowindow bei Klick auf Marker
-				clearSelectionLoad();
-				activeObject = this;
-			}); // Ende des Eventlisteners
 			break;
 
 			case 'circle':
@@ -314,6 +322,7 @@ function drawObjects(theArray){
 				clearSelectionLoad();
 				activeObject = this;
 				activeObject.setEditable(true);
+				infoWindow.setMap(null);
 			}); // Ende des Eventlisteners
 
 			google.maps.event.addListener(circleObj,'dragend', function(){ //Aktualisiert Array und Infowindow wenn Marker verschoben wird
@@ -346,6 +355,7 @@ function drawObjects(theArray){
 				clearSelectionLoad();
 				activeObject = this;
 				activeObject.setEditable(true);
+				infoWindow.setMap(null);
 			}); // Ende des Eventlisteners
 
 			google.maps.event.addListener(polygonObj,'dragend', function(){ //Aktualisiert Array und Infowindow wenn Marker verschoben wird
@@ -374,6 +384,7 @@ function drawObjects(theArray){
 				clearSelectionLoad();
 				activeObject = this;
 				activeObject.setEditable(true);
+				infoWindow.setMap(null);
 			}); // Ende des Eventlisteners
 
 			google.maps.event.addListener(polylineObj,'dragend', function(){ //Aktualisiert Array und Infowindow wenn Marker verschoben wird
@@ -407,11 +418,7 @@ function deleteObject(){
 		objectArray.splice(index,1); // Löscht das Objekt aus dem Objekt-Array
 		let deleteObject = {nummer:activeObject.obj_nummer, typ:activeObject.obj_typ}; //Erzeugt das zu löschende Objekt
 		deleteArray.push(deleteObject); //Verschiebt das zu löschende Objekt in den Lösch-Array
-
-		if (activeObject.info !== undefined){ // Unterscheidet zwischen neu erzeugtem Marker (.info ist nicht definiert) und beim Laden generierten Marker
-			activeObject.info.setMap(null);// Löscht das Infowindow von der Karte
-		}
-
+		infoWindow.setMap(null);
 		activeObject.setMap(null);// Löscht das Objekt von der Karte
 
 		if (activeObject.poly1 !== undefined && activeObject.poly2 !== undefined){ // Überprüft, ob es sich um einen MET-Marker handelt (dieser besitzt zwei Ausbreitungspolygone)

@@ -392,8 +392,12 @@ a{
 }
 
 @media (min-width: 768px){
-	.modal-dialog {
-	    width: 70vw;
+	.modalOptions{
+	    width: 95vw;
+	}
+
+	.modalMET{
+	    width: 50vw;
 	}
 
 	.navbar-toggle {

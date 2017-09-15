@@ -1,8 +1,5 @@
 function updateKataster(UID, tableName){ //Aktualisiert die Punkte im Messkataster
-	if(UID != "0")
-	{
-		katasterArray = [];
-	}
+	katasterArray = [];
 	tableName.clear(); // Leert die Liste aller verfügbaren Optionen
 	var data = [];
 	data = $(this).serialize() + "&" + $.param(data);
@@ -20,10 +17,7 @@ function updateKataster(UID, tableName){ //Aktualisiert die Punkte im Messkatast
 			 	let kat_point = {ID: value.ID, Nummer: value.Nummer, Bezeichnung: value.Bezeichnung, Adresse: value.Adresse, ODL: value.ODL, IPS: value.IPS, Koordinaten: value.Koordinaten};
 
 			 	maxRowID = Math.max.apply(Math,obj.map(function(o){return o.ID;})); //Liest die größte gespeicherte ID aus
-			 	if(UID != "0")
-			 	{
 			 		katasterArray.push(kat_point);
-			 	}
 			});
 
 			$('.btn-del-row').click(function(){
