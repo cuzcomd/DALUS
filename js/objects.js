@@ -195,16 +195,16 @@ function drawObjects(theArray){
 
 			case 'comment':
 			let comment_obj = new google.maps.Marker({
-			map:map,
-			position: {lat:Number(value.obj_lat), lng:Number(value.obj_lon)},
-			obj_lat: Number(value.obj_lat),
-			obj_lon: Number(value.obj_lon),
-			icon:{url:'images/comment.png', anchor: new google.maps.Point(16,16)},
-			obj_nummer: Number(value.obj_nummer),
-			obj_hinweis: value.obj_hinweis,
-			obj_typ: 'comment',
-			draggable:true,
-			zIndex:10
+				map:map,
+				position: {lat:Number(value.obj_lat), lng:Number(value.obj_lon)},
+				obj_lat: Number(value.obj_lat),
+				obj_lon: Number(value.obj_lon),
+				icon:{url:'images/comment.png', anchor: new google.maps.Point(16,16)},
+				obj_nummer: Number(value.obj_nummer),
+				obj_hinweis: value.obj_hinweis,
+				obj_typ: 'comment',
+				draggable:true,
+				zIndex:10
 			});
 
 			objectArray.push(comment_obj);
@@ -232,9 +232,7 @@ function drawObjects(theArray){
 						<form>
 							<div class="form-group">
 								<label for="hinweis">Hinweise</label>
-								<textarea id="hinweis" class="form-control" onchange="updateHinweis(${object.obj_nummer},'comment', this.value);" rows="5">
-									${object.obj_hinweis}
-								</textarea>
+								<textarea id="hinweis" class="form-control" onchange="updateHinweis(${object.obj_nummer},'comment', this.value);" rows="5">${object.obj_hinweis}</textarea>
 							</div>
 						</form>
 						<div class="btn-group" role="group" aria-label="Optionen">
@@ -318,22 +316,22 @@ function drawObjects(theArray){
 
 			objectArray.push(circleObj);
 
-			google.maps.event.addListener(circleObj,'click',function(){ // Öffnet Infowindow bei Klick auf Marker
+			google.maps.event.addListener(circleObj,'click',function(){ // Öffnet Infowindow bei Klick auf Kreis
 				clearSelectionLoad();
 				activeObject = this;
 				activeObject.setEditable(true);
 				infoWindow.setMap(null);
 			}); // Ende des Eventlisteners
 
-			google.maps.event.addListener(circleObj,'dragend', function(){ //Aktualisiert Array und Infowindow wenn Marker verschoben wird
-				let index = objectArray.findIndex(x => x.obj_nummer == this.obj_nummer  && x.obj_typ == this.obj_typ);  // Ermittelt Array-Index des aktuellen Markers
+			google.maps.event.addListener(circleObj,'dragend', function(){ //Aktualisiert Array und Infowindow wenn Kreis verschoben wird
+				let index = objectArray.findIndex(x => x.obj_nummer == this.obj_nummer  && x.obj_typ == this.obj_typ);  // Ermittelt Array-Index des Kreises
 				objectArray[index].obj_lat = this.getCenter().lat().toFixed(6); // Aktualisiert geogr. Position im Array
 				objectArray[index].obj_lon = this.getCenter().lng().toFixed(6);// Aktualisiert geogr. Position im Array	
 			});
 
-			google.maps.event.addListener(circleObj,'radius_changed', function(){ //Aktualisiert Array und Infowindow wenn Marker verschoben wird
-				let index = objectArray.findIndex(x => x.obj_nummer == this.obj_nummer  && x.obj_typ == this.obj_typ);  // Ermittelt Array-Index des aktuellen Markers
-				objectArray[index].obj_parameter = this.getRadius(); // Aktualisiert geogr. Position im Array
+			google.maps.event.addListener(circleObj,'radius_changed', function(){ //Aktualisiert Array und Infowindow wenn Kreisradius verändert wird
+				let index = objectArray.findIndex(x => x.obj_nummer == this.obj_nummer  && x.obj_typ == this.obj_typ);  // Ermittelt Array-Index des Kreises
+				objectArray[index].obj_parameter = this.getRadius(); // Aktualisiert Radius im Array
 			});
 			break;
 
@@ -351,16 +349,16 @@ function drawObjects(theArray){
 			});
 			objectArray.push(polygonObj);
 
-			google.maps.event.addListener(polygonObj,'click',function(){ // Öffnet Infowindow bei Klick auf Marker
+			google.maps.event.addListener(polygonObj,'click',function(){ // Öffnet Infowindow bei Klick auf Polygon
 				clearSelectionLoad();
 				activeObject = this;
 				activeObject.setEditable(true);
 				infoWindow.setMap(null);
 			}); // Ende des Eventlisteners
 
-			google.maps.event.addListener(polygonObj,'dragend', function(){ //Aktualisiert Array und Infowindow wenn Marker verschoben wird
-				let index = objectArray.findIndex(x => x.obj_nummer == this.obj_nummer  && x.obj_typ == this.obj_typ);  // Ermittelt Array-Index des aktuellen Markers
-				objectArray[index].obj_parameter = this.getPath().getArray(); // Aktualisiert geogr. Position im Array
+			google.maps.event.addListener(polygonObj,'dragend', function(){ //Aktualisiert Array und Infowindow wenn Polygon verschoben wird
+				let index = objectArray.findIndex(x => x.obj_nummer == this.obj_nummer  && x.obj_typ == this.obj_typ);  // Ermittelt Array-Index des Polygons
+				objectArray[index].obj_parameter = this.getPath().getArray(); // Aktualisiert Pfad im Array
 			});
 			break;
 
@@ -380,21 +378,22 @@ function drawObjects(theArray){
 
 			objectArray.push(polylineObj);
 
-			google.maps.event.addListener(polylineObj,'click',function(){ // Öffnet Infowindow bei Klick auf Marker
+			google.maps.event.addListener(polylineObj,'click',function(){ // Öffnet Infowindow bei Klick auf Polyline
 				clearSelectionLoad();
 				activeObject = this;
 				activeObject.setEditable(true);
 				infoWindow.setMap(null);
 			}); // Ende des Eventlisteners
 
-			google.maps.event.addListener(polylineObj,'dragend', function(){ //Aktualisiert Array und Infowindow wenn Marker verschoben wird
-				let index = objectArray.findIndex(x => x.obj_nummer == this.obj_nummer  && x.obj_typ == this.obj_typ);  // Ermittelt Array-Index des aktuellen Markers
-				objectArray[index].obj_parameter = this.getPath().getArray(); // Aktualisiert geogr. Position im Array
+			google.maps.event.addListener(polylineObj,'dragend', function(){ //Aktualisiert Array und Infowindow wenn Polyline verschoben wird
+				let index = objectArray.findIndex(x => x.obj_nummer == this.obj_nummer  && x.obj_typ == this.obj_typ);  // Ermittelt Array-Index der Polyline
+				objectArray[index].obj_parameter = this.getPath().getArray(); // Aktualisiert Pfad im Array
 			});
 			break;
 
 			default:
 		} //Ende switch value.obj_typ
+
         google.maps.event.addListener(map, 'click', clearSelectionLoad); //Beim Klick auf die Karte wird ausgewähltes Objekt abgewählt
         google.maps.event.addDomListener(document, 'keyup', function (e) { // Durch drücken der Entf-Taste wird ausgewähltes Objekt gelöscht.
 			var code = (e.keyCode ? e.keyCode : e.which);
@@ -406,7 +405,7 @@ function drawObjects(theArray){
 } //Ende function drawObjects
 
 function clearSelectionLoad() {
-	if (activeObject && activeObject.obj_typ != "marker" && activeObject.obj_typ != "met" && activeObject.obj_typ != "comment"){ //Funktion nur ausführen, wenn ein Objekt ausgewählt ist und es kein Marker ist
+	if (activeObject && activeObject.obj_typ != "marker" && activeObject.obj_typ != "met" && activeObject.obj_typ != "comment"){ //Funktion nur ausführen, wenn ein Objekt ausgewählt ist und es kein Marker, MET-Objekt oder Kommentarfeld ist
 		activeObject.setEditable(false);
 	}// Ende if(activeObject)
 	activeObject = null; //Aktives Objekt zurücksetzen
@@ -430,9 +429,9 @@ function deleteObject(){
 	}// Ende if (activeObject)
 }// Ende Funktion deleteObject()
 
-function changeColor(markerNummer, color){
+function changeColor(markerNummer, farbe){
 	var index = objectArray.findIndex(x => x.obj_nummer == activeObject.obj_nummer && x.obj_typ == activeObject.obj_typ);  //ermittelt Array-Index des aktuellen Markers
-	switch(color){
+	switch(farbe){
 		case 1:
 		activeObject.setIcon({url:'images/white.png', anchor: new google.maps.Point(16,16), labelOrigin: new google.maps.Point(16,40)});
 		objectArray[index].obj_farbe = "white";
@@ -459,5 +458,5 @@ function changeColor(markerNummer, color){
 		break;
 
 		default:
-	}//Ende switch(color)	
+	}//Ende switch(farbe)	
 }//Ende Funktion changeColor()

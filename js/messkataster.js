@@ -17,7 +17,7 @@ function updateKataster(UID, tableName){ //Aktualisiert die Punkte im Messkatast
 			 	let kat_point = {ID: value.ID, Nummer: value.Nummer, Bezeichnung: value.Bezeichnung, Adresse: value.Adresse, ODL: value.ODL, IPS: value.IPS, Koordinaten: value.Koordinaten};
 
 			 	maxRowID = Math.max.apply(Math,obj.map(function(o){return o.ID;})); //Liest die größte gespeicherte ID aus
-			 		katasterArray.push(kat_point);
+			 	katasterArray.push(kat_point);
 			});
 
 			$('.btn-del-row').click(function(){
@@ -43,8 +43,8 @@ function saveKataster(UID, tableID){ //Speichert das Messkataster
             arrayItem[headers[index]] = $(item).html();
    		});
     	data.push(arrayItem);
-		});
-		data = JSON.stringify(data);
+	});
+	data = JSON.stringify(data);
 		
 	$.ajax({
 		type: "POST",
@@ -98,9 +98,13 @@ function loadFixpoints(switchMesspunkte){ // Zeigt das Messkataster auf der Kart
 			google.maps.event.addListener(marker,'click',function(){ // Öffnet Infowindow bei Klick auf Marker
 				activeObject = this;
 				
-				infoWindow.setContent("<div > Messpunkt "+ this.nummer +' (' + this.name +')<hr><br/><div class="fa fa-home"></div> ' + this.adresse +
-			 	'<br/><br/><div class="fa fa-map-marker"></div> ' + this.getPosition().lat().toFixed(6) +' , ' + this.getPosition().lng().toFixed(6) +' (' + LLtoUSNG(this.getPosition().lat(), this.getPosition().lng(), 5) +
-			 	')<br/><br/> Ortsdosisleistung: ' + this.odl + ' nSv/h <br/>Nullrate: ' + this.ips + ' Imp/s</div>');
+				infoWindow.setContent(
+					`<div>Messpunkt ${this.nummer} (${this.name})<hr><br/>
+					<div class="fa fa-home"></div> ${this.adresse}<br/><br/>
+					<div class="fa fa-map-marker"></div>${this.getPosition().lat().toFixed(6)}, ${this.getPosition().lng().toFixed(6)} (${LLtoUSNG(this.getPosition().lat(), this.getPosition().lng(), 5)})<br/><br/>
+					Ortsdosisleistung: ${this.odl} nSv/h <br/>
+					Nullrate: ${this.ips} Imp/s</div>`);
+
 				infoWindow.setPosition(this.getPosition());
 			 	infoWindow.setOptions({pixelOffset: new google.maps.Size(0,-20)});
 			 	infoWindow.open(map);

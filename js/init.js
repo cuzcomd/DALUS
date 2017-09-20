@@ -111,6 +111,9 @@ function updateMesstruppsMarker(){ //Aktualisiert die Punkte im Messkataster
 	});//Ende Ajax
 }//Ende Funktion updateMesstruppsMarker
 
+function myCallbackFunction (updatedCell, updatedRow, oldValue) { //Callback für das Editieren der Messkatasterzellen
+	    }
+
 function dataTables(){
 	dataTable = $('#kataster').DataTable({
 		paging: false,

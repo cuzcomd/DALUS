@@ -218,7 +218,7 @@ function drawPolygon(map, lat, lon, geoAdresse, winkel, richtung, innen, aussen,
 			selectedShape.setEditable(false);
 			selectedShape = null;
 		}
-		activeObject = this; // Setzt den aktuell ausgewählten marker als aktiv
+		activeObject = this; // Setzt den aktuell ausgewählten Marker als aktiv
 		infoWindow.setContent(`<h5>Freisetzungsort</h5>
 		<div class="fa fa-home"></div> ${adresse}<br/><hr>
 		<div class="fa fa-map-marker"></div> ${this.obj_lat} , ${this.obj_lon}<br/> (${utm_koord})<br/><br/>
@@ -228,7 +228,7 @@ function drawPolygon(map, lat, lon, geoAdresse, winkel, richtung, innen, aussen,
 		Ausbreitungswinkel: ${ausbreitungswinkel} &deg;<br/><br/>
 		<div class="btn-group" role="group" aria-label="Optionen">
 		<button type="button" class="btn btn-default btn-danger" id="deleteButton" ontouchstart="deleteObject()" onclick="deleteObject()"><i class="fa fa-trash-o"></i></button>`)
-	infoWindow.open(map,marker);
+		infoWindow.open(map,marker);
 	});
 } //Ende function drawPolygon()
 

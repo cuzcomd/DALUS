@@ -128,8 +128,10 @@ function startDrawingManager(map){
 			objectNummer += 1;
 
 			google.maps.event.addListener(newShape,'click',function(){ // Öffnet Infowindow bei Klick auf Kommentarmarker
-				selectedShape.setEditable(false);
-				selectedShape = null;
+				if (selectedShape) {
+					selectedShape.setEditable(false);
+					selectedShape = null;
+				}
 				activeObject = this; // Setzt den aktuell ausgewählten marker als aktiv
 				let index = objectArray.findIndex(x => x.obj_nummer == activeObject.obj_nummer && x.obj_typ == activeObject.obj_typ); // Ermittelt Array-Index des aktuellen Markers
 				var object = objectArray[index];
@@ -151,9 +153,7 @@ function startDrawingManager(map){
 						<form>
 							<div class="form-group">
 								<label for="hinweis">Hinweise</label>
-								<textarea id="hinweis" class="form-control" onchange="updateHinweis(${object.obj_nummer},'comment', this.value);" rows="5">
-									${object.obj_hinweis}
-								</textarea>
+								<textarea id="hinweis" class="form-control" onchange="updateHinweis(${object.obj_nummer},'comment', this.value);" rows="5">${object.obj_hinweis}</textarea>
 							</div>
 						</form>
 						<div class="btn-group" role="group" aria-label="Optionen">

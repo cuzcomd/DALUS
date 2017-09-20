@@ -65,16 +65,12 @@
 	markerArray =[];
 	var selectedShape; //Initialisierung für aktuell markiertes Geometrieobjekt
 
-	function myCallbackFunction (updatedCell, updatedRow, oldValue) { //Callback für das Editieren der Messkatasterzellen
-	    }
-
 	function initMap() { // Erzeugung der Karte
-		loadOSMLayer(); //OSM Kartenbilder laden
+		loadOSMLayer(); // OSM Kartenbilder laden
 		infoWindow = new google.maps.InfoWindow({
 			maxWidth: 500
 		}); //Globale Initialisierung des Infowindows
 		startDrawingManager(map); //Google DrawingManager laden
-		loadProjectObjects();	// Im Projekt gespeicherte Objekte einlesen
 		dataTables(); // Lädt die Optionen der datatables
 		updateKataster(userID, dataTable); // Lädt die Messpunkte
 
@@ -108,53 +104,51 @@
 
 		document.getElementById('startSearch').addEventListener('click', function(){
 			var adresse = $('#pac-input').val();
-			if (adresse)
-			{
-				new google.maps.Geocoder().geocode( { 'address': adresse}, function(results, status) {
-		    		if (status == 'OK') {
-				        map.setCenter(results[0].geometry.location);
-				        var marker = new google.maps.Marker({
-				            map: map,
-				            position: results[0].geometry.location
-				        });
-			      	} 
-			      	else {
-     					alert('Geocode was not successful for the following reason: ' + status);
-     				}
-	     		});
-	     		return;
-     		}
-		});
+		    if (adresse){
+		    	new google.maps.Geocoder().geocode( { 'address': adresse}, function(results, status) {
+		            if (status == 'OK') {
+		                map.setCenter(results[0].geometry.location);
+		                var marker = new google.maps.Marker({
+		                    map: map,
+		                    position: results[0].geometry.location
+		                });
+		            } 
+		            else {
+		              	alert('Geocode was not successful for the following reason: ' + status);
+	           	 	}
+	          	});
+	          	return;
+	        }
+	    }); //Ende eventlistener
 
-		var input = /** @type {!HTMLInputElement} */(document.getElementById('pac-input'));
+	    var input = /** @type {!HTMLInputElement} */(document.getElementById('pac-input'));
         var autocomplete = new google.maps.places.Autocomplete(input);
         autocomplete.bindTo('bounds', map);
-
         autocomplete.addListener('place_changed', function() {
-        	var place = autocomplete.getPlace();
-        	if (!place.geometry) {
-           		new google.maps.Geocoder().geocode( { 'address': place.name}, function(results, status) {
-		    		if (status == 'OK') {
-				        map.setCenter(results[0].geometry.location);
-				        var marker = new google.maps.Marker({
-				            map: map,
-				            position: results[0].geometry.location
-				        });
-			      	} 
-			      	else {
-     					alert('Geocode was not successful for the following reason: ' + status);
-     				}
-     			});
-     			 return;
-     		}
+         	var place = autocomplete.getPlace();
+         	if (!place.geometry) {
+              	new google.maps.Geocoder().geocode( { 'address': place.name}, function(results, status) {
+            		if (status == 'OK') {
+                		map.setCenter(results[0].geometry.location);
+                		var marker = new google.maps.Marker({
+                    		map: map,
+                    		position: results[0].geometry.location
+                		});
+              		} 
+              		else {
+              			alert('Geocode was not successful for the following reason: ' + status);
+            		}
+          		});
+           	return;
+        	}
 
 	        var marker = new google.maps.Marker({
-	          	map: map,
-				position: place.geometry.location
-			});
+	            map: map,
+	        	position: place.geometry.location
+	      	});
 	        // If the place has a geometry, then present it on a map.
 	        if (place.geometry.viewport) {
-	        	map.fitBounds(place.geometry.viewport);
+	            map.fitBounds(place.geometry.viewport);
 	        } 
 	        else {
 	            map.setCenter(place.geometry.location);
@@ -169,19 +163,19 @@
 	            (place.address_components[2] && place.address_components[2].short_name || '')
 	            ].join(' ');
 	        }
-        });
+	    }); // Ende addlistener
 
-        $('.dropdown.keep-open').on({
-    "shown.bs.dropdown": function() { this.closable = false; },
-    "click":             function() { this.closable = true; },
-    "hide.bs.dropdown":  function() { return this.closable; }
-});
+        $('.dropdown.keep-open').on({ //Verhindert das Zuklappen der Menüpunkte
+		    "shown.bs.dropdown": function() { this.closable = false; },
+		    "click":             function() { this.closable = true; },
+		    "hide.bs.dropdown":  function() { return this.closable; }
+		});
 
         $('.dropdown.stay .dropdown-menu ').on({
-	"click":function(e){
-      e.stopPropagation();
-    }
-});
+			"click":function(e){
+		      	e.stopPropagation();
+		    }
+		});
 	}//Ende Funktion initMap
 	</script> <!-- Initialfunktion -->
 	<script src="js/module.js"></script>
@@ -225,111 +219,6 @@
 			</div><!-- Ende modal-content -->
 		</div><!-- Ende modal-dialog -->
 	</div> <!-- Ende modal fade -->
-
-	<div class="modal fade" id="modal_new_project" tabindex="-1" role="dialog" aria-labelledby="Neues Projekt">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title" id="myModalLabel">Neues Projekt erstellen</h4>
-				</div>
-				<div class="modal-body">
-					<form action='' method='POST' class='ajax_create_project' role='form'>
-						<input type='hidden' name='username' class="activeUserID" value=''>
-						<div class="form-group">
-							<label for="projekt_titel_new" class="col-form-label">Projekttitel</label>
-							<input class="form-control" type="text" placeholder="Projekttitel" id="projekt_titel_new" name="projekttitel" required>
-						</div>
-						<div class="form-group">
-							<label for="newProjektShared" class="col-form-label">Freigeben für</label>
-							<select multiple class="form-control listOfAllUsersExceptMe" type="text" id="newProjektShared" name="shared[]" size="10">
-							</select>
-						</div>
-						<div class="text-center">
-							<button type='submit' class='btn btn-primary' onclick="$('#modal_new_project').modal('hide')"><span class='fa fa-check-square-o'></span> Projekt anlegen</button>
-						</div>
-					</form>
-				</div><!-- Ende modal-body -->
-			</div><!-- Ende modal-content -->
-		</div><!-- Ende modal-dialog -->
-	</div><!-- Ende Modal_new_project -->
-
-	<div class="modal fade" id="modal_open_project" tabindex="-1" role="dialog" aria-labelledby="Projekt öffnen">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title" id="myModalLabel">Projekt öffnen</h4>
-				</div>
-				<div class="modal-body">
-					<h5>Meine Projekte </h5>
-					<form action='' class="ajax_load_project" method='POST' role='form'>
-						<div class="form-group">
-							<select class="form-control" type="text" id="projectOpen" name="project_open"  size="10">
-							</select>
-						</div>
-						<div class="text-center">
-							<button type='submit' class='btn btn-primary' onclick="$('#modal_open_project').modal('hide')"><span class='fa fa-check-square-o'></span> Projekt öffnen</button>
-						</div>
-					</form>
-					<h5>Für mich freigegebene Projekte</h5>
-					<form action='' class="ajax_load_project" method='POST' role='form'>
-						<div class="form-group">
-							<select class="form-control" id="projectOpenShared" name="project_open"  size="10">
-							</select>
-						</div>
-						<div class="text-center">
-							<button type='submit' class='btn btn-primary' onclick="$('#modal_open_project').modal('hide')"><span class='fa fa-check-square-o'></span> Projekt öffnen</button>
-						</div>
-					</form>
-				</div><!-- Ende modal-body -->
-			</div><!-- Ende modal-content -->
-		</div><!-- Ende modal-dialog -->
-	</div><!-- Ende Modal_open_project -->
-
-	<div class="modal fade" id="modal_edit_project" tabindex="-1" role="dialog" aria-labelledby="Projekt ändern">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title" id="myModalLabel">Projekt ändern</h4>
-				</div>
-				<div class="modal-body">
-					<form action='' method='POST' class='ajax_edit_project' role='form'>
-						<input type='hidden' class='activeUserID' name='current_user_id' value=''>
-						<input type='hidden' class='activeProjectID' name='current_project_id' value='0'>
-						<div class="form-group">
-							<label for="projekt_titel" class="col-form-label">Projekttitel</label>
-							<input class="form-control activeProjectName" id="projekt_titel" type="text" placeholder="Projekttitel" name="projekttitel" value="" required>
-						</div>
-						<div class="form-group">
-							<label for="projektShared" class="col-form-label">Freigeben für</label>
-							<select multiple class="form-control" type="text" id="projektShared" name="shared[]"  size="10">
-								<!-- Hier erscheinen die Benutzernamen, für die das Projekt freigegeben wurde -->
-							</select>
-						</div>
-						<div class="text-center">
-							<button type='submit' class='btn btn-primary' onclick="$('#modal_edit_project').modal('hide')"><span class='fa fa-check-square-o'></span> Änderung Speichern</button>
-						</div>
-					</form>
-				</div><!-- Ende modal-body -->
-			</div><!-- Ende modal-content -->
-		</div><!-- Ende modal-dialog -->
-	</div><!-- Ende Modal_edit_project -->
-
-	<div class="modal fade" id="modalWinkel" tabindex="-1" role="dialog" aria-labelledby="MET Ausbreitungswinkel">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title" id="myModalLabel">MET Ausbreitungswinkel</h4>
-				</div>
-				<div class="modal-body">
-					 <!-- Ende Winkelrechner -->
-				</div><!-- Ende modal-body -->
-			</div><!-- Ende modal-content -->
-		</div><!-- Ende modal-dialog -->
-	</div><!-- Ende Modal_edit_project -->
 
 	<div class="modal fade" id="modalMET" tabindex="-1" role="dialog" aria-labelledby="MET Ausbreitungsmodell">
 		<div class="modalMET modal-dialog" role="document">
@@ -550,7 +439,7 @@
 			</div><!-- Ende modal-content -->
 		</div><!-- Ende modal-dialog -->
 	</div><!-- Ende modalMET -->
-
+	
 	<div class="modal fade" id="modalOptions" tabindex="-1" role="dialog" aria-labelledby="Optionen">
 		<div class="modalOptions modal-dialog" role="document">
 			<div class="modal-content">
@@ -587,6 +476,97 @@
 			</div><!-- Ende modal-content -->
 		</div><!-- Ende modal-dialog -->
 	</div><!-- Ende modalOptions -->
+
+	<div class="modal fade" id="modal_new_project" tabindex="-1" role="dialog" aria-labelledby="Neues Projekt">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">Neues Projekt erstellen</h4>
+				</div>
+				<div class="modal-body">
+					<form action='' method='POST' class='ajax_create_project' role='form'>
+						<input type='hidden' name='username' class="activeUserID" value=''>
+						<div class="form-group">
+							<label for="projekt_titel_new" class="col-form-label">Projekttitel</label>
+							<input class="form-control" type="text" placeholder="Projekttitel" id="projekt_titel_new" name="projekttitel" required>
+						</div>
+						<div class="form-group">
+							<label for="newProjektShared" class="col-form-label">Freigeben für</label>
+							<select multiple class="form-control listOfAllUsersExceptMe" type="text" id="newProjektShared" name="shared[]" size="10">
+							</select>
+						</div>
+						<div class="text-center">
+							<button type='submit' class='btn btn-primary' onclick="$('#modal_new_project').modal('hide')"><span class='fa fa-check-square-o'></span> Projekt anlegen</button>
+						</div>
+					</form>
+				</div><!-- Ende modal-body -->
+			</div><!-- Ende modal-content -->
+		</div><!-- Ende modal-dialog -->
+	</div><!-- Ende Modal_new_project -->
+
+	<div class="modal fade" id="modal_open_project" tabindex="-1" role="dialog" aria-labelledby="Projekt öffnen">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">Projekt öffnen</h4>
+				</div>
+				<div class="modal-body">
+					<h5>Meine Projekte </h5>
+					<form action='' class="ajax_load_project" method='POST' role='form'>
+						<div class="form-group">
+							<select class="form-control" type="text" id="projectOpen" name="project_open"  size="10">
+							</select>
+						</div>
+						<div class="text-center">
+							<button type='submit' class='btn btn-primary' onclick="$('#modal_open_project').modal('hide')"><span class='fa fa-check-square-o'></span> Projekt öffnen</button>
+						</div>
+					</form>
+					<h5>Für mich freigegebene Projekte</h5>
+					<form action='' class="ajax_load_project" method='POST' role='form'>
+						<div class="form-group">
+							<select class="form-control" id="projectOpenShared" name="project_open"  size="10">
+							</select>
+						</div>
+						<div class="text-center">
+							<button type='submit' class='btn btn-primary' onclick="$('#modal_open_project').modal('hide')"><span class='fa fa-check-square-o'></span> Projekt öffnen</button>
+						</div>
+					</form>
+				</div><!-- Ende modal-body -->
+			</div><!-- Ende modal-content -->
+		</div><!-- Ende modal-dialog -->
+	</div><!-- Ende Modal_open_project -->
+
+	<div class="modal fade" id="modal_edit_project" tabindex="-1" role="dialog" aria-labelledby="Projekt ändern">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">Projekt ändern</h4>
+				</div>
+				<div class="modal-body">
+					<form action='' method='POST' class='ajax_edit_project' role='form'>
+						<input type='hidden' class='activeUserID' name='current_user_id' value=''>
+						<input type='hidden' class='activeProjectID' name='current_project_id' value='0'>
+						<div class="form-group">
+							<label for="projekt_titel" class="col-form-label">Projekttitel</label>
+							<input class="form-control activeProjectName" id="projekt_titel" type="text" placeholder="Projekttitel" name="projekttitel" value="" required>
+						</div>
+						<div class="form-group">
+							<label for="projektShared" class="col-form-label">Freigeben für</label>
+							<select multiple class="form-control" type="text" id="projektShared" name="shared[]"  size="10">
+								<!-- Hier erscheinen die Benutzernamen, für die das Projekt freigegeben wurde -->
+							</select>
+						</div>
+						<div class="text-center">
+							<button type='submit' class='btn btn-primary' onclick="$('#modal_edit_project').modal('hide')"><span class='fa fa-check-square-o'></span> Änderung Speichern</button>
+						</div>
+					</form>
+				</div><!-- Ende modal-body -->
+			</div><!-- Ende modal-content -->
+		</div><!-- Ende modal-dialog -->
+	</div><!-- Ende Modal_edit_project -->
 
 	<nav id="myNavmenu" class="navmenu navmenu-default navmenu-fixed-left offcanvas-sm" role="navigation">
 		<div class="userInformation">
@@ -735,7 +715,6 @@
 	<script src = "js/datetimepickerOptions.js" defer></script>
 	<script src = "js/project.js" defer></script>
 	<script src = "js/helpers.js" defer></script>
-	<script src = "js/ajaxCalls.js" defer> // Ajax aufruf für Projekte </script>
 	<script src = "js/xmlwriter.js" defer></script>
 	<script src = "js/exportKml.js" defer></script>
 	<script src = "js/alertify.min.js" defer></script>
