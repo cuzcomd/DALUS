@@ -13,8 +13,8 @@
 	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 	<!--[if lt IE 9]>
-	  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-	  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+	<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 	<![endif]-->
 	<link rel="apple-touch-icon" sizes="180x180" href="/dalus/images/favicon/apple-touch-icon.png">
 	<link rel="icon" type="image/png" sizes="32x32" href="/dalus/images/favicon/favicon-32x32.png">
@@ -88,10 +88,10 @@
 		});
 
 		<?php
-		  	if ($accessLevel == 'admin')
-		 	{
-		  		include_once('php/acl/admin/GPSlistener.php'); //Listener für GPS-Logging laden
-		  	}
+			if ($accessLevel == 'admin')
+			{
+				include_once('php/acl/admin/GPSlistener.php'); //Listener für GPS-Logging laden
+			}
 		?>
 
 		document.getElementById('saveProject').addEventListener('click', function() { // Beim Klick auf "Speichern", aktuelle Änderungen speichern
@@ -104,77 +104,77 @@
 
 		document.getElementById('startSearch').addEventListener('click', function(){
 			var adresse = $('#pac-input').val();
-		    if (adresse){
-		    	new google.maps.Geocoder().geocode( { 'address': adresse}, function(results, status) {
-		            if (status == 'OK') {
-		                map.setCenter(results[0].geometry.location);
-		                var marker = new google.maps.Marker({
-		                    map: map,
-		                    position: results[0].geometry.location
-		                });
-		            } 
-		            else {
-		              	alert('Geocode was not successful for the following reason: ' + status);
-	           	 	}
-	          	});
-	          	return;
-	        }
-	    }); //Ende eventlistener
+			if (adresse){
+				new google.maps.Geocoder().geocode( { 'address': adresse}, function(results, status) {
+					if (status == 'OK') {
+						map.setCenter(results[0].geometry.location);
+						var marker = new google.maps.Marker({
+							map: map,
+							position: results[0].geometry.location
+						});
+					} 
+					else {
+						alert('Geocode was not successful for the following reason: ' + status);
+					}
+				});
+				return;
+			}
+		}); //Ende eventlistener
 
-	    var input = /** @type {!HTMLInputElement} */(document.getElementById('pac-input'));
-        var autocomplete = new google.maps.places.Autocomplete(input);
-        autocomplete.bindTo('bounds', map);
-        autocomplete.addListener('place_changed', function() {
-         	var place = autocomplete.getPlace();
-         	if (!place.geometry) {
-              	new google.maps.Geocoder().geocode( { 'address': place.name}, function(results, status) {
-            		if (status == 'OK') {
-                		map.setCenter(results[0].geometry.location);
-                		var marker = new google.maps.Marker({
-                    		map: map,
-                    		position: results[0].geometry.location
-                		});
-              		} 
-              		else {
-              			alert('Geocode was not successful for the following reason: ' + status);
-            		}
-          		});
-           	return;
-        	}
+		var input = /** @type {!HTMLInputElement} */(document.getElementById('pac-input'));
+		var autocomplete = new google.maps.places.Autocomplete(input);
+		autocomplete.bindTo('bounds', map);
+		autocomplete.addListener('place_changed', function() {
+			var place = autocomplete.getPlace();
+			if (!place.geometry) {
+				new google.maps.Geocoder().geocode( { 'address': place.name}, function(results, status) {
+					if (status == 'OK') {
+						map.setCenter(results[0].geometry.location);
+						var marker = new google.maps.Marker({
+							map: map,
+							position: results[0].geometry.location
+						});
+					} 
+					else {
+						alert('Geocode was not successful for the following reason: ' + status);
+					}
+				});
+			return;
+			}
 
-	        var marker = new google.maps.Marker({
-	            map: map,
-	        	position: place.geometry.location
-	      	});
-	        // If the place has a geometry, then present it on a map.
-	        if (place.geometry.viewport) {
-	            map.fitBounds(place.geometry.viewport);
-	        } 
-	        else {
-	            map.setCenter(place.geometry.location);
-	            map.setZoom(17);  // Why 17? Because it looks good.
-	        }
+			var marker = new google.maps.Marker({
+				map: map,
+				position: place.geometry.location
+			});
+			// If the place has a geometry, then present it on a map.
+			if (place.geometry.viewport) {
+				map.fitBounds(place.geometry.viewport);
+			} 
+			else {
+				map.setCenter(place.geometry.location);
+				map.setZoom(17);  // Why 17? Because it looks good.
+			}
 
-	        var address = '';
-	        if (place.address_components) {
-	            address = [
-	            (place.address_components[0] && place.address_components[0].short_name || ''),
-	            (place.address_components[1] && place.address_components[1].short_name || ''),
-	            (place.address_components[2] && place.address_components[2].short_name || '')
-	            ].join(' ');
-	        }
-	    }); // Ende addlistener
+			var address = '';
+			if (place.address_components) {
+				address = [
+				(place.address_components[0] && place.address_components[0].short_name || ''),
+				(place.address_components[1] && place.address_components[1].short_name || ''),
+				(place.address_components[2] && place.address_components[2].short_name || '')
+				].join(' ');
+			}
+		}); // Ende addlistener
 
-        $('.dropdown.keep-open').on({ //Verhindert das Zuklappen der Menüpunkte
-		    "shown.bs.dropdown": function() { this.closable = false; },
-		    "click":             function() { this.closable = true; },
-		    "hide.bs.dropdown":  function() { return this.closable; }
+		$('.dropdown.keep-open').on({ //Verhindert das Zuklappen der Menüpunkte
+			"shown.bs.dropdown": function() { this.closable = false; },
+			"click":             function() { this.closable = true; },
+			"hide.bs.dropdown":  function() { return this.closable; }
 		});
 
-        $('.dropdown.stay .dropdown-menu ').on({
+		$('.dropdown.stay .dropdown-menu ').on({
 			"click":function(e){
-		      	e.stopPropagation();
-		    }
+				e.stopPropagation();
+			}
 		});
 	}//Ende Funktion initMap
 	</script> <!-- Initialfunktion -->
@@ -427,8 +427,7 @@
 											</div>
 										</div>
 									</form>
-									<div class="alert alert-warning alert-dismissible" role="alert">
-										<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+									<div class="alert alert-warning" role="alert">
 										<strong>Hinweis:</strong><br/>Der Winkel wird automatisch aktualisiert.
 									</div>
 								</div><!-- Ende metWinkel -->
@@ -453,10 +452,10 @@
 							<ul class="nav nav-pills nav-stacked">
 								<?php
 									include_once('php/acl/user/optionsPanel.php'); //Optionen für ACL "user" laden
-								  	if ($accessLevel == 'admin')
-								 	{
-								  		include_once('php/acl/admin/optionsPanel.php'); //Optionen für ACL "admin" laden
-								  	}
+									if ($accessLevel == 'admin')
+									{
+										include_once('php/acl/admin/optionsPanel.php'); //Optionen für ACL "admin" laden
+									}
 								?>
 							</ul>
 						</div> <!-- Ende adminPanel -->
@@ -577,7 +576,6 @@
 			<span class="fa fa-folder-open" aria-hidden="true"></span>
 			<span id="activeProject">&nbsp; Kein Projekt geöffnet</span>
 		</div>
-  		<!-- <a class="navmenu-brand text-center"><img src="images/dalus_logo.svg" width="150px"></a>  -->		
 		<div class="input-group searchbar">
 			<input id="pac-input" class="form-control" type="text" placeholder="Ort suchen ...">
 			<span id = "startSearch" class="input-group-addon" role="button"><i class="fa fa-search"></i></span>
@@ -588,19 +586,19 @@
 				<li class="setMarkWhite" data-toggle="tooltip" data-placement="bottom" title="Messpunkt" role="button"><a data-toggle="tab"><i class="fa fa-flag-o"></i></a></li>
 				<li class="setComment" data-toggle="tooltip" data-placement="bottom" title="Kommentar" role="button"><a data-toggle="tab"><i class="fa fa-commenting-o"></i></a></li>
 				<li class="dropdown">
-				    <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-pencil"></i>
-				    <span class="caret"></span></a>
-				    <ul class="dropdown-menu">
-				      	<li class="setCirc" data-toggle="tooltip" data-placement="bottom" title="Kreis zeichnen" role="button"><a data-toggle="tab"><i class="fa fa-circle-thin"></i> Kreis</a></li>
+					<a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-pencil"></i>
+					<span class="caret"></span></a>
+					<ul class="dropdown-menu">
+						<li class="setCirc" data-toggle="tooltip" data-placement="bottom" title="Kreis zeichnen" role="button"><a data-toggle="tab"><i class="fa fa-circle-thin"></i> Kreis</a></li>
 						<li class="setPoly" data-toggle="tooltip" data-placement="bottom" title="Polygon zeichnen" role="button"><a data-toggle="tab"><i class="fa fa-bookmark-o"></i> Polygon</a></li>
 						<li class="setPath" data-toggle="tooltip" data-placement="bottom" title="Pfad zeichnen" role="button"><a data-toggle="tab"><i class="fa fa-pencil"></i> Pfad</a></li>
-				    </ul>
+					</ul>
 				</li>
 				<li class="deleteActiveObject" data-toggle="tooltip" data-placement="bottom" title="Objekt löschen" role="button"><a data-toggle="tab"><i class="fa fa-trash"></i></a></li>
 			</ul>
 		</div> <!-- Ende Werkzeuge -->
 		<ul class="nav navmenu-nav">
-			<li class="dropdown stay keep-open" id ="project_options" role="presentation" data-toggle="tooltip" data-placement="bottom" title="Projekt">
+			<li class="dropdown stay keep-open open" id ="project_options" role="presentation" data-toggle="tooltip" data-placement="bottom" title="Projekt">
 				<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bars" aria-hidden="true"></i> Projekt
 				<span class="caret"></span></a>
 				<ul class="dropdown-menu navmenu-nav" role="menu">
@@ -646,24 +644,24 @@
 				<br><br>
 				<div>
 					<form action="" class="form"  role="form">
-				        <div class="form-group">
-				            <label for="startTrack" class="control-label">Von</label>
-				            <div class="input-group date form_datetime" id="startTrack" placeholder = "2017-07-17 10:30">
-				                <input class="form-control" size="16" type="text" value="" id="startTrackInput">
-				                <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+						<div class="form-group">
+							<label for="startTrack" class="control-label">Von</label>
+							<div class="input-group date form_datetime" id="startTrack" placeholder = "2017-07-17 10:30">
+								<input class="form-control" size="16" type="text" value="" id="startTrackInput">
+								<span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
 								<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
-				            </div>
+							</div>
 							<input type="hidden" id="dtp_input1" value="" />
-				        </div>
-				        <div class="form-group">
-				            <label for="endTrack" class="control-label">Bis</label>
-				            <div class="input-group date form_datetime" id="endTrack" placeholder = "2017-07-17 10:30">
-				                <input class="form-control" size="16" type="text" value="" id="endTrackInput">
-				                <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+						</div>
+						<div class="form-group">
+							<label for="endTrack" class="control-label">Bis</label>
+							<div class="input-group date form_datetime" id="endTrack" placeholder = "2017-07-17 10:30">
+								<input class="form-control" size="16" type="text" value="" id="endTrackInput">
+								<span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
 								<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
-				            </div>
+							</div>
 							<input type="hidden" id="dtp_input1" value="" />
-				        </div>
+						</div>
 					</form>
 				</div>
 			</div>
@@ -684,40 +682,40 @@
 				<li class="setMarkWhite" data-toggle="tooltip" data-placement="bottom" title="Messpunkt" role="button"><a data-toggle="tab"><i class="fa fa-flag-o"></i></a></li>
 				<li class="setComment" data-toggle="tooltip" data-placement="bottom" title="Kommentar" role="button"><a data-toggle="tab"><i class="fa fa-commenting-o"></i></a></li>
 				<li class="dropdown">
-				    <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-pencil"></i>
-				    <span class="caret"></span></a>
-				    <ul class="dropdown-menu">
-				      	<li class="setCirc" data-toggle="tooltip" data-placement="bottom" title="Kreis zeichnen" role="button"><a data-toggle="tab"><i class="fa fa-circle-thin"></i> Kreis</a></li>
+					<a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-pencil"></i>
+					<span class="caret"></span></a>
+					<ul class="dropdown-menu">
+						<li class="setCirc" data-toggle="tooltip" data-placement="bottom" title="Kreis zeichnen" role="button"><a data-toggle="tab"><i class="fa fa-circle-thin"></i> Kreis</a></li>
 						<li class="setPoly" data-toggle="tooltip" data-placement="bottom" title="Polygon zeichnen" role="button"><a data-toggle="tab"><i class="fa fa-bookmark-o"></i> Polygon</a></li>
 						<li class="setPath" data-toggle="tooltip" data-placement="bottom" title="Pfad zeichnen" role="button"><a data-toggle="tab"><i class="fa fa-pencil"></i> Pfad</a></li>
-				    </ul>
+					</ul>
 				</li>
 				<li class="deleteActiveObject" data-toggle="tooltip" data-placement="bottom" title="Objekt löschen" role="button"><a data-toggle="tab"><i class="fa fa-trash"></i></a></li>
 			</ul>
 		</span> <!-- Ende Werkzeuge -->
-	  	<button type="button" class="navbar-toggle" data-toggle="offcanvas" data-target="#myNavmenu" data-canvas="body">
-		    <span class="icon-bar"></span>
-		    <span class="icon-bar"></span>
-		    <span class="icon-bar"></span>
-	  	</button>
+		<button type="button" class="navbar-toggle" data-toggle="offcanvas" data-target="#myNavmenu" data-canvas="body">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		</button>
 	</div>
-	<div id="map"></div>
-	<textarea id="kmlString"></textarea>
+	<div id="map"></div>  <!-- gooogle-Karte -->
+	<textarea id="kmlString"></textarea>  <!-- unsichbares Textfeld  als Zwischenspeicher für kml-Export-->
 	<script src = "https://maps.googleapis.com/maps/api/js?libraries=geometry,drawing,places&callback=initMap" async defer></script> <!-- GooleAPI laden. Hier muss der API-Schlüssel eingetragen werden. -->
 	<script src = "js/bootstrap.min.js"></script> <!-- Bootstrap.js laden -->
-	<script src = "js/bootstrap-editable.min.js"></script>
-	<script src = "js/jasny-bootstrap.min.js"></script>
-	<script src = "js/html2canvas.min.js" defer></script>
+	<script src = "js/bootstrap-editable.min.js"></script>  <!-- Script mit Funktionen zur direkten Bearbeitung des Inhalts von DOM-Elementen  -->
+	<script src = "js/jasny-bootstrap.min.js"></script>  <!-- Script mit Funktionen für das off-canvas Menü  -->
+	<script src = "js/html2canvas.min.js" defer></script>  <!-- Script zum erzuegen eines Screenshots der google-Karte  -->
 	<script src = "js/usng.min.js" defer></script> <!-- Script für Umwandlung von Geokoordinaten in UTM-Ref Koordinaten -->
 	<script src = "js/MET.js" defer></script> <!-- Adresse des MET-Modells durch Eingabemaske oder manuelle Festlegung bestimmen -->
-	<script src = "js/datetimepicker.js"></script>
-	<script src = "js/datetimepicker.de.js" defer></script>
-	<script src = "js/datetimepickerOptions.js" defer></script>
-	<script src = "js/project.js" defer></script>
-	<script src = "js/helpers.js" defer></script>
-	<script src = "js/xmlwriter.js" defer></script>
-	<script src = "js/exportKml.js" defer></script>
-	<script src = "js/alertify.min.js" defer></script>
+	<script src = "js/datetimepicker.js"></script> <!-- Script zur Anzeige eines Datumsfeldes  -->
+	<script src = "js/datetimepicker.de.js" defer></script> <!--  Deutsche Übersetzung -->
+	<script src = "js/datetimepickerOptions.js" defer></script>  <!-- Script mit Optionen für die Anzeige des Datumsfeldes  -->
+	<script src = "js/project.js" defer></script> <!--  Script mit Funktionen zur Projektverwaltung-->
+	<script src = "js/helpers.js" defer></script> <!-- Script mit Hilfsfunktionen  -->
+	<script src = "js/xmlwriter.js" defer></script> <!-- Script zum erzeugen einer kml-Datei -->
+	<script src = "js/exportKml.js" defer></script> <!-- Script zum Export der Geometriedaten als kml-Datei -->
+	<script src = "js/alertify.min.js" defer></script> <!-- Script zur Anzeige von Popupbenachrichtigungen -->
 	<script src = "js/toastr.min.js" defer></script> <!-- Script zum dynamischen Anzeigen von Statusmeldungen -->
 	<script src = "js/geocoder.js" defer></script> <!-- Script zum dynamischen Anzeigen von Statusmeldungen -->
 </body>

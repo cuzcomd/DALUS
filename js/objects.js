@@ -87,27 +87,27 @@ function drawObjects(theArray){
 				        var adresse = result;   
 			        }
 			        var markerContent =
-			        `<div class="text-center "id="messpunktLabel"><b>${object.obj_label}</b> <i class="pull-right fa fa-pencil" style="color:#ccc;"></i></div><br>
+			         `<div class="text-center "id="messpunktLabel"><b>${object.obj_label}</b> <i class="pull-right fa fa-pencil" style="color:#ccc;"></i></div><br>
 			        <div class="header" style="display:inline-block">
-			        	<div class="col-xs-6">
-			        		<div class="col-xs-1 fa fa-home" aria-hidden="true"></div><div class="col-xs-10" >${adresse}</div><hr>
-			        		<div class="col-xs-1 fa fa-map-marker" aria-hidden="true"></div><div class="col-xs-10" >${object.obj_lat}, ${object.obj_lon}<br>
-			        		(${LLtoUSNG(object.obj_lat, object.obj_lon, 5)})</div>
-			       		</div>
 			        	<div class="col-xs-6"><label for="markerMesstrupp">Zugewiesener Messtrupp</label><select id="markerMesstrupp" onchange="setMesstrupp(${object.obj_nummer}, this.value)"></select><br><br>
 				        	<div class="btn-group" role="group" aria-label="Optionen">
 								<button type="button" class="btn btn-default btn-danger btnInfoWindow" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button>
 								<div class="btn-group"><button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Farbe <span class="caret"></span></button>
 									<ul class="dropdown-menu" role="menu">
-					      				<li onclick="changeColor(${activeObject.obj_nummer},1);"><a href="#"><img src="images/white.png"></a></li>
-					      				<li onclick="changeColor(${activeObject.obj_nummer},2);"><a href="#"><img src="images/green.png"></a></li>
-					      				<li onclick="changeColor(${activeObject.obj_nummer},3);"><a href="#"><img src="images/blue.png"></a></li>
-					      				<li onclick="changeColor(${activeObject.obj_nummer},4);"><a href="#"><img src="images/yellow.png"></a></li>
-					      				<li onclick="changeColor(${activeObject.obj_nummer},5);"><a href="#"><img src="images/red.png"></a></li>
+					      				<li onclick="changeColor(${activeObject.obj_nummer},1);"><a href="#"><img src="images/white.png"> Vorgeplanter Messpunkt</a></li>
+					      				<li onclick="changeColor(${activeObject.obj_nummer},2);"><a href="#"><img src="images/green.png"> Kein Geruch wahrnehmbar</a></li>
+					      				<li onclick="changeColor(${activeObject.obj_nummer},3);"><a href="#"><img src="images/blue.png"> Geruch wahrnehmbar</a></li>
+					      				<li onclick="changeColor(${activeObject.obj_nummer},4);"><a href="#"><img src="images/yellow.png"> Messung unterhalb des Beurteilungswertes</a></li>
+					      				<li onclick="changeColor(${activeObject.obj_nummer},5);"><a href="#"><img src="images/red.png"> Messung oberhalb des Beurteilungswertes</a></li>
 	   								</ul>
 	   							</div>
 	   						</div>
 				        </div>
+				        <div class="col-xs-6">
+			        		<div class="col-xs-1 fa fa-home" aria-hidden="true"></div><div class="col-xs-10" >${adresse}</div><hr>
+			        		<div class="col-xs-1 fa fa-map-marker" aria-hidden="true"></div><div class="col-xs-10" >${object.obj_lat}, ${object.obj_lon}<br>
+			        		(${LLtoUSNG(object.obj_lat, object.obj_lon, 5)})</div>
+			       		</div>
 			        </div><br>
 			        <hr> Geräte<br><form><div class="form-group"> <label for="messwert">Messwert [ppm]</label><input type="text" class="form-control" id="messwert" cols="50" value = "${object.obj_messwert}" onchange="updateMesswert(${object.obj_nummer}, this.value);"></div></form>
 			        <form><div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis(${object.obj_nummer},'marker', this.value);" rows="5">${object.obj_hinweis}</textarea></div></form>`;
@@ -148,25 +148,25 @@ function drawObjects(theArray){
 					var markerContent =
 			         `<div class="text-center "id="messpunktLabel"><b>${object.obj_label}</b> <i class="pull-right fa fa-pencil" style="color:#ccc;"></i></div><br>
 			        <div class="header" style="display:inline-block">
-			        	<div class="col-xs-6">
-			        		<div class="col-xs-1 fa fa-home" aria-hidden="true"></div><div class="col-xs-10" >${adresse}</div><hr>
-			        		<div class="col-xs-1 fa fa-map-marker" aria-hidden="true"></div><div class="col-xs-10" >${object.obj_lat}, ${object.obj_lon}<br>
-			        		(${LLtoUSNG(object.obj_lat, object.obj_lon, 5)})</div>
-			       		</div>
 			        	<div class="col-xs-6"><label for="markerMesstrupp">Zugewiesener Messtrupp</label><select id="markerMesstrupp" onchange="setMesstrupp(${object.obj_nummer}, this.value)"></select><br><br>
 				        	<div class="btn-group" role="group" aria-label="Optionen">
 								<button type="button" class="btn btn-default btn-danger btnInfoWindow" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button>
 								<div class="btn-group"><button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Farbe <span class="caret"></span></button>
 									<ul class="dropdown-menu" role="menu">
-					      				<li onclick="changeColor(${activeObject.obj_nummer},1);"><a href="#"><img src="images/white.png"></a></li>
-					      				<li onclick="changeColor(${activeObject.obj_nummer},2);"><a href="#"><img src="images/green.png"></a></li>
-					      				<li onclick="changeColor(${activeObject.obj_nummer},3);"><a href="#"><img src="images/blue.png"></a></li>
-					      				<li onclick="changeColor(${activeObject.obj_nummer},4);"><a href="#"><img src="images/yellow.png"></a></li>
-					      				<li onclick="changeColor(${activeObject.obj_nummer},5);"><a href="#"><img src="images/red.png"></a></li>
+					      				<li onclick="changeColor(${activeObject.obj_nummer},1);"><a href="#"><img src="images/white.png"> Vorgeplanter Messpunkt</a></li>
+					      				<li onclick="changeColor(${activeObject.obj_nummer},2);"><a href="#"><img src="images/green.png"> Kein Geruch wahrnehmbar</a></li>
+					      				<li onclick="changeColor(${activeObject.obj_nummer},3);"><a href="#"><img src="images/blue.png"> Geruch wahrnehmbar</a></li>
+					      				<li onclick="changeColor(${activeObject.obj_nummer},4);"><a href="#"><img src="images/yellow.png"> Messung unterhalb des Beurteilungswertes</a></li>
+					      				<li onclick="changeColor(${activeObject.obj_nummer},5);"><a href="#"><img src="images/red.png"> Messung oberhalb des Beurteilungswertes</a></li>
 	   								</ul>
 	   							</div>
 	   						</div>
 				        </div>
+				        <div class="col-xs-6">
+			        		<div class="col-xs-1 fa fa-home" aria-hidden="true"></div><div class="col-xs-10" >${adresse}</div><hr>
+			        		<div class="col-xs-1 fa fa-map-marker" aria-hidden="true"></div><div class="col-xs-10" >${object.obj_lat}, ${object.obj_lon}<br>
+			        		(${LLtoUSNG(object.obj_lat, object.obj_lon, 5)})</div>
+			       		</div>
 			        </div><br>
 			        <hr> Geräte<br><form><div class="form-group"> <label for="messwert">Messwert [ppm]</label><input type="text" class="form-control" id="messwert" cols="50" value = "${object.obj_messwert}" onchange="updateMesswert(${object.obj_nummer}, this.value);"></div></form>
 			        <form><div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis(${object.obj_nummer},'marker', this.value);" rows="5">${object.obj_hinweis}</textarea></div></form>`;
