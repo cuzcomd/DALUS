@@ -699,7 +699,7 @@
 			<span class="icon-bar"></span>
 		</button>
 	</div>
-	<div id="map"></div>  <!-- gooogle-Karte -->
+	<div id="map"></div>  <!-- Google-Karte -->
 	<textarea id="kmlString"></textarea>  <!-- unsichbares Textfeld  als Zwischenspeicher für kml-Export-->
 	<script src = "https://maps.googleapis.com/maps/api/js?libraries=geometry,drawing,places&callback=initMap" async defer></script> <!-- GooleAPI laden. Hier muss der API-Schlüssel eingetragen werden. -->
 	<script src = "js/bootstrap.min.js"></script> <!-- Bootstrap.js laden -->

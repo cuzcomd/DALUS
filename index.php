@@ -1,25 +1,25 @@
 <?php 
 session_start();
+session_regenerate_id();
 require('php/config.php');
 
-if(isset($_GET['login'])) {
-	$benutzername = filter_var($_POST['benutzername'], FILTER_SANITIZE_STRING);
-	$passwort = filter_var($_POST['passwort'], FILTER_SANITIZE_STRING);
+if(isset($_GET['login'])) { // Überprüft, ob das Loginformular abgeschickt wurde
+	$benutzername = filter_var($_POST['benutzername'], FILTER_SANITIZE_STRING); // Filtert den Benutzernamen von Schadcode
+	$passwort = filter_var($_POST['passwort'], FILTER_SANITIZE_STRING); // Filtert das Passwort von Schadcode
 
-	$stmt = $pdo->prepare("SELECT * FROM users WHERE benutzername = :benutzername");
+	$stmt = $pdo->prepare("SELECT * FROM users WHERE benutzername = :benutzername"); // Lädt die Daten des registrierten Benutzers
 	$stmt->bindParam(':benutzername', $benutzername, PDO::PARAM_STR);
 	$stmt->execute();
 	$user = $stmt->fetch();
 
 	//Überprüfung des Passworts
 	if ($user !== false && password_verify($passwort, $user['passwort'])) {
-		$_SESSION['userid'] = $user['id'];
-		$_SESSION['accessLevel'] = $user['level'];
+		$_SESSION['userid'] = $user['id']; // User ID
+		$_SESSION['accessLevel'] = $user['level']; //Zugriffslevel
 
-		$stmt2 = $pdo->prepare("UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = :id");
-		$stmt2->bindParam(':id', $user['id'], PDO::PARAM_INT);
-		$stmt2->execute();
-
+		$stmt = $pdo->prepare("UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = :id"); // Speichert Loginzeit in der Datenbank
+		$stmt->bindParam(':id', $_SESSION['userid'], PDO::PARAM_INT);
+		$stmt->execute();
 		header("Location: workbench"); /* Browser auf die Workbench umleiten */
 		exit();
 	} else {
