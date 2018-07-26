@@ -5,7 +5,8 @@
 <head>
 	<meta charset="UTF-8"/>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, shrink-to-fit=no">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="Webanwendung zur Ausbreitungsabschätzung von Schadstoffen in der Atmosphäre für Feuerwehren.">
 	<title>DALUS</title>
 	<link href="css/bootstrap.min.css" rel="stylesheet">
 	<link href="css/bootstrap-editable.css" rel="stylesheet"/>
@@ -25,14 +26,14 @@
 	<meta name="msapplication-config" content="/dalus/images/favicon/browserconfig.xml">
 	<meta name="theme-color" content="#ffffff">
 	<link rel="stylesheet" href="css/font-awesome.min.css">
-	<link type="text/css" rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/style.css">
 	<script src="js/jquery.min.js"></script>
 	<link rel="stylesheet" href="css/jquery.dataTables.min.css">
 	<link rel="stylesheet" href="css/datetimepicker.css">
-	<link rel="stylesheet" href="css/alertify/alertify.core.css" />
-	<link rel="stylesheet" href="css/alertify/alertify.bootstrap.css" />
-	<link rel="stylesheet" href="css/toastr.min.css" /> <!-- CSS für Script zum dynamischen Anzeigen von Statusmeldungen -->
-	<link href="css/dataTables.bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="css/alertify/alertify.core.css">
+	<link rel="stylesheet" href="css/alertify/alertify.bootstrap.css">
+	<link rel="stylesheet" href="css/toastr.min.css"> <!-- CSS für Script zum dynamischen Anzeigen von Statusmeldungen -->
+	<link rel="stylesheet" href="css/dataTables.bootstrap.min.css">
 	<script src="js/jquery.dataTables.min.js"></script>
 	<script src="js/dataTables.bootstrap.min.js"></script>
 	<script src="js/dataTables.cellEdit.js"></script>
@@ -55,6 +56,7 @@
 	metCounter = 1; // Initialisierung
 	activeObject = null; // Initialisierung
 	activeProjectName = "Unbekanntes Projekt";  //Initialisierung
+	ursprungKoordinaten = ""; //Initialisierung
 	loadUser(); // Daten des angemeldeten Benutzers laden
 	updateProjects(); //Verfügbare Projekte aktualisieren
 	updateSharedProjects(); //Verfügbare geteilte Projekte aktualisieren
@@ -62,13 +64,13 @@
 	updateAllUsers() //Aktulisiert alle verfügbaren Benutzer
 	objectArray = []; //Array für temporär erzeugte Objekte
 	deleteArray = []; // Array für temporär gelöschte Objekte
-	markerArray =[];
+	markerArray =[]; // Array für temporär erzeugte Marker
 	var selectedShape; //Initialisierung für aktuell markiertes Geometrieobjekt
 
 	function initMap() { // Erzeugung der Karte
 		loadOSMLayer(); // OSM Kartenbilder laden
 		infoWindow = new google.maps.InfoWindow({
-			maxWidth: 500
+			maxWidth: 350
 		}); //Globale Initialisierung des Infowindows
 		startDrawingManager(map); //Google DrawingManager laden
 		dataTables(); // Lädt die Optionen der datatables
@@ -82,9 +84,8 @@
 			loadFixpoints($(this));
 		});
 
-		document.getElementById('switchKompass').addEventListener('click', function() {// Kompass ein-/ausblenden
-			$("#switchKompass").find('i').toggleClass("fa-toggle-off fa-toggle-on");
-			$('#module2').toggle();
+		document.getElementById('switchMesskatasterMobile').addEventListener('click', function() {// Messkataster ein-/ausblenden
+			loadFixpoints($(this));
 		});
 
 		<?php
@@ -187,7 +188,7 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title text-center" id="myModalLabel"><img src="images/dalus_logo.svg" width="250px"></h4>
+					<h4 class="modal-title text-center"><img src="images/dalus_logo.svg" width="250px"></h4>
 				</div>
 				<div class="modal-body">
 					Das Projekt "Digitale Ausbreitungsabschätzung Luftgetragener Schadstoffe" (DALUS) dient zur Darstellung von Ausbreitungsabschätzungen luftgetragener Schadstoffemissionen und der Dokumentation von Messeinsätzen im Rahmen der operativen Gefahrenwehr.<br/><hr /><br/>
@@ -205,14 +206,14 @@
 						    GNU General Public License for more details.<br><br>
 
 						    You should have received a copy of the GNU General Public License
-						    along with this program.  If not, see <a href="https://www.gnu.org/licenses/" target="_blank">https://www.gnu.org/licenses/</a>.<br/><br/>
+						    along with this program.  If not, see <a href="https://www.gnu.org/licenses/" target="_blank" rel="noopener">https://www.gnu.org/licenses/</a>.<br/><br/>
 						</div>
 					</div>
 				</div>
 				<div class="modal-footer">
 					<div class="row">
-						<div class="col-xs-4 text-center"><a href="CHANGELOG.md" target="_blank">Version: 1.5.0</a></div>
-						<div class="col-xs-4"><a href="https://github.com/cuzcomd/DALUS" target="_blank"><i class="fa fa-github" aria-hidden="true"></i> GitHub Repository</a></div>
+						<div class="col-xs-4 text-center"><a href="CHANGELOG.md" target="_blank" rel="noopener">Version: 1.5.1</a></div>
+						<div class="col-xs-4"><a href="https://github.com/cuzcomd/DALUS" target="_blank" rel="noopener"><i class="fa fa-github" aria-hidden="true"></i> GitHub Repository</a></div>
 						<div class="col-xs-4"><a href="mailto:kontakt@cuzcomd.de">kontakt@cuzcomd.de</a></div>
 					</div>
 				</div>
@@ -225,226 +226,169 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title" id="myModalLabel">MET Ausbreitungsmodell</h4>
+					<h4 class="modal-title">MET Ausbreitungsmodell</h4>
 				</div>
-				<div class="modal-body">
-					<div id="METWrapper" class="row">
-						<div id="METPanel" class="col-xs-3">
-							<ul class="nav nav-pills nav-stacked">
-								<li class="active"><a data-toggle="pill" href="#metAuto">An Adresse zeichnen</a></li>
-								<li><a data-toggle="pill" href="#metMan">Manuell zeichnen</a></li>
-								<li><a data-toggle="pill" href="#metWinkel">Winkel bestimmen</a></li>
-							</ul>
-						</div> <!-- Ende adminPanel -->
-						<div id="adminContent" class="col-xs-6">
-							<div class="tab-content">
-								<div id="metAuto" class="tab-pane fade in active ">
-									<div id="geocoder">
-										<form id="input-form" class="form-horizontal" role="form">
-											<div class="form-group" data-toggle="tooltip" title="Freisetzungsort">
-												<label class="control-label col-xs-4" for="addresse">Scha&shy;dens&shy;ort</label>
-												<div class="col-xs-8">
-													<div class="input-group">
-														<span class="input-group-addon"><i class="fa fa-home"></i></span>
-														<input id="addresse" type="textbox" value="Alt Diesdorf 4, Magdeburg" class="form-control">
-													</div>
-												</div>
-											</div>
-					
-											<div class="form-group" data-toggle="tooltip" title="Ausbreitungswinkel">
-												<label class="control-label col-xs-4" for="winkelAuto">Aus&shy;brei&shy;tungs&shy;winkel</label>
-												<div class="col-xs-8">
-													<div class="input-group">
-														<span class="input-group-addon"><i class="fa fa-arrows-h"></i></span>
-														<select id="winkelAuto" name="winkel" class="form-control">
-															<option value="45" label="45&deg;">45&deg;</option>
-															<option value="60" label="60&deg;" selected>60&deg;</option>
-															<option value="90" label="90&deg;">90&deg;</option>
-															<option value="360" label="360&deg;">360&deg;</option>
-														</select>
-													</div>
-												</div>
-											</div>
-		
-											<div class="form-group" data-toggle="tooltip" title="Windrichtung">
-												<label class="control-label col-xs-4" for="windrichtung">Wind&shy;richtung</label>
-												<div class="col-xs-8">
-													<div class="input-group">
-														<span class="input-group-addon"><i class="fa fa-location-arrow"></i></span>
-														<input id="windrichtung" type="number" value="280" class="form-control" onchange="document.getElementById('arrow').style.transform = 'rotate('+(this.value-90)+'deg)';">
-														<span class="input-group-addon">&deg;</span>
-													</div>
-												</div>
-											</div>
-					
-											<div class="form-group" data-toggle="tooltip" title="Gefährdung für Personen im Gebäude">
-												<label class="control-label col-xs-4" for="distanz 1">Gefährdung für Personen im Gebäude</label>
-												<div class="col-xs-8">
-													<div class="input-group">
-														<span class="input-group-addon"><i class="fa fa-exclamation"></i> <i class="fa fa-home"></i></span>
-														<input id="distanz1" type="number" value="600" class="form-control">
-														<span class="input-group-addon">m</span>
-													</div>
-												</div>
-											</div>
-												
-											<div class="form-group" data-toggle="tooltip" title="Gefährdung für Personen im Freien">
-												<label class="control-label col-xs-4" for="distanz 1">Geährdung für Personen im Freien</label>
-												<div class="col-xs-8">
-													<div class="input-group">
-														<span class="input-group-addon"><i class="fa fa-exclamation"></i> <i class="fa fa-street-view"></i></span>
-														<input id="distanz2" type="number" value="1300"  class="form-control">
-														<span class="input-group-addon">m</span>
-													</div>
-												</div>
-											</div>
-										</form>
-										<br>
-										<div class="geocoderButtons">
-											<button type="button" class="btn btn-primary" id="calcMET" data-toggle="tooltip" title="MET-Freisetzungsort aus Adressfeld lesen" ><i class="fa fa-crosshairs"></i> Zeichnen</button>
-										</div>
-									</div> <!-- Ende Geocoder -->
-								</div> <!-- Ende metAuto -->
-
-								<div id="metMan" class="tab-pane fade ">
-									<div id="geocoder">
-										<form id="input-form" class="form-horizontal" role="form">
-											<div class="form-group" data-toggle="tooltip" title="Ausbreitungswinkel">
-												<label class="control-label col-xs-4" for="winkelMan">Aus&shy;brei&shy;tungs&shy;winkel</label>
-												<div class="col-xs-8">
-													<div class="input-group">
-														<span class="input-group-addon"><i class="fa fa-arrows-h"></i></span>
-														<select id="winkelMan" name="winkel" class="form-control">
-															<option value="45" label="45&deg;">45&deg;</option>
-															<option value="60" label="60&deg;" selected>60&deg;</option>
-															<option value="90" label="90&deg;">90&deg;</option>
-															<option value="360" label="360&deg;">360&deg;</option>
-														</select>
-													</div>
-												</div>
-											</div>
-					
-											<div class="form-group" data-toggle="tooltip" title="Windrichtung">
-												<label class="control-label col-xs-4" for="windrichtungMan">Wind&shy;richtung</label>
-												<div class="col-xs-8">
-													<div class="input-group">
-														<span class="input-group-addon"><i class="fa fa-location-arrow"></i></span>
-														<input id="windrichtungMan" type="number" value="280" class="form-control" onchange="document.getElementById('arrow').style.transform = 'rotate('+(this.value-90)+'deg)';">
-														<span class="input-group-addon">&deg;</span>
-													</div>
-												</div>
-											</div>
-					
-											<div class="form-group" data-toggle="tooltip" title="Gefährdung für Personen im Gebäude">
-												<label class="control-label col-xs-4" for="distanz1Man">Gefährdung für Personen im Gebäude</label>
-												<div class="col-xs-8">
-													<div class="input-group">
-														<span class="input-group-addon"><i class="fa fa-exclamation"></i> <i class="fa fa-home"></i></span>
-														<input id="distanz1Man" type="number" value="600" class="form-control">
-														<span class="input-group-addon">m</span>
-													</div>
-												</div>
-											</div>
-												
-											<div class="form-group" data-toggle="tooltip" title="Gefährdung für Personen im Freien">
-												<label class="control-label col-xs-4" for="distanz2Man">Geährdung für Personen im Freien</label>
-												<div class="col-xs-8">
-													<div class="input-group">
-														<span class="input-group-addon"><i class="fa fa-exclamation"></i> <i class="fa fa-street-view"></i></span>
-														<input id="distanz2Man" type="number" value="1300"  class="form-control">
-														<span class="input-group-addon">m</span>
-													</div>
-												</div>
-											</div>
-										</form>
-										<br>
-										<div class="geocoderButtons">
-											<button type="button" class="btn btn-primary" id="calcMETmanual" data-toggle="tooltip" title="MET Freisetzungsort manuell festlegen" ontouchstart="drawMetMarkerManual()" onclick="drawMetMarkerManual()"></i> Zeichnen</button>
-										</div>
-									</div> <!-- Ende Geocoder -->
-								</div> <!-- Ende metMan -->
-
-								<div id="metWinkel" class="tab-pane fade ">
-									<form id="form_winkelrechner" class="form-horizontal">
-										<div class="form-group">
-											<label for="nebel" class="col-xs-4 form-control-label">Nebel</label>
-											<div class="col-xs-8">
-												<select id="nebel" name="nebel" class="form-control" onchange="computeAngle();">
-													<option value="true" label="Ja">Ja</option>
-													<option value="false" label="Nein">Nein</option>
-												</select>
-											</div>
-										</div>
-		
-										<div class="form-group">	
-											<label for="windgeschwindigkeit" class="col-xs-4 form-control-label">Wind&shy;ge&shy;schwin&shy;dig&shy;keit</label>
-											<div class="col-xs-8">
-												<select id="windgeschwindigkeit" name="windgeschwindigkeit" class="form-control" onchange="computeAngle();">
-													<option value="high" label="gr&ouml;&szlig;er 5 m/s (18 km/h)">gr&ouml;&szlig;er 5 m/s (18 km/h)</option>
-													<option value="medium" label="zwischen 1 m/s (4 km/h) und 5 m/s (18 km/h)">zwischen 1 m/s (4 km/h) und 5 m/s (18 km/h)</option>
-													<option value="low" label="kleiner 1 m/s (4 km/h)">kleiner 1 m/s (4 km/h)</option>
-												</select>
-											</div>
-										</div>
-
-										<div class="form-group">	
-											<label for="himmel" class="col-xs-4 form-control-label">Bedeckter Himmel</label>
-											<div class="col-xs-8">
-												<select id="himmel" name="himmel" class="form-control" onchange="computeAngle();">
-													<option value="true" label="mehr als 50 %">mehr als 50 %</option>
-													<option value="false" label="weniger als 50 %">weniger als 50 %</option>
-												</select>
-											</div>
-										</div>
-		
-										<div class="form-group">
-											<label for="tageszeit" class="col-xs-4 form-control-label">Tageszeit</label>
-											<div class="col-xs-8">
-												<select id="tageszeit" name="tageszeit" class="form-control" onchange="computeAngle();">
-													<option value="day" label="Tag">Tag</option>
-													<option value="night" label="Nacht">Nacht</option>
-												</select>
-											</div>
-										</div>
-									
-										<div class="form-group">
-											<label for="monat" class="col-xs-4 form-control-label">Monat</label>
-											<div class="col-xs-8">
-												<select id="monat" name="monat" class="form-control" onchange="computeAngle();">
-													<option value="om" label="Oktober - M&auml;rz">Oktober - M&auml;rz</option>
-													<option value="as" label="April - September">April - September</option>
-												</select>
-											</div>
-										</div>
-		
-										<div class="form-group">
-											<label for="brand" class="col-xs-4 form-control-label">Brand</label>
-											<div class="col-xs-8">
-												<select id="brand" name="brand" class="form-control" onchange="computeAngle();">
-													<option value="true" label="Ja">Ja</option>
-													<option value="false" label="Nein">Nein</option>
-												</select>
-											</div>
-										</div>
-									</form>
-									<div class="alert alert-warning" role="alert">
-										<strong>Hinweis:</strong><br/>Der Winkel wird automatisch aktualisiert.
+				<div class="modal-body container">
+					<div id="geocoder row">
+						<form id="input-form-met" class="form-horizontal" role="form">
+							<div class="form-group" data-toggle="tooltip" title="Freisetzungsort">
+								<label class="control-label col-xs-12 col-sm-4" for="addresse">Scha&shy;dens&shy;ort</label>
+								<div class="col-xs-12 col-sm-5">
+									<div class="input-group">
+										<span class="input-group-addon"><i class="fa fa-home"></i></span>
+										<input id="addresse" type="textbox" value="Alt Diesdorf 4, Magdeburg" class="form-control">
 									</div>
-								</div><!-- Ende metWinkel -->
-							</div> <!-- Ende tab-content -->
-						</div> <!-- Ende adminContent -->
-					</div> <!-- Ende adminWrapper -->
+								</div>
+								<div class="col-xs-12 col-sm-3 geocoderButtons">
+									<button type="button" class="btn btn-default" id="geocode" data-toggle="tooltip" title="MET Freisetzungsort manuell festlegen" onclick="setCoord()"><i class="fa fa-crosshairs"></i> Wählen</button>
+								</div>
+							</div>
+	
+							<div class="form-group" data-toggle="tooltip" title="Ausbreitungswinkel">
+								<label class="control-label col-xs-12 col-sm-4" for="winkel">Aus&shy;brei&shy;tungs&shy;winkel</label>
+								<div class="col-xs-12 col-sm-5">
+									<div class="input-group">
+										<span class="input-group-addon"><i class="fa fa-arrows-h"></i></span>
+										<select id="winkel" name="winkel" class="form-control">
+											<option value="45" label="45&deg;">45&deg;</option>
+											<option value="60" label="60&deg;" selected>60&deg;</option>
+											<option value="90" label="90&deg;">90&deg;</option>
+											<option value="360" label="360&deg;">360&deg;</option>
+										</select>
+									</div>
+								</div>
+								<div class="col-xs-12 col-sm-3">
+									<button type="button" class="btn btn-default" id="setWinkel" data-toggle="tooltip" title="Ausbreitungswinkel bestimmen" onclick="$('#modal_winkel').modal('show');"><i class="fa fa-calculator"></i> Ermitteln</button>
+								</div>
+							</div>
+							<div class="form-group" data-toggle="tooltip" title="Windrichtung">
+								<label class="control-label col-xs-12 col-sm-4" for="windrichtung">Wind&shy;richtung</label>
+								<div class="col-xs-12 col-sm-5">
+									<div class="input-group">
+										<span class="input-group-addon"><i class="fa fa-location-arrow"></i></span>
+										<input id="windrichtung" type="number" value="280" class="form-control" onchange="document.getElementById('arrow').style.transform = 'rotate('+(this.value-90)+'deg)';">
+										<span class="input-group-addon">&deg;</span>
+									</div>
+								</div>
+							</div>
+	
+							<div class="form-group" data-toggle="tooltip" title="Gefährdung für Personen im Gebäude">
+								<label class="control-label col-xs-12 col-sm-4" for="distanz 1">Gefährdung für Personen im Gebäude</label>
+								<div class="col-xs-12 col-sm-5">
+									<div class="input-group">
+										<span class="input-group-addon"><i class="fa fa-exclamation"></i> <i class="fa fa-home"></i></span>
+										<input id="distanz1" type="number" value="600" class="form-control">
+										<span class="input-group-addon">m</span>
+									</div>
+								</div>
+							</div>
+								
+							<div class="form-group" data-toggle="tooltip" title="Gefährdung für Personen im Freien">
+								<label class="control-label col-xs-12 col-sm-4" for="distanz 1">Gefährdung für Personen im Freien</label>
+								<div class="col-xs-12 col-sm-5">
+									<div class="input-group">
+										<span class="input-group-addon"><i class="fa fa-exclamation"></i> <i class="fa fa-street-view"></i></span>
+										<input id="distanz2" type="number" value="1300"  class="form-control">
+										<span class="input-group-addon">m</span>
+									</div>
+								</div>
+							</div>
+						</form>
+						<br>
+						<div class="geocoderButtons text-center">
+							<button type="button" class="btn btn-primary" id="calcMET" data-toggle="tooltip" title="MET-Freisetzungsort aus Adressfeld lesen" ><i class="fa fa-pencil-square-o"></i> Zeichnen</button>
+						</div>
+					</div> <!-- Ende Geocoder -->
 				</div><!-- Ende modal-body -->
 			</div><!-- Ende modal-content -->
 		</div><!-- Ende modal-dialog -->
 	</div><!-- Ende modalMET -->
+<div class="modal fade" id="modal_winkel" tabindex="-1" role="dialog" aria-labelledby="Winkel bestimmen">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title text-center">Ausbreitungswinkel bestimmen</h4>
+				</div>
+				<div class="modal-body">
+					<form id="form_winkelrechner" class="form-horizontal">
+						<div class="form-group">
+							<label for="nebel" class="col-xs-4 form-control-label">Nebel</label>
+							<div class="col-xs-8">
+								<select id="nebel" name="nebel" class="form-control" onchange="computeAngle();">
+									<option value="true" label="Ja">Ja</option>
+									<option value="false" label="Nein">Nein</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="form-group">	
+							<label for="windgeschwindigkeit" class="col-xs-4 form-control-label">Wind&shy;ge&shy;schwin&shy;dig&shy;keit</label>
+							<div class="col-xs-8">
+								<select id="windgeschwindigkeit" name="windgeschwindigkeit" class="form-control" onchange="computeAngle();">
+									<option value="high" label="gr&ouml;&szlig;er 5 m/s (18 km/h)">gr&ouml;&szlig;er 5 m/s (18 km/h)</option>
+									<option value="medium" label="zwischen 1 m/s (4 km/h) und 5 m/s (18 km/h)">zwischen 1 m/s (4 km/h) und 5 m/s (18 km/h)</option>
+									<option value="low" label="kleiner 1 m/s (4 km/h)">kleiner 1 m/s (4 km/h)</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="form-group">	
+							<label for="himmel" class="col-xs-4 form-control-label">Bedeckter Himmel</label>
+							<div class="col-xs-8">
+								<select id="himmel" name="himmel" class="form-control" onchange="computeAngle();">
+									<option value="true" label="mehr als 50 %">mehr als 50 %</option>
+									<option value="false" label="weniger als 50 %">weniger als 50 %</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label for="tageszeit" class="col-xs-4 form-control-label">Tageszeit</label>
+							<div class="col-xs-8">
+								<select id="tageszeit" name="tageszeit" class="form-control" onchange="computeAngle();">
+									<option value="day" label="Tag">Tag</option>
+									<option value="night" label="Nacht">Nacht</option>
+								</select>
+							</div>
+						</div>
+					
+						<div class="form-group">
+							<label for="monat" class="col-xs-4 form-control-label">Monat</label>
+							<div class="col-xs-8">
+								<select id="monat" name="monat" class="form-control" onchange="computeAngle();">
+									<option value="om" label="Oktober - M&auml;rz">Oktober - M&auml;rz</option>
+									<option value="as" label="April - September">April - September</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label for="brand" class="col-xs-4 form-control-label">Brand</label>
+							<div class="col-xs-8">
+								<select id="brand" name="brand" class="form-control" onchange="computeAngle();">
+									<option value="true" label="Ja">Ja</option>
+									<option value="false" label="Nein">Nein</option>
+								</select>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<div class="text-center">
+						<button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Schließen">Übernehmen</button>
+					</div>
+				</div>
+			</div><!-- Ende modal-content -->
+		</div><!-- Ende modal-dialog -->
+	</div> <!-- Ende modal fade -->
 	
 	<div class="modal fade" id="modalOptions" tabindex="-1" role="dialog" aria-labelledby="Optionen">
 		<div class="modalOptions modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title" id="myModalLabel">Optionen </h4>
+					<h4 class="modal-title">Optionen </h4>
 				</div>
 				<div class="modal-body">
 					<div id="adminWrapper" class="row">
@@ -481,7 +425,7 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title" id="myModalLabel">Neues Projekt erstellen</h4>
+					<h4 class="modal-title">Neues Projekt erstellen</h4>
 				</div>
 				<div class="modal-body">
 					<form action='' method='POST' class='ajax_create_project' role='form'>
@@ -509,7 +453,7 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title" id="myModalLabel">Projekt öffnen</h4>
+					<h4 class="modal-title">Projekt öffnen</h4>
 				</div>
 				<div class="modal-body">
 					<h5>Meine Projekte </h5>
@@ -542,7 +486,7 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title" id="myModalLabel">Projekt ändern</h4>
+					<h4 class="modal-title">Projekt ändern</h4>
 				</div>
 				<div class="modal-body">
 					<form action='' method='POST' class='ajax_edit_project' role='form'>
@@ -577,8 +521,9 @@
 			<span id="activeProject">&nbsp; Kein Projekt geöffnet</span>
 		</div>
 		<div class="input-group searchbar">
+			<label for="pac-input" class="sr-only">Ort suchen</label>
 			<input id="pac-input" class="form-control" type="text" placeholder="Ort suchen ...">
-			<span id = "startSearch" class="input-group-addon" role="button"><i class="fa fa-search"></i></span>
+			<span id = "startSearch" class="input-group-addon" role="button" title="Suche starten" ><i class="fa fa-search"></i></span>
 		</div>
 		<div class="werkzeuge hidden-sm hidden-xs">
 			<ul class="nav nav-pills nav-werkzeuge">
@@ -586,7 +531,7 @@
 				<li class="setMarkWhite" data-toggle="tooltip" data-placement="bottom" title="Messpunkt" role="button"><a data-toggle="tab"><i class="fa fa-flag-o"></i></a></li>
 				<li class="setComment" data-toggle="tooltip" data-placement="bottom" title="Kommentar" role="button"><a data-toggle="tab"><i class="fa fa-commenting-o"></i></a></li>
 				<li class="dropdown">
-					<a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-pencil"></i>
+					<a class="dropdown-toggle" data-toggle="dropdown" href="#" title="WerkzeugeToggle"><i class="fa fa-pencil"></i>
 					<span class="caret"></span></a>
 					<ul class="dropdown-menu">
 						<li class="setCirc" data-toggle="tooltip" data-placement="bottom" title="Kreis zeichnen" role="button"><a data-toggle="tab"><i class="fa fa-circle-thin"></i> Kreis</a></li>
@@ -595,13 +540,14 @@
 					</ul>
 				</li>
 				<li class="deleteActiveObject" data-toggle="tooltip" data-placement="bottom" title="Objekt löschen" role="button"><a data-toggle="tab"><i class="fa fa-trash"></i></a></li>
+				<li id = "switchMesskataster" data-click-state="0" role="button"><a><i class="fa fa-thumb-tack icon-inactive" aria-hidden="true"></i></a></li>
 			</ul>
 		</div> <!-- Ende Werkzeuge -->
 		<ul class="nav navmenu-nav">
 			<li class="dropdown stay keep-open open" id ="project_options" role="presentation" data-toggle="tooltip" data-placement="bottom" title="Projekt">
-				<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bars" aria-hidden="true"></i> Projekt
+				<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" title="ProjektToggle"><i class="fa fa-bars" aria-hidden="true" id="ProjektToggle"></i> Projekt
 				<span class="caret"></span></a>
-				<ul class="dropdown-menu navmenu-nav" role="menu">
+				<ul class="dropdown-menu navmenu-nav">
 					<li id="newProject" role="button" onclick="toggleNav('#modal_new_project')" ><a><i class="fa fa-pencil-square-o"></i> Neues Projekt</a></li>
 					<li id="openProject" role="button" onclick="toggleNav('#modal_open_project')"><a><i class="fa fa-folder-open-o"></i> Projekt öffnen</a></li>
 					<li id="editProject" role="button" onclick="toggleNav('#modal_edit_project')" ><a><i class="fa fa-pencil-square-o"></i> Projekt ändern</a></li>
@@ -610,24 +556,23 @@
 					<li id="exportKML" onclick="toKML()" ><a id="download-link" href="data:;base64," download><i class="fa fa-floppy-o" aria-hidden="true"></i> kml-Datei exportieren</a></li>	
 				</ul>
 			</li>
-			<li class="dropdown stay keep-open" id ="parameter" role="presentation" data-toggle="tooltip" data-placement="bottom" title="Ansicht">
-				<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-eye-slash" aria-hidden="true"></i> Ansicht
-				<span class="caret"></span></a>
-				<ul class="dropdown-menu navmenu-nav" role="menu" >
-					<li id = "switchMesskataster" data-click-state="0" role="button"><a><i class="fa fa-toggle-off" aria-hidden="true"></i> Messkataster</a></li>
-					<li id = "switchKompass" data-click-state="0" role="button"><a><i class="fa fa-toggle-off" aria-hidden="true"></i> Kompass</a></li>
-					<?php
-						if ($accessLevel == 'admin') // GPS-Logging nur für Admins einblenden
+			<?php
+						if ($accessLevel == 'admin') // Extras nur für Admins einblenden
 						{
-							echo '<li id = "switchGPS" data-click-state="0" role="button"><a><i class="fa fa-toggle-off" aria-hidden="true"></i> GPS Tracking</a></li>';
-						}
-					?>
-				</ul>
-			</li>
-			<li class="dropdown stay keep-open" id ="modelle" role="presentation" data-toggle="tooltip" data-placement="bottom" title="Ausbreitungsmodelle">
-				<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-location-arrow" aria-hidden="true"></i> Ausbreitungsmodelle
+			echo '
+			<li class="dropdown stay keep-open" id ="parameter" role="presentation" data-toggle="tooltip" data-placement="bottom" title="Extras">
+				<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" title="ExtrasToggle"><i class="fa fa-eye-slash" aria-hidden="true"></i> Extras
 				<span class="caret"></span></a>
-				<ul class="dropdown-menu navmenu-nav" role="menu" >
+				<ul class="dropdown-menu navmenu-nav">
+					<li id = "switchGPS" data-click-state="0" role="button"><a><i class="fa fa-toggle-off" aria-hidden="true"></i> GPS Tracking</a></li>;
+				</ul>
+			</li>';
+			}
+			?>
+			<li class="dropdown stay keep-open open" id ="modelle" role="presentation" data-toggle="tooltip" data-placement="bottom" title="Ausbreitungsmodelle">
+				<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" title="ModelleToggle"><i class="fa fa-location-arrow" aria-hidden="true"></i> Ausbreitungsmodelle
+				<span class="caret"></span></a>
+				<ul class="dropdown-menu navmenu-nav">
 					<li id ="switch_winkel" role="button" onclick="toggleNav('#modalMET')"><a><i class="fa fa-location-arrow"></i> MET</a></li>
 				</ul>
 			</li>
@@ -660,13 +605,11 @@
 								<span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
 								<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
 							</div>
-							<input type="hidden" id="dtp_input1" value="" />
+							<input type="hidden" id="dtp_input2" value="" />
 						</div>
 					</form>
 				</div>
 			</div>
-			<div id = "module2" class="module windrose" ><img src="images/arrow.png" alt="Windrose" id="arrow"/></div>
-			<div id = "module3" class="module"></div>
 		</div>
 		<div class="nav sidebar-footer">
 			<a href='php/logout' data-toggle="tooltip" data-placement="bottom" title="Abmelden"><span class="fa fa-power-off" aria-hidden="true"></span></a>
@@ -682,7 +625,7 @@
 				<li class="setMarkWhite" data-toggle="tooltip" data-placement="bottom" title="Messpunkt" role="button"><a data-toggle="tab"><i class="fa fa-flag-o"></i></a></li>
 				<li class="setComment" data-toggle="tooltip" data-placement="bottom" title="Kommentar" role="button"><a data-toggle="tab"><i class="fa fa-commenting-o"></i></a></li>
 				<li class="dropdown">
-					<a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-pencil"></i>
+					<a class="dropdown-toggle" data-toggle="dropdown" href="# title="WerkzeugeMobilToggle"><i class="fa fa-pencil"></i>
 					<span class="caret"></span></a>
 					<ul class="dropdown-menu">
 						<li class="setCirc" data-toggle="tooltip" data-placement="bottom" title="Kreis zeichnen" role="button"><a data-toggle="tab"><i class="fa fa-circle-thin"></i> Kreis</a></li>
@@ -691,6 +634,7 @@
 					</ul>
 				</li>
 				<li class="deleteActiveObject" data-toggle="tooltip" data-placement="bottom" title="Objekt löschen" role="button"><a data-toggle="tab"><i class="fa fa-trash"></i></a></li>
+				<li id = "switchMesskatasterMobile" data-click-state="0" role="button"><a><i class="fa fa-toggle-off" aria-hidden="true"></i></a></li>
 			</ul>
 		</span> <!-- Ende Werkzeuge -->
 		<button type="button" class="navbar-toggle" data-toggle="offcanvas" data-target="#myNavmenu" data-canvas="body">
@@ -700,8 +644,9 @@
 		</button>
 	</div>
 	<div id="map"></div>  <!-- Google-Karte -->
+	<div id="modul-Kompass" class="modul-Kompass"><img src="images/arrow.png" alt="Windrose" id="arrow"/></div>
 	<textarea id="kmlString"></textarea>  <!-- unsichbares Textfeld  als Zwischenspeicher für kml-Export-->
-	<script src = "https://maps.googleapis.com/maps/api/js?libraries=geometry,drawing,places&callback=initMap" async defer></script> <!-- GooleAPI laden. Hier muss der API-Schlüssel eingetragen werden. -->
+	<script src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyDY_NrEuhiUpKDhL7TbzNd-Vmvl266lzaM&libraries=geometry,drawing,places&callback=initMap" async defer></script> <!-- GooleAPI laden. Hier muss der API-Schlüssel eingetragen werden. -->
 	<script src = "js/bootstrap.min.js"></script> <!-- Bootstrap.js laden -->
 	<script src = "js/bootstrap-editable.min.js"></script>  <!-- Script mit Funktionen zur direkten Bearbeitung des Inhalts von DOM-Elementen  -->
 	<script src = "js/jasny-bootstrap.min.js"></script>  <!-- Script mit Funktionen für das off-canvas Menü  -->
@@ -717,6 +662,6 @@
 	<script src = "js/exportKml.js" defer></script> <!-- Script zum Export der Geometriedaten als kml-Datei -->
 	<script src = "js/alertify.min.js" defer></script> <!-- Script zur Anzeige von Popupbenachrichtigungen -->
 	<script src = "js/toastr.min.js" defer></script> <!-- Script zum dynamischen Anzeigen von Statusmeldungen -->
-	<script src = "js/geocoder.js" defer></script> <!-- Script zum dynamischen Anzeigen von Statusmeldungen -->
+	<script src = "js/geocoder.js" defer></script> <!-- Geocoding von Messpunkten -->
 </body>
 </html>

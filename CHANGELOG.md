@@ -1,6 +1,16 @@
 ## Changelog
 
-### 1.5.0
+### 1.5.1 (26.07.2018)
+* Bug: Update der Screenshotfunktion auf neue Version
+* Bug: Wenn ein Messpunkt des Katasters ausgewählt war, kam es in manchen Fällen zu Fehlermeldungen
+* Style: Viele kleine Verbesserungen
+* Style: Codebereinigung und -optimierung
+* Style: Verschieben des Kompassmoduls in die Karte
+* Style: Entschlackung des MET-Fensters
+* Style: Openstreetmap Kart ist nicht länger als Standard ausgewählt (Geschwindigkeitsverbesserung)
+* Security: Erhöhung der Sicherheit bei Anmelden
+
+### 1.5.0 (12.09.2017)
 * Feature: Benutzer können jetzt Messtrupps erstellen und Ihnen Messpunkte zuweisen
 * Feature: Der Benutzerlevel "Editor" ist entfallen. Dafür können Nutzer jetzt individuelle Anpassungen am Messkataster und anderen Optionen vornehmen.
 * Style: Komplette Überarbeitung des Optionsmenüs

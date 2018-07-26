@@ -405,7 +405,7 @@ function drawObjects(theArray){
 } //Ende function drawObjects
 
 function clearSelectionLoad() {
-	if (activeObject && activeObject.obj_typ != "marker" && activeObject.obj_typ != "met" && activeObject.obj_typ != "comment"){ //Funktion nur ausführen, wenn ein Objekt ausgewählt ist und es kein Marker, MET-Objekt oder Kommentarfeld ist
+	if (activeObject && activeObject.obj_typ != "marker" && activeObject.obj_typ != "met" && activeObject.obj_typ != "comment"  && activeObject.typ != "katasterpunkt"){ //Funktion nur ausführen, wenn ein Objekt ausgewählt ist und es kein Marker, MET-Objekt oder Kommentarfeld ist
 		activeObject.setEditable(false);
 	}// Ende if(activeObject)
 	activeObject = null; //Aktives Objekt zurücksetzen

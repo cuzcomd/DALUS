@@ -68,7 +68,7 @@ function addRow(tableName, tableNameString){ //Fügt eine neue Zeile in das Mess
 
 function loadFixpoints(switchMesspunkte){ // Zeigt das Messkataster auf der Karte an
 	
-	switchMesspunkte.find('i').toggleClass("fa-toggle-off fa-toggle-on"); // Damit Menüpunkt farblich hinterlegt wird
+	switchMesspunkte.find('i').toggleClass("icon-inactive icon-active"); // Damit Menüpunkt farblich hinterlegt wird
 	if(switchMesspunkte.attr('data-click-state') == 1) { 
 		switchMesspunkte.attr('data-click-state', 0); // Wenn Schalter aktiviert ist, ihn wieder deaktivieren
 		markerArray.forEach(function (elem) {
@@ -84,12 +84,13 @@ function loadFixpoints(switchMesspunkte){ // Zeigt das Messkataster auf der Kart
 			var pos = value.Koordinaten.split(",");
 			var marker = new google.maps.Marker({
 			    position: new google.maps.LatLng(Number(pos[0]).toFixed(6),Number(pos[1]).toFixed(6)),
-			    icon: 'images/radioactive_flag.png',
+			    icon: 'images/thumbtack.png',
 			    nummer: value.Nummer,
 			    name: value.Bezeichnung,
 			    adresse: value.Adresse,
 			    odl: value.ODL,
-			    ips: value.IPS
+			    ips: value.IPS,
+			    typ: 'katasterpunkt'
 			});
 			
 			markerArray.push(marker);

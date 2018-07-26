@@ -6,7 +6,7 @@ function loadOSMLayer(){
 	mapTypeIds.push("OSM");
 	map = new google.maps.Map(document.getElementById('map'), {
 		zoom: 14,
-		mapTypeId: "OSM",
+		mapTypeId: "roadmap",
 		mapTypeControlOptions: {
 			mapTypeIds: mapTypeIds,
 			style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,

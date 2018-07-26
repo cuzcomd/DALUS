@@ -3,6 +3,7 @@ html, body {
 	width:100%;
 	margin: 0;
 	padding: 0;
+	font-size:16px;
 }
 
 a{
@@ -27,7 +28,7 @@ a{
 
 #arrow{
 	vertical-align:middle;
-	height:240px;
+	height:200px;
 } 
 
 #form_winkelrechner{
@@ -35,11 +36,10 @@ a{
 }
 
 #map {
-    height: 100%;
-	display:relative;
+    height: 100vh;
 }
 
-#messpunktdiv, #saveProject, #deleteProject, #editProject, #kmlString, #module1, #module2, #module3{
+#messpunktdiv, #saveProject, #deleteProject, #editProject, #kmlString, #module1{
 	display:none;
 }
 
@@ -56,23 +56,23 @@ a{
 }
 #pac-input::-webkit-input-placeholder
 {
-	color: #7D96AD ;
+	color: rgb(150,175,200) ;
 }
 ##pac-input::-ms-input-placeholder
 {
-	color: #7D96AD ;
+	color: rgb(150,175,200) ;
 }
 #pac-input:-ms-input-placeholder
 {
-	color: #7D96AD ;
+	color: rgb(150,175,200) ;
 }
 #pac-input::-moz-placeholder
 {
-	color: #7D96AD ;
+	color: rgb(150,175,200) ;
 }
 #pac-input::placeholder
 {
-	color: #7D96AD ;
+	color: rgb(150,175,200) ;
 }
 
 #pac-input:focus {
@@ -111,7 +111,7 @@ a{
 	background:#eee;
 }
 
-.fa-toggle-on{
+.icon-active{
 	color:rgb(39, 160, 79);
 }
 
@@ -243,6 +243,22 @@ a{
 	border-top:1px solid #eee;
 }
 
+.modul-Kompass{
+	position:absolute;
+	bottom:20px;
+	right:40px;
+	width:200px;
+	height:200px;
+	border-radius:100px;
+
+	background: url('../images/windrose.png') rgba(255,255,255, 0.5);
+	background-size:contain;
+	background-repeat: no-repeat;
+	background-position:center;
+	text-align:center;
+	line-height:100%;
+}
+
 .moduleWrapper{
  	display:flex;
  	flex-direction:column;
@@ -251,7 +267,7 @@ a{
  }
 
 .navmenu-nav a:hover{
-	color: #27a04f!important;
+	color: rgb(42, 191, 101)!important;
 }
 
 .navbar-default{
@@ -289,7 +305,7 @@ a{
 
 .projectInformation, .userInformation{
 	background: #273340;
-    color: #7d96ad;
+    color: rgb(150,175,200);
 	padding: 2.5px 15px;
 	display:block;
 	width:100%;
@@ -327,7 +343,7 @@ a{
 }
 
 .sidebar-footer a:hover {
-    color: #169e4d;
+    color: rgb(42, 191, 101);
 }
 
 .tab-content {
@@ -336,6 +352,7 @@ a{
 
 .werkzeuge{
 	padding: 5px 15px;
+	font-size:14px;
 }
 
 .werkzeuge a{
@@ -343,7 +360,7 @@ a{
 }
 
 .werkzeuge-top{
-	margin:5px 0 0 30px;
+	margin:5px 0 0 5px;
 	display:inline-block;
 }
 
@@ -351,38 +368,11 @@ a{
 	padding:10px 25px;
 }
 
-.windrose{
-	background: url('../images/windrose.png') rgba(51, 68, 85, 0.8);
-	background-size:contain;
-	background-repeat: no-repeat;
-	background-position:center;
-	width:100%;
-	text-align:center;
-	line-height:100%;
-}
-
 @media (max-device-width: 1024px){
-	#arrow{
-		width:100%;
-		height:100%;
-		min-width: 256px;
-		min-height: 256px;
-		max-width: 256px;
-		max-height: 256px;
-	}
-
 	.tab-content{
 		margin: 0 auto;
 		padding-bottom:10px;
 	}
- 	.windrose{
- 		padding:0;
-		width:100%;
-		min-width: 256px;
-    	min-height: 256px;
-    	max-width: 256px;
-    	max-height: 256px;
- 	}
 } 
 
 @media (max-width: 470px){
@@ -397,7 +387,7 @@ a{
 	}
 
 	.modalMET{
-	    width: 50vw;
+	    width: 95vw;
 	}
 
 	.navbar-toggle {

@@ -1,27 +1,11 @@
-function drawMetMarkerManual(){
+function setCoord(){
 	$('#modalMET').modal('hide');
-	drawingManager.setOptions({
-		drawingMode: google.maps.drawing.OverlayType.MARKER,
-		markerOptions: {icon: {url:'images/fake.png',anchor: new google.maps.Point(0,0)},
-		draggable:true
-	}});
-	marker_typ = 'metManual';
-}
-
-function generateMET(resultsMap, manualLat, manualLon) {
-		if (manualLat !== undefined && manualLon !== undefined) { //Überprüfen, ob MET-Freisetzungsort manuell festgelegt wurde
-			var latitude = manualLat;
-			var longitude = manualLon;
-			var winkel = parseInt(document.getElementById('winkelMan').value);
-			var richtung = parseInt(document.getElementById('windrichtungMan').value);
-			var innen = parseInt(document.getElementById('distanz1Man').value);
-			var aussen = parseInt(document.getElementById('distanz2Man').value);
-			var latlng = {lat: Number(latitude), lng: Number(longitude)};
-			new google.maps.Geocoder().geocode({'location': latlng}, function(results, status) {
+	var metManListener = google.maps.event.addListener(map, 'click', function(e) {
+		new google.maps.Geocoder().geocode({'location': e.latLng}, function(results, status) {
 				if (status === google.maps.GeocoderStatus.OK) {
-					resultsMap.setCenter(results[0].geometry.location);
 					var adresse = results[0].formatted_address;
-					drawPolygon(resultsMap, latitude, longitude, adresse, winkel, richtung, innen, aussen);
+					document.getElementById('addresse').value = adresse;
+					ursprungKoordinaten = e.latLng;
 				} 
 				else 
 				{
@@ -29,22 +13,35 @@ function generateMET(resultsMap, manualLat, manualLon) {
 					
 				}
 			}); //Ende reverse geocoder
-		} // Ende if(manualLat !== undefined)
-		else{ //Überprüfen, ob MET-Freisetzungsort im Eingabefeld festgelegt wurde
-			var adresse = document.getElementById('addresse').value;
-			new google.maps.Geocoder().geocode({'address': adresse}, function(results, status) {
-				if (status === google.maps.GeocoderStatus.OK) {
-					resultsMap.setCenter(results[0].geometry.location);
-					var latitude = resultsMap.getCenter().lat();
-					var longitude = resultsMap.getCenter().lng();
-					drawPolygon(resultsMap, latitude, longitude, adresse);
-				} 
-				else 
-				{
-					alert('Die Adresse konnte nicht ermittelt werden. Grund: ' + status);
-				}
-			}); //Ende geocoder
-		} //Ende if(manualLat !== undefined)
+		$('#modalMET').modal('show');
+		google.maps.event.removeListener(metManListener); //Entfernt den eventListener, damit die manuelle Auswahl nur einmal ausgeführt wird.
+});
+}
+
+function generateMET(resultsMap) {
+	var adresse = document.getElementById('addresse').value;
+	if(ursprungKoordinaten == '')
+	{
+		new google.maps.Geocoder().geocode({'address': adresse}, function(results, status) {
+			if (status === google.maps.GeocoderStatus.OK) {
+				resultsMap.setCenter(results[0].geometry.location);
+				var latitude = resultsMap.getCenter().lat();
+				var longitude = resultsMap.getCenter().lng();
+				drawPolygon(resultsMap, latitude, longitude, adresse);
+			} 
+			else 
+			{
+				alert('Die Adresse konnte nicht ermittelt werden. Grund: ' + status);
+			}
+		}); //Ende geocoder
+	}
+	else
+	{
+		var latitude = ursprungKoordinaten.lat();
+		var longitude = ursprungKoordinaten.lng();
+		ursprungKoordinaten = '';
+		drawPolygon(resultsMap, latitude, longitude, adresse);
+	}
 	}// Ende function generateMET()
 
 function drawPolygon(map, lat, lon, geoAdresse, winkel, richtung, innen, aussen, counter){
@@ -54,7 +51,7 @@ function drawPolygon(map, lat, lon, geoAdresse, winkel, richtung, innen, aussen,
 		var ausbreitungswinkel = winkel;
 	} 
 	else {
-		var ausbreitungswinkel = parseInt(document.getElementById('winkelAuto').value);
+		var ausbreitungswinkel = parseInt(document.getElementById('winkel').value);
 	}
 
 	if (richtung !== undefined) {
@@ -274,6 +271,5 @@ function computeAngle(){
 	else
 		met_winkel=60;
 	
-	document.getElementById("winkelAuto").value=met_winkel; // Berechneten Winkel in MET-Auswahlfeld eintragen	
-	document.getElementById("winkelMan").value=met_winkel; // Berechneten Winkel in MET-Auswahlfeld eintrage
+	document.getElementById("winkel").value=met_winkel; // Berechneten Winkel in MET-Auswahlfeld eintragen
 }

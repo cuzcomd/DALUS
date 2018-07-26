@@ -80,9 +80,9 @@
        <tbody>
        </tbody>
     </table>
-    <button id="addRow" role="button" class="btn btn-primary" onclick ="addRow(dataTable2,'dataTable2')"><i class="fa fa-plus-square"></i> Neuen Messpunkt hinzufügen</button>
-    <button id="loadTableAdmin" role="button" class="btn btn-primary" onclick="updateKataster(0, dataTable2)"><i class="fa fa-refresh"></i> Vorlage laden</button>
-    <button id="saveTableAdmin" role="button" class="btn btn-danger" onclick="saveKataster(0, '#katasterGlobal')"><i class="fa fa-floppy-o"></i> Vorlage überschreiben</button>
+    <button role="button" class="btn btn-primary" onclick ="addRow(dataTable2,'dataTable2')"><i class="fa fa-plus-square"></i> Neuen Messpunkt hinzufügen</button>
+    <button role="button" class="btn btn-primary" onclick="updateKataster(0, dataTable2)"><i class="fa fa-refresh"></i> Vorlage laden</button>
+    <button role="button" class="btn btn-danger" onclick="saveKataster(0, '#katasterGlobal')"><i class="fa fa-floppy-o"></i> Vorlage überschreiben</button>
 </div> <!-- Ende messkatasterGlobal -->
 
 <div id="truppsGlobal" class="tab-pane fade">
@@ -99,7 +99,7 @@
        <tbody>
        </tbody>
     </table>
-    <button id="addRow" role="button" class="btn btn-primary" onclick ="addRowMesstrupps(dataTable4,'dataTable4')"><i class="fa fa-plus-square"></i> Neuen Messtrupp hinzufügen</button>
-    <button id="loadTableAdmin" role="button" class="btn btn-primary" onclick="updateMesstrupps(0, dataTable4)"><i class="fa fa-refresh"></i> Vorlage laden</button>
-    <button id="saveTableAdmin" role="button" class="btn btn-danger" onclick="saveMesstrupps(0, '#messtruppsGlobal')"><i class="fa fa-floppy-o"></i> Vorlage überschreiben</button>
+    <button role="button" class="btn btn-primary" onclick ="addRowMesstrupps(dataTable4,'dataTable4')"><i class="fa fa-plus-square"></i> Neuen Messtrupp hinzufügen</button>
+    <button role="button" class="btn btn-primary" onclick="updateMesstrupps(0, dataTable4)"><i class="fa fa-refresh"></i> Vorlage laden</button>
+    <button role="button" class="btn btn-danger" onclick="saveMesstrupps(0, '#messtruppsGlobal')"><i class="fa fa-floppy-o"></i> Vorlage überschreiben</button>
 </div> <!-- Ende messkatasterGlobal -->
