@@ -646,7 +646,7 @@
 	<div id="map"></div>  <!-- Google-Karte -->
 	<div id="modul-Kompass" class="modul-Kompass"><img src="images/arrow.png" alt="Windrose" id="arrow"/></div>
 	<textarea id="kmlString"></textarea>  <!-- unsichbares Textfeld  als Zwischenspeicher für kml-Export-->
-	<script src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyDY_NrEuhiUpKDhL7TbzNd-Vmvl266lzaM&libraries=geometry,drawing,places&callback=initMap" async defer></script> <!-- GooleAPI laden. Hier muss der API-Schlüssel eingetragen werden. -->
+	<script src = "https://maps.googleapis.com/maps/api/js?libraries=geometry,drawing,places&callback=initMap" async defer></script> <!-- GooleAPI laden. Hier muss der API-Schlüssel eingetragen werden. -->
 	<script src = "js/bootstrap.min.js"></script> <!-- Bootstrap.js laden -->
 	<script src = "js/bootstrap-editable.min.js"></script>  <!-- Script mit Funktionen zur direkten Bearbeitung des Inhalts von DOM-Elementen  -->
 	<script src = "js/jasny-bootstrap.min.js"></script>  <!-- Script mit Funktionen für das off-canvas Menü  -->
