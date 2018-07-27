@@ -236,40 +236,60 @@ function computeAngle(){
 	var tageszeit = document.getElementById('tageszeit').value;
 	var monat = document.getElementById('monat').value;
 	var brand = document.getElementById('brand').value;
+	var met_classes = {
+		0:{"letter":"A","winkel":90},
+		1:{"letter":"B","winkel":90},
+		2:{"letter":"C","winkel":60},
+		3:{"letter":"D","winkel":60},
+		4:{"letter":"E","winkel":45},
+		5:{"letter":"F","winkel":45},
+		6:{"letter":"G","winkel":45},
+	};
+	var met_class = 0;
 	if(nebel=="true")
-		met_winkel=45;
+	{
+		if(brand=="true") met_class=4;
+		else met_class=5;
+	}
 	else if(wind == "high")
-		met_winkel=60;
+	{
+		if(brand=="true") met_class=2;
+		else met_class=2;
+	}
 	else if(himmel=="true")
-		met_winkel=60;
+	{
+		if(brand=="true") met_class=2;
+		else met_class=3;
+	}
 	else if(tageszeit=="night")
 	{
 		if(wind!="high")
 		{
-			if(brand=="true")
-				met_winkel=60;
-			else
-				met_winkel=45;
+			if(brand=="true") met_class=3;
+			else met_class=4;
 		}
 		else 
-			met_winkel=45;
+			if(brand=="true") met_class=4;
+			else met_class=5;
 	}
 	else if(wind=="low")
 	{
 		if(monat=="om")
 		{
-			if(brand=="true")
-				met_winkel=90;
-			else
-				met_winkel=60;
+			if(brand=="true") met_class=1;
+			else met_class=2;
 		}
 		else
-			met_winkel=90;
+			if(brand=="true") met_class=0;
+			else met_class=1;
 	}
-	else if(brand=="true")
-		met_winkel=90;
-	else
-		met_winkel=60;
+	else if(brand=="true") met_class=1;
+	else met_class=2;
+
+	if (document.getElementById("intens_brand_ja").checked) met_class -= 1;
+	if (met_class < 0) met_class = 0; //Es kann keine kleinere Klasse als A geben, auch wenn das MET-Modell diesen Fehler vorsieht
+	if (document.getElementById("tiefkalt_ja").checked) met_class += 1;
 	
-	document.getElementById("winkel").value=met_winkel; // Berechneten Winkel in MET-Auswahlfeld eintragen
+	document.getElementById("winkel").value=met_classes[met_class]["winkel"]; // Berechneten Winkel in MET-Auswahlfeld eintragen
+	$("#ausbreitungsklasse").html("Ausbreitungsklasse " +met_classes[met_class]["letter"]);
 }

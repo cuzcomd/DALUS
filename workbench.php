@@ -45,6 +45,8 @@
 	<script src="js/init.js"></script>
 
 	<script> // Initialfunktion
+	OWMAPIkey = "";
+	GoogleAPIkey = "";
 	benutzer = []; //Initialisierung
 	optionen = []; //Initialisierung
 	userAL = ""; //Initialisierung
@@ -57,6 +59,7 @@
 	activeObject = null; // Initialisierung
 	activeProjectName = "Unbekanntes Projekt";  //Initialisierung
 	ursprungKoordinaten = ""; //Initialisierung
+	loadOptions(); // Allgemeine Optionen der DALUS-Installation laden
 	loadUser(); // Daten des angemeldeten Benutzers laden
 	updateProjects(); //Verfügbare Projekte aktualisieren
 	updateSharedProjects(); //Verfügbare geteilte Projekte aktualisieren
@@ -66,7 +69,25 @@
 	deleteArray = []; // Array für temporär gelöschte Objekte
 	markerArray =[]; // Array für temporär erzeugte Marker
 	var selectedShape; //Initialisierung für aktuell markiertes Geometrieobjekt
-
+	
+	function loadOptions(){ //Aktualisiert die Punkte im Messkataster
+	var data = [];
+	data = $(this).serialize() + "&" + $.param(data);
+	$.ajax({
+		type: "POST",
+		dataType: "json",
+		url: "php/options.php",
+		data: {"action": "loadOptions"},
+		success: function(data) {
+			OWMAPIkey = data.opt_OWMAPI;
+			cityName = data.opt_city;
+		},
+		error: function(xhr, desc, err) {
+			console.log(xhr);
+			console.log("Details: " + desc + "\nError:" + err);
+		}
+	});//Ende Ajax
+}//Ende Funktion updateKataster
 	function initMap() { // Erzeugung der Karte
 		loadOSMLayer(); // OSM Kartenbilder laden
 		infoWindow = new google.maps.InfoWindow({
@@ -212,7 +233,7 @@
 				</div>
 				<div class="modal-footer">
 					<div class="row">
-						<div class="col-xs-4 text-center"><a href="CHANGELOG.md" target="_blank" rel="noopener">Version: 1.5.1</a></div>
+						<div class="col-xs-4 text-center"><a href="CHANGELOG.md" target="_blank" rel="noopener">Version: 1.5.2</a></div>
 						<div class="col-xs-4"><a href="https://github.com/cuzcomd/DALUS" target="_blank" rel="noopener"><i class="fa fa-github" aria-hidden="true"></i> GitHub Repository</a></div>
 						<div class="col-xs-4"><a href="mailto:kontakt@cuzcomd.de">kontakt@cuzcomd.de</a></div>
 					</div>
@@ -246,7 +267,7 @@
 	
 							<div class="form-group" data-toggle="tooltip" title="Ausbreitungswinkel">
 								<label class="control-label col-xs-12 col-sm-4" for="winkel">Aus&shy;brei&shy;tungs&shy;winkel</label>
-								<div class="col-xs-12 col-sm-5">
+								<div class="col-xs-9 col-sm-2">
 									<div class="input-group">
 										<span class="input-group-addon"><i class="fa fa-arrows-h"></i></span>
 										<select id="winkel" name="winkel" class="form-control">
@@ -257,6 +278,7 @@
 										</select>
 									</div>
 								</div>
+								<div id="ausbreitungsklasse" class="col-xs-3 col-sm-3"></div>
 								<div class="col-xs-12 col-sm-3">
 									<button type="button" class="btn btn-default" id="setWinkel" data-toggle="tooltip" title="Ausbreitungswinkel bestimmen" onclick="$('#modal_winkel').modal('show');"><i class="fa fa-calculator"></i> Ermitteln</button>
 								</div>
@@ -308,14 +330,14 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title text-center">Ausbreitungswinkel bestimmen</h4>
+					<h4 class="modal-title text-center">Ausbreitungsklasse bestimmen</h4>
 				</div>
 				<div class="modal-body">
 					<form id="form_winkelrechner" class="form-horizontal">
 						<div class="form-group">
 							<label for="nebel" class="col-xs-4 form-control-label">Nebel</label>
 							<div class="col-xs-8">
-								<select id="nebel" name="nebel" class="form-control" onchange="computeAngle();">
+								<select id="nebel" name="nebel" class="form-control">
 									<option value="true" label="Ja">Ja</option>
 									<option value="false" label="Nein">Nein</option>
 								</select>
@@ -325,7 +347,7 @@
 						<div class="form-group">	
 							<label for="windgeschwindigkeit" class="col-xs-4 form-control-label">Wind&shy;ge&shy;schwin&shy;dig&shy;keit</label>
 							<div class="col-xs-8">
-								<select id="windgeschwindigkeit" name="windgeschwindigkeit" class="form-control" onchange="computeAngle();">
+								<select id="windgeschwindigkeit" name="windgeschwindigkeit" class="form-control">
 									<option value="high" label="gr&ouml;&szlig;er 5 m/s (18 km/h)">gr&ouml;&szlig;er 5 m/s (18 km/h)</option>
 									<option value="medium" label="zwischen 1 m/s (4 km/h) und 5 m/s (18 km/h)">zwischen 1 m/s (4 km/h) und 5 m/s (18 km/h)</option>
 									<option value="low" label="kleiner 1 m/s (4 km/h)">kleiner 1 m/s (4 km/h)</option>
@@ -336,7 +358,7 @@
 						<div class="form-group">	
 							<label for="himmel" class="col-xs-4 form-control-label">Bedeckter Himmel</label>
 							<div class="col-xs-8">
-								<select id="himmel" name="himmel" class="form-control" onchange="computeAngle();">
+								<select id="himmel" name="himmel" class="form-control">
 									<option value="true" label="mehr als 50 %">mehr als 50 %</option>
 									<option value="false" label="weniger als 50 %">weniger als 50 %</option>
 								</select>
@@ -346,7 +368,7 @@
 						<div class="form-group">
 							<label for="tageszeit" class="col-xs-4 form-control-label">Tageszeit</label>
 							<div class="col-xs-8">
-								<select id="tageszeit" name="tageszeit" class="form-control" onchange="computeAngle();">
+								<select id="tageszeit" name="tageszeit" class="form-control">
 									<option value="day" label="Tag">Tag</option>
 									<option value="night" label="Nacht">Nacht</option>
 								</select>
@@ -356,7 +378,7 @@
 						<div class="form-group">
 							<label for="monat" class="col-xs-4 form-control-label">Monat</label>
 							<div class="col-xs-8">
-								<select id="monat" name="monat" class="form-control" onchange="computeAngle();">
+								<select id="monat" name="monat" class="form-control">
 									<option value="om" label="Oktober - M&auml;rz">Oktober - M&auml;rz</option>
 									<option value="as" label="April - September">April - September</option>
 								</select>
@@ -366,17 +388,32 @@
 						<div class="form-group">
 							<label for="brand" class="col-xs-4 form-control-label">Brand</label>
 							<div class="col-xs-8">
-								<select id="brand" name="brand" class="form-control" onchange="computeAngle();">
+								<select id="brand" name="brand" class="form-control">
 									<option value="true" label="Ja">Ja</option>
 									<option value="false" label="Nein">Nein</option>
 								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="intensiverbrand" class="col-xs-4 form-control-label">Intensiver Brand</label>
+							<div class="col-xs-8" id="intensiverbrand">
+								<label class="radio-inline"><input type="radio" id="intens_brand_ja" name="intens_brand" value="ja">Ja</label>
+								<label class="radio-inline"><input type="radio" id="intens_brand_nein" name="intens_brand" value="nein" checked>Nein</label>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="tiefkalt" class="col-xs-4 form-control-label">Tiefkaltes Gas</label>
+							<div class="col-xs-8" id ="tiefkalt">
+								<label class="radio-inline"><input type="radio" id="tiefkalt_ja" name="tiefkalt" value="ja">Ja</label>
+								<label class="radio-inline"><input type="radio" id="tiefkalt_nein" name="tiefkalt" value="nein" checked>Nein</label>
 							</div>
 						</div>
 					</form>
 				</div>
 				<div class="modal-footer">
 					<div class="text-center">
-						<button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Schließen">Übernehmen</button>
+						<button type="button" class="btn btn-default" onclick="getMETweather();">Wetterdaten laden</button>
+						<button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Schließen" onclick="computeAngle();">Übernehmen</button>
 					</div>
 				</div>
 			</div><!-- Ende modal-content -->
@@ -543,6 +580,15 @@
 				<li id = "switchMesskataster" data-click-state="0" role="button"><a><i class="fa fa-thumb-tack icon-inactive" aria-hidden="true"></i></a></li>
 			</ul>
 		</div> <!-- Ende Werkzeuge -->
+		<div class="weatherapp container-fluid">
+			<div class="weathercity"> Wetterdaten werden geladen ...</div>
+			<div class="row">
+				<div class="temp col-xs-3"></div>
+				<div class="wind-speed col-xs-3"></div>
+				<div class="wind-direction col-xs-3"></div>
+				<div class="clouds col-xs-3"></div>
+			</div>
+		</div> <!-- Ende Wetterinformationen -->
 		<ul class="nav navmenu-nav">
 			<li class="dropdown stay keep-open open" id ="project_options" role="presentation" data-toggle="tooltip" data-placement="bottom" title="Projekt">
 				<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" title="ProjektToggle"><i class="fa fa-bars" aria-hidden="true" id="ProjektToggle"></i> Projekt
@@ -557,17 +603,17 @@
 				</ul>
 			</li>
 			<?php
-						if ($accessLevel == 'admin') // Extras nur für Admins einblenden
-						{
-			echo '
-			<li class="dropdown stay keep-open" id ="parameter" role="presentation" data-toggle="tooltip" data-placement="bottom" title="Extras">
-				<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" title="ExtrasToggle"><i class="fa fa-eye-slash" aria-hidden="true"></i> Extras
-				<span class="caret"></span></a>
-				<ul class="dropdown-menu navmenu-nav">
-					<li id = "switchGPS" data-click-state="0" role="button"><a><i class="fa fa-toggle-off" aria-hidden="true"></i> GPS Tracking</a></li>;
-				</ul>
-			</li>';
-			}
+				if ($accessLevel == 'admin') // Extras nur für Admins einblenden
+				{
+					echo '
+					<li class="dropdown stay keep-open" id ="parameter" role="presentation" data-toggle="tooltip" data-placement="bottom" title="Extras">
+						<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" title="ExtrasToggle"><i class="fa fa-eye-slash" aria-hidden="true"></i> Extras
+						<span class="caret"></span></a>
+						<ul class="dropdown-menu navmenu-nav">
+							<li id = "switchGPS" data-click-state="0" role="button"><a><i class="fa fa-toggle-off" aria-hidden="true"></i> GPS Tracking</a></li>;
+						</ul>
+					</li>';
+				}
 			?>
 			<li class="dropdown stay keep-open open" id ="modelle" role="presentation" data-toggle="tooltip" data-placement="bottom" title="Ausbreitungsmodelle">
 				<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" title="ModelleToggle"><i class="fa fa-location-arrow" aria-hidden="true"></i> Ausbreitungsmodelle
@@ -582,7 +628,7 @@
 			<div id = "module1" class="module gpsLegende">
 				<h5><b>GPS Tracking</b></h5>
 				<div>
-					<form id="gpsLoadedCars" action="" class="form"  role="form">
+					<form id="gpsLoadedCars" action="" class="form" role="form">
 					<!-- Vom Benutzer gespeicherte Fahrzeuge -->
 					</form>
 				</div>
@@ -634,7 +680,7 @@
 					</ul>
 				</li>
 				<li class="deleteActiveObject" data-toggle="tooltip" data-placement="bottom" title="Objekt löschen" role="button"><a data-toggle="tab"><i class="fa fa-trash"></i></a></li>
-				<li id = "switchMesskatasterMobile" data-click-state="0" role="button"><a><i class="fa fa-toggle-off" aria-hidden="true"></i></a></li>
+				<li id = "switchMesskatasterMobile" data-click-state="0" role="button"><a><i class="fa fa-thumb-tack" aria-hidden="true"></i></a></li>
 			</ul>
 		</span> <!-- Ende Werkzeuge -->
 		<button type="button" class="navbar-toggle" data-toggle="offcanvas" data-target="#myNavmenu" data-canvas="body">
@@ -663,5 +709,6 @@
 	<script src = "js/alertify.min.js" defer></script> <!-- Script zur Anzeige von Popupbenachrichtigungen -->
 	<script src = "js/toastr.min.js" defer></script> <!-- Script zum dynamischen Anzeigen von Statusmeldungen -->
 	<script src = "js/geocoder.js" defer></script> <!-- Geocoding von Messpunkten -->
+	<script src = "js/openweathermap.js" defer></script> <!-- Geocoding von Messpunkten -->
 </body>
 </html>

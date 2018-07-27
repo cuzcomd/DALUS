@@ -3,6 +3,7 @@ if (is_ajax()) {
   if (isset($_POST["action"]) && !empty($_POST["action"])) { //Checks if action value exists
     $action = $_POST["action"];
     switch($action) { //Switch case for value of action
+		case "loadOptions": loadOptions(); break;
 		case "updateKataster": updateKataster(); break;
 		case "saveKataster": saveKataster(); break;
 		case "loadMesstrupps": loadMesstrupps(); break;
@@ -14,6 +15,18 @@ if (is_ajax()) {
 //Function to check if the request is an AJAX request
 function is_ajax() {
   return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
+}
+
+function loadOptions(){
+	require('session.php');
+	include("config.php");
+
+	$stmt = $pdo->prepare("SELECT opt_OWMAPI, opt_city FROM options WHERE opt_UID = 0");
+	$stmt->execute();
+
+	$optionen = $stmt->fetch(PDO::FETCH_OBJ);//Optionendes angemeldeten Benutzers abfragen
+
+	echo json_encode($optionen);
 }
 
 function updateKataster(){

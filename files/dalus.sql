@@ -41,6 +41,8 @@ CREATE TABLE `options` (
   `opt_UID` int(10) UNSIGNED NOT NULL,
   `opt_cars` longtext COLLATE latin1_german1_ci NOT NULL,
   `opt_kataster` longtext COLLATE latin1_german1_ci NOT NULL
+  `opt_OWMAPI` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `opt_city` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
 CREATE TABLE `projects` (

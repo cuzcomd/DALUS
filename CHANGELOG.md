@@ -1,5 +1,10 @@
 ## Changelog
 
+### 1.5.2 (27.07.2018)
+* Feature: Wetterdaten werden live eingelesen von Openweathermap.com
+* Feature: MET-Modell zeigt jett die AUsbreitungsklasse an und berücksichtigt intensiven Brand und tiefkalte Gase
+* Bug: Messkatastersymbol war im mobilen Menü noch falsch dargestellt
+
 ### 1.5.1 (26.07.2018)
 * Bug: Update der Screenshotfunktion auf neue Version
 * Bug: Wenn ein Messpunkt des Katasters ausgewählt war, kam es in manchen Fällen zu Fehlermeldungen

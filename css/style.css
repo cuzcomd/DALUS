@@ -31,6 +31,11 @@ a{
 	height:200px;
 } 
 
+#ausbreitungsklasse{
+	line-height:34px;
+	color:#666;
+}
+
 #form_winkelrechner{
 	padding-bottom:15px;
 }
@@ -223,14 +228,6 @@ a{
   background-color: #5bc0de;
 }
 
-.geocoderButtons{
-	padding-bottom:15px;
-}
-
-.geocoderButtons .btn{
-	margin-bottom:5px;
-}
-
 .input-group-addon:first-child, .input-group-addon:last-child{
 	min-width:50px;
 }
@@ -245,7 +242,7 @@ a{
 
 .modul-Kompass{
 	position:absolute;
-	bottom:20px;
+	bottom:40px;
 	right:40px;
 	width:200px;
 	height:200px;
@@ -324,7 +321,7 @@ a{
     display: block;
     margin: 5px 0 0;
     position: absolute;
-    width: 300px;
+    width: 100%;
     background: #172D44;
     color: #5A738E;
     z-index: 999;
@@ -348,6 +345,16 @@ a{
 
 .tab-content {
 	padding-top:10px;
+}
+
+.weatherapp{
+	color:#eee;
+	min-height:50px;
+	font-size:14px;
+}
+
+.weatherapp > div > div{
+	padding-right:0;
 }
 
 .werkzeuge{
