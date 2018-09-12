@@ -34,14 +34,14 @@ function updateKataster(){
 	require("session.php");
 	$UID = !empty($_POST['UID']) ? $_POST['UID']:'';
 
-	$stmt = $pdo->prepare("SELECT opt_kataster FROM options WHERE opt_UID = :UID");
-	$stmt->bindParam(':UID', $UID, PDO::PARAM_INT);
+	$stmt = $pdo->prepare("SELECT opt_kataster FROM options WHERE opt_UID = :UID AND opt_kataster > ''");
+	$stmt->bindParam(':UID', $UID, PDO::PARAM_STR);
 	$stmt->execute();
 	$messpunkte = $stmt->fetch();
 
 	if (!$messpunkte) // Überprüft, ob persönliche Messpunkte gespeichert sind und lädt anderenfalls die globalen Vorgaben
 	{
-		$stmt2 = $pdo->prepare("SELECT opt_kataster FROM options WHERE opt_UID = '0'");
+		$stmt2 = $pdo->prepare("SELECT opt_kataster FROM options WHERE opt_UID = '0' AND opt_cars > ''");
 		$stmt2->execute();
 		$messpunkte = $stmt2->fetch();
 	}
@@ -81,21 +81,21 @@ function loadMesstrupps(){ // Lädt die Messtrupps, die der angemeldete Benutzer
 	}
 	else
 	{
-		$stmt = $pdo->prepare("SELECT opt_cars FROM options WHERE opt_UID = :UID");
+		$stmt = $pdo->prepare("SELECT opt_cars FROM options WHERE opt_UID = :UID AND opt_cars > ''");
 		$stmt->bindParam(':UID', $UID, PDO::PARAM_STR);
 		$stmt->execute();
 		$messtrupps = $stmt->fetch();
 
 		if (!$messtrupps) // Überprüft, ob persönliche Messtrupps gespeichert sind und lädt anderenfalls die globalen Vorgaben
 		{
-			$stmt = $pdo->prepare("SELECT opt_cars FROM options WHERE opt_UID = '0'");
+			$stmt = $pdo->prepare("SELECT opt_cars FROM options WHERE opt_UID = '0' AND opt_cars > ''");
 			$stmt->execute();
 			$messtrupps = $stmt->fetch();
 		}
 
 		if (!$messtrupps) // Wenn globale Vorgaben nicht definiert sind, wird ein Standardwert angenommen
 		{
-			$messtrupps = array('opt_cars' => '[{"ID":"1","key":"unbek","name":"Florian Musterstadt 73","color":"#c93030"}]', "0" => '[{"ID":"1","key":"unbek","name":"Florian Musterstadt 73","color":"#c93030"}]');
+			$messtrupps = array('opt_cars' => '[{"ID":"0","key":"","name":"Keine Zuordnung","color":"#000000"}]', "0" => '[{"ID":"0","key":"","name":"Keine Zuordnung","color":"#000000"}]');
 		}
 	}
 

@@ -48,7 +48,7 @@ Das Messkataster listet vordefinierte Messpunkte auf, die Benutzer in der Karte 
        </tbody>
     </table>
     <button role="button" class="btn btn-primary" onclick ="addRow(dataTable,'dataTable')"><i class="fa fa-plus-square"></i> Neuen Messpunkt hinzufügen</button>
-    <button role="button" class="btn btn-primary" onclick="saveKataster(userID, '#kataster')"><i class="fa fa-floppy-o"></i> Speichern</button>
+    <button role="button" class="btn btn-success" onclick="saveKataster(userID, '#kataster')"><i class="fa fa-floppy-o"></i> Speichern</button>
     <button role="button" class="btn btn-danger" onclick="updateKataster(0, dataTable)"><i class="fa fa-refresh"></i> Globale Vorlage laden</button>
 </div> <!-- Ende editKataster -->
 
@@ -67,6 +67,6 @@ Das Messkataster listet vordefinierte Messpunkte auf, die Benutzer in der Karte 
        </tbody>
     </table>
     <button role="button" class="btn btn-primary" onclick ="addRowMesstrupps(dataTable3,'dataTable3')"><i class="fa fa-plus-square"></i> Neuen Messtrupp hinzufügen</button>
-    <button role="button" class="btn btn-primary" onclick="saveMesstrupps(userID, '#messtrupps')"><i class="fa fa-floppy-o"></i> Speichern</button>
+    <button role="button" class="btn btn-success" onclick="saveMesstrupps(userID, '#messtrupps')"><i class="fa fa-floppy-o"></i> Speichern</button>
     <button role="button" class="btn btn-danger" onclick="updateMesstrupps(0, dataTable3)"><i class="fa fa-refresh"></i> Globale Vorlage laden</button>
 </div> <!-- Ende editKataster -->

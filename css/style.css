@@ -242,8 +242,8 @@ a{
 
 .modul-Kompass{
 	position:absolute;
-	bottom:40px;
-	right:40px;
+	bottom:50px;
+	right:50px;
 	width:200px;
 	height:200px;
 	border-radius:100px;
@@ -343,6 +343,34 @@ a{
     color: rgb(42, 191, 101);
 }
 
+.symbol{
+	width:26px;
+	height:26px;
+	border: 1px solid #000;
+	border-radius:13px;
+	display:inline-block;
+	vertical-align: middle;
+}
+
+.symbol_white{
+	background:#fff;
+}
+
+.symbol_green{
+	background:#7BC790;
+}
+
+.symbol_blue{
+	background:#7DA2C9;
+}
+
+.symbol_yellow{
+	background:#F0F484;
+}
+
+.symbol_red{
+	background:#DE6868;
+}
 .tab-content {
 	padding-top:10px;
 }

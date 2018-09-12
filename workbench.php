@@ -33,6 +33,7 @@
 	<link rel="stylesheet" href="css/alertify/alertify.core.css">
 	<link rel="stylesheet" href="css/alertify/alertify.bootstrap.css">
 	<link rel="stylesheet" href="css/toastr.min.css"> <!-- CSS für Script zum dynamischen Anzeigen von Statusmeldungen -->
+	<link rel="stylesheet" href="css/bootstrap-colorpicker.min.css">
 	<link rel="stylesheet" href="css/dataTables.bootstrap.min.css">
 	<script src="js/jquery.dataTables.min.js"></script>
 	<script src="js/dataTables.bootstrap.min.js"></script>
@@ -43,6 +44,7 @@
 	<script src="js/messkataster.js"></script>
 	<script src="js/messtrupps.js"></script>
 	<script src="js/init.js"></script>
+	<<script src = "js/bootstrap-colorpicker.min.js"></script> <!-- Geocoding von Messpunkten -->
 
 	<script> // Initialfunktion
 	OWMAPIkey = "";
@@ -68,6 +70,7 @@
 	objectArray = []; //Array für temporär erzeugte Objekte
 	deleteArray = []; // Array für temporär gelöschte Objekte
 	markerArray =[]; // Array für temporär erzeugte Marker
+	messtruppArray = []; // Array für Messtrupps
 	var selectedShape; //Initialisierung für aktuell markiertes Geometrieobjekt
 	
 	function loadOptions(){ //Aktualisiert die Punkte im Messkataster
@@ -96,6 +99,7 @@
 		startDrawingManager(map); //Google DrawingManager laden
 		dataTables(); // Lädt die Optionen der datatables
 		updateKataster(userID, dataTable); // Lädt die Messpunkte
+		updateMesstrupps(userID, dataTable3); // Lädt die Messtrupps
 
 		document.getElementById('calcMET').addEventListener('click', function() { // Beim Klick auf "Zeichnen" MET-Modell erzeugen
 			generateMET(map);
@@ -233,7 +237,7 @@
 				</div>
 				<div class="modal-footer">
 					<div class="row">
-						<div class="col-xs-4 text-center"><a href="CHANGELOG.md" target="_blank" rel="noopener">Version: 1.5.2</a></div>
+						<div class="col-xs-4 text-center"><a href="CHANGELOG.md" target="_blank" rel="noopener">Version: 1.6.0</a></div>
 						<div class="col-xs-4"><a href="https://github.com/cuzcomd/DALUS" target="_blank" rel="noopener"><i class="fa fa-github" aria-hidden="true"></i> GitHub Repository</a></div>
 						<div class="col-xs-4"><a href="mailto:kontakt@cuzcomd.de">kontakt@cuzcomd.de</a></div>
 					</div>

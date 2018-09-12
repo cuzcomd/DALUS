@@ -20,40 +20,31 @@ function loadProjectObjects(){
 
 function drawObjects(theArray){
 	for (const value of theArray) {
-		switch(value.obj_farbe) {
-			case 'white':
-			var icon_type = 'images/white.png';
-			break;
-
-			case 'green':
-			var icon_type = 'images/green.png';
-			break;
-
-			case 'blue':
-			var icon_type = 'images/blue.png';
-			break;
-
-			case 'yellow':
-			var icon_type = 'images/yellow.png';
-			break;
-			
-			case 'red':
-			var icon_type = 'images/red.png';
-			break;
-
-			default:
-			var icon_type = 'images/white.png';
-		}
-
 		switch(value.obj_typ) {
 			case 'marker':
+			let indexMesstruppsArray = messtruppArray.findIndex(x => x.abkürzung == value.obj_messtrupp); // Daten des ausgewählten Messtrupps aus dem Array lesen
+			if(indexMesstruppsArray < 0) // Fallback, falls keine Farbe für einen nicht zugeordneten Messtrupp angegeben wurde
+			{
+				savedStrokeColor = marker_strokeColor; 
+				toastr.warning('Ein in diesem Projekt genutzter Messtrupp wurde aus der Datenbank gelöscht.');
+			}
+			else{
+				savedStrokeColor =  messtruppArray[indexMesstruppsArray].farbe
+			}
 			let geom_obj = new google.maps.Marker({
 			map:map,
 			position: {lat:Number(value.obj_lat), lng:Number(value.obj_lon)},
 			obj_lat: Number(value.obj_lat),
 			obj_lon: Number(value.obj_lon),
-			icon:{url:icon_type, anchor: new google.maps.Point(16,16), labelOrigin: new google.maps.Point(16,40)},
-			label: {text: value.obj_label.toString(), fontWeight: "700", color: "black"},
+			icon:{
+					path: google.maps.SymbolPath.CIRCLE,
+					scale: marker_scale,
+					fillColor: value.obj_farbe,
+					fillOpacity: marker_fillOpacity,
+					strokeColor: savedStrokeColor,
+					strokeWeight:marker_strokeWeight,
+					labelOrigin: marker_labelOrigin},
+			label: {text: value.obj_label.toString(), fontWeight: "700", color: "#000"},
 			obj_nummer: Number(value.obj_nummer),
 			obj_farbe: value.obj_farbe,
 			obj_messwert: Number(value.obj_messwert),
@@ -94,11 +85,11 @@ function drawObjects(theArray){
 								<button type="button" class="btn btn-default btn-danger btnInfoWindow" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button>
 								<div class="btn-group"><button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Farbe <span class="caret"></span></button>
 									<ul class="dropdown-menu" role="menu">
-					      				<li onclick="changeColor(${activeObject.obj_nummer},1);"><a href="#"><img src="images/white.png"> Vorgeplanter Messpunkt</a></li>
-					      				<li onclick="changeColor(${activeObject.obj_nummer},2);"><a href="#"><img src="images/green.png"> Kein Geruch wahrnehmbar</a></li>
-					      				<li onclick="changeColor(${activeObject.obj_nummer},3);"><a href="#"><img src="images/blue.png"> Geruch wahrnehmbar</a></li>
-					      				<li onclick="changeColor(${activeObject.obj_nummer},4);"><a href="#"><img src="images/yellow.png"> Messung unterhalb des Beurteilungswertes</a></li>
-					      				<li onclick="changeColor(${activeObject.obj_nummer},5);"><a href="#"><img src="images/red.png"> Messung oberhalb des Beurteilungswertes</a></li>
+					      				<li onclick="changeColor(${activeObject.obj_nummer},1);"><a href="#"><span class="symbol symbol_white"></span> Vorgeplanter Messpunkt</a></li>
+					      				<li onclick="changeColor(${activeObject.obj_nummer},2);"><a href="#"><span class="symbol symbol_green"></span> Kein Geruch wahrnehmbar</a></li>
+					      				<li onclick="changeColor(${activeObject.obj_nummer},3);"><a href="#"><span class="symbol symbol_blue"></span> Geruch wahrnehmbar</a></li>
+					      				<li onclick="changeColor(${activeObject.obj_nummer},4);"><a href="#"><span class="symbol symbol_yellow"></span> Messung unterhalb des Beurteilungswertes</a></li>
+					      				<li onclick="changeColor(${activeObject.obj_nummer},5);"><a href="#"><span class="symbol symbol_red"></span> Messung oberhalb des Beurteilungswertes</a></li>
 	   								</ul>
 	   							</div>
 	   						</div>
@@ -153,11 +144,11 @@ function drawObjects(theArray){
 								<button type="button" class="btn btn-default btn-danger btnInfoWindow" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button>
 								<div class="btn-group"><button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Farbe <span class="caret"></span></button>
 									<ul class="dropdown-menu" role="menu">
-					      				<li onclick="changeColor(${activeObject.obj_nummer},1);"><a href="#"><img src="images/white.png"> Vorgeplanter Messpunkt</a></li>
-					      				<li onclick="changeColor(${activeObject.obj_nummer},2);"><a href="#"><img src="images/green.png"> Kein Geruch wahrnehmbar</a></li>
-					      				<li onclick="changeColor(${activeObject.obj_nummer},3);"><a href="#"><img src="images/blue.png"> Geruch wahrnehmbar</a></li>
-					      				<li onclick="changeColor(${activeObject.obj_nummer},4);"><a href="#"><img src="images/yellow.png"> Messung unterhalb des Beurteilungswertes</a></li>
-					      				<li onclick="changeColor(${activeObject.obj_nummer},5);"><a href="#"><img src="images/red.png"> Messung oberhalb des Beurteilungswertes</a></li>
+					      				<li onclick="changeColor(${activeObject.obj_nummer},1);"><a href="#"><span class="symbol symbol_white"></span> Vorgeplanter Messpunkt</a></li>
+					      				<li onclick="changeColor(${activeObject.obj_nummer},2);"><a href="#"><span class="symbol symbol_green"></span> Kein Geruch wahrnehmbar</a></li>
+					      				<li onclick="changeColor(${activeObject.obj_nummer},3);"><a href="#"><span class="symbol symbol_blue"></span> Geruch wahrnehmbar</a></li>
+					      				<li onclick="changeColor(${activeObject.obj_nummer},4);"><a href="#"><span class="symbol symbol_yellow"></span> Messung unterhalb des Beurteilungswertes</a></li>
+					      				<li onclick="changeColor(${activeObject.obj_nummer},5);"><a href="#"><span class="symbol symbol_red"></span> Messung oberhalb des Beurteilungswertes</a></li>
 	   								</ul>
 	   							</div>
 	   						</div>
@@ -412,7 +403,7 @@ function clearSelectionLoad() {
 } //Ende der Funktion clearSelection()
 
 function deleteObject(){
-	if(activeObject){ //Führt den Löschvorgang nur aus, wenn ein Objekt ausgewählt wurde
+	if(activeObject && activeObject.typ != "katasterpunkt"){ //Führt den Löschvorgang nur aus, wenn ein Objekt ausgewählt wurde und es sich nicht um einen Punkkt des Messkatasters handelt.
 		var index = objectArray.findIndex(x => x.obj_nummer == activeObject.obj_nummer && x.obj_typ == activeObject.obj_typ);
 		objectArray.splice(index,1); // Löscht das Objekt aus dem Objekt-Array
 		let deleteObject = {nummer:activeObject.obj_nummer, typ:activeObject.obj_typ}; //Erzeugt das zu löschende Objekt
@@ -431,30 +422,67 @@ function deleteObject(){
 
 function changeColor(markerNummer, farbe){
 	var index = objectArray.findIndex(x => x.obj_nummer == activeObject.obj_nummer && x.obj_typ == activeObject.obj_typ);  //ermittelt Array-Index des aktuellen Markers
+	var oldSymbol = activeObject.getIcon();
 	switch(farbe){
 		case 1:
-		activeObject.setIcon({url:'images/white.png', anchor: new google.maps.Point(16,16), labelOrigin: new google.maps.Point(16,40)});
-		objectArray[index].obj_farbe = "white";
+
+		activeObject.setIcon({
+			path: oldSymbol.path,
+			scale: oldSymbol.scale,
+			fillColor: '#FFFFFF',
+			fillOpacity: oldSymbol.fillOpacity,
+			strokeColor: oldSymbol.strokeColor,
+			strokeWeight: oldSymbol.strokeWeight,
+			labelOrigin: oldSymbol.labelOrigin});
+		objectArray[index].obj_farbe = "#FFFFFF";
 		break;
 
 		case 2:
-		activeObject.setIcon({url:'images/green.png', anchor: new google.maps.Point(16,16), labelOrigin: new google.maps.Point(16,40)});
-		objectArray[index].obj_farbe = "green";
+		activeObject.setIcon({
+			path: oldSymbol.path,
+			scale: oldSymbol.scale,
+			fillColor: '#7BC790',
+			fillOpacity: oldSymbol.fillOpacity,
+			strokeColor: oldSymbol.strokeColor,
+			strokeWeight: oldSymbol.strokeWeight,
+			labelOrigin: oldSymbol.labelOrigin});
+		objectArray[index].obj_farbe = "#7BC790";
 		break;
 
 		case 3:
-		activeObject.setIcon({url:'images/blue.png', anchor: new google.maps.Point(16,16), labelOrigin: new google.maps.Point(16,40)});
-		objectArray[index].obj_farbe = "blue";
+		activeObject.setIcon({
+			path: oldSymbol.path,
+			scale: oldSymbol.scale,
+			fillColor: '#7DA2C9',
+			fillOpacity: oldSymbol.fillOpacity,
+			strokeColor: oldSymbol.strokeColor,
+			strokeWeight: oldSymbol.strokeWeight,
+			labelOrigin: oldSymbol.labelOrigin});
+		objectArray[index].obj_farbe = "#7DA2C9";
 		break;
 
 		case 4:
-		activeObject.setIcon({url:'images/yellow.png', anchor: new google.maps.Point(16,16), labelOrigin: new google.maps.Point(16,40)});
-		objectArray[index].obj_farbe = "yellow";
+		activeObject.setIcon({
+			path: oldSymbol.path,
+			scale: oldSymbol.scale,
+			fillColor: '#F0F484',
+			fillOpacity: oldSymbol.fillOpacity,
+			strokeColor: oldSymbol.strokeColor,
+			strokeWeight: oldSymbol.strokeWeight,
+			labelOrigin: oldSymbol.labelOrigin});
+		objectArray[index].obj_farbe = "#F0F484";
 		break;
 
 		case 5:
-		activeObject.setIcon({url:'images/red.png', anchor: new google.maps.Point(16,16), labelOrigin: new google.maps.Point(16,40)});
-		objectArray[index].obj_farbe = "red";
+		activeObject.setIcon({
+			path: oldSymbol.path,
+			scale: oldSymbol.scale,
+			fillColor: '#DE6868',
+			fillOpacity: oldSymbol.fillOpacity,
+			strokeColor: oldSymbol.strokeColor,
+			strokeWeight: oldSymbol.strokeWeight,
+			labelOrigin: oldSymbol.labelOrigin});
+		objectArray[index].obj_farbe = "#DE6868";
 		break;
 
 		default:

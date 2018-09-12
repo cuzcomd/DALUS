@@ -88,14 +88,14 @@ function updateMesstruppsMarker(){ //Aktualisiert die Punkte im Messkataster
 		success: function(data) {
 			var obj = JSON.parse(data['0']);
 			$.each(obj, function (key, value) {
-				if(value.Abkürzung != activeObject.obj_messtrupp) // Überprüft, ob der Messtrupp bereits ausgewählt wurde und setzt ihn dann als aktiv
+				if(activeObject != null && value.Abkürzung != activeObject.obj_messtrupp) // Überprüft, ob der Messtrupp bereits ausgewählt wurde und setzt ihn dann als aktiv
 				{
 				 	$('#markerMesstrupp') // Fügt eine neue Option hinzu
 				 	.append($('<option></option>') 
 				 	.attr('value', value.Abkürzung)
 				 	.text(value.Bezeichnung));
 				 }
-				 else if(value.Abkürzung == activeObject.obj_messtrupp)
+				 else if(activeObject != null && value.Abkürzung == activeObject.obj_messtrupp)
 				 {
 				 	$('#markerMesstrupp') // Fügt eine neue Option hinzu
 				 	.append($('<option selected selected="selected"></option>') 

@@ -45,7 +45,7 @@ function generateMET(resultsMap) {
 	}// Ende function generateMET()
 
 function drawPolygon(map, lat, lon, geoAdresse, winkel, richtung, innen, aussen, counter){
-	marker_color ="black";
+	marker_color ="#000000";
 	$('#modalMET').modal('hide');
 	if (winkel !== undefined) {
 		var ausbreitungswinkel = winkel;
@@ -185,13 +185,19 @@ function drawPolygon(map, lat, lon, geoAdresse, winkel, richtung, innen, aussen,
 	// Marker am Freisetzungsort erstellen 
 	var marker = new google.maps.Marker({
 		position: new google.maps.LatLng(lat, lon),
-		icon:{url:'images/black.png', anchor: new google.maps.Point(16,16)},
+		icon:{
+			path: google.maps.SymbolPath.CIRCLE,
+			scale: marker_scale,
+			fillColor: '#000000',
+			fillOpacity: 0.4,
+			strokeColor: '#B20000',
+			strokeWeight: marker_strokeWeight},
 		obj_lat: lat,
 		obj_lon: lon,
 		obj_parameter: metParameter,
 		obj_typ: 'met',
 		obj_nummer: metCounter,
-		obj_farbe: 'black',
+		obj_farbe: '#000000',
 		map: map,
 		title: 'Freisetzungsort',
 		draggable:false,

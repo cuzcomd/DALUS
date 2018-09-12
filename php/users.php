@@ -86,7 +86,14 @@ function editUser(){
  	if ($user !== false && password_verify($oldPassword, $user['passwort'])) {
 		if(!empty($_POST['password1']) && !empty($_POST['password2'])){
 			if( $password1 == $password2){
-				$newPassword =  password_hash($password1, PASSWORD_DEFAULT);
+				//prüfen, ob die PHP Version mindestens 7.2 ist und dann einen stärkeren Hashingalgorithmus verwenden
+				if (version_compare(PHP_VERSION, '7.2.0') >= 0) {
+					$newPassword =  password_hash($password1, PASSWORD_ARGON2I);
+				}
+				else {
+					$newPassword =  password_hash($password1, PASSWORD_BCRYPT);
+				}
+				
  				$stmt2 = $pdo->prepare("UPDATE users SET benutzername = :username , passwort = :newPassword WHERE id = :userID");
 				$stmt2->bindParam(':newPassword', $newPassword, PDO::PARAM_STR, 12);
 				$stmt2->bindParam(':username', $username, PDO::PARAM_STR, 12);
@@ -114,7 +121,14 @@ function createUser(){
 	$benutzername = (!empty($_POST['benutzername']) ? $_POST['benutzername']:'');
 	$vorname = (!empty($_POST['vorname']) ? $_POST['vorname']:'');
 	$nachname = (!empty($_POST['nachname']) ? $_POST['nachname']:'');
-	$passwort = password_hash((!empty($_POST['benutzername']) ? $_POST['benutzername']:''), PASSWORD_DEFAULT);
+	//prüfen, ob die PHP Version mindestens 7.2 ist und dann einen stärkeren Hashingalgorithmus verwenden
+	if (version_compare(PHP_VERSION, '7.2.0') >= 0) {
+		$passwort = password_hash((!empty($_POST['benutzername']) ? $_POST['benutzername']:''), PASSWORD_ARGON2I);
+	}
+	else {
+		$passwort = password_hash((!empty($_POST['benutzername']) ? $_POST['benutzername']:''), PASSWORD_BCRYPT);
+	}
+	
 	$level = (!empty($_POST['level']) ? $_POST['level']:'');
 	
 	if ($accessLevel == "admin")
