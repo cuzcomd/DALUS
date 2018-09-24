@@ -79,7 +79,6 @@ function deleteProject(){ //Löscht dads aktuell geöffnete Projekt
 	{
 		$stmt = $pdo->prepare("DELETE FROM projects WHERE prj_id = :project_id");
 		$stmt->bindParam(':project_id', $project_id, PDO::PARAM_INT);
-		$stmt->bindParam(':project_owner', $_SESSION['userid'], PDO::PARAM_INT);
 		$stmt->execute();
 		
 		$stmt2 = $pdo->prepare("DELETE FROM objects WHERE obj_prj_id = :project_id");
