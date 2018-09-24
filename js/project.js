@@ -82,24 +82,32 @@ function deleteProject(){ // Löscht das aktuelle Projekt, sowie alle dazugehör
 				url: "php/projects.php",
 				data: data,
 				success: function(data) {
-					$("#activeProject").html("&nbsp; Kein Projekt geöffnet");
-					$('#editProject').hide(); // Menüpunkt 'Projekt bearbeiten' anzeigen
-					$('#saveProject').hide(); // Menüpunkt 'Projekt speichern' anzeigen
-					$('#deleteProject').hide(); // Menüpunkt 'Projekt speichern' anzeigen
-					prj_id = 0;
-					clearMap();
-					loadProjectObjects();
-					updateProjects();
-					updateSharedProjects();
-					isSharedWith();
-					updateAllUsers()
+					if(data == "success")
+					{
+						$("#activeProject").html("&nbsp; Kein Projekt geöffnet");
+						$('#editProject').hide(); // Menüpunkt 'Projekt bearbeiten' anzeigen
+						$('#saveProject').hide(); // Menüpunkt 'Projekt speichern' anzeigen
+						$('#deleteProject').hide(); // Menüpunkt 'Projekt speichern' anzeigen
+						prj_id = 0;
+						clearMap();
+						loadProjectObjects();
+						updateProjects();
+						updateSharedProjects();
+						isSharedWith();
+						updateAllUsers()
+						toastr.error('Projekt gelöscht.');
+					}
+					else
+					{
+						toastr.error('Du kannst dieses Projekt nicht löschen. Wende dich an den Ersteller.');
+					}
 				},
 				error: function(xhr, desc, err) {
 					console.log(xhr);
 					console.log("Details: " + desc + "\nError:" + err);
 				}
 			}); //Ende ajax
-			toastr.error('Projekt gelöscht.');
+			
 			return false;
 		} // Ende if
 	}); // Ende alerify
@@ -123,7 +131,6 @@ $("document").ready(function(){
 				$("#activeProject").html("&nbsp; "+data["projekttitel"]);
 				$('.activeProjectName').attr("value",data["projekttitel"]);
 				$('.activeProjectID').val(data["projekt_id"]);
-				$('.activeUserID').val(userID);
 				prj_id = data["projekt_id"]; // In Datenbak erzeugte Projekt ID einlesen
 				$('#editProject').show(); // Menüpunkt 'Projekt bearbeiten' anzeigen
 				$('#saveProject').show(); // Menüpunkt 'Projekt speichern' anzeigen
@@ -156,14 +163,21 @@ $("document").ready(function(){
 			url: "php/projects.php",
 			data: data,
 			success: function(data) {
-				toastr.success('Projekt geändert.');
-				$("#activeProject").html("&nbsp; "+data["projekttitel"]);
-				$('.activeProjectName').attr("value",data["projekttitel"]);
-				$('#modal_edit_project').modal('hide');
-				updateProjects();
-				updateSharedProjects();
-				isSharedWith();
-				updateAllUsers()
+				if(data == "error")
+				{
+					toastr.error('Du kannst dieses Projekt nicht ändern. Bitte wende dich an den Ersteller.');
+				}
+				else
+				{
+					toastr.success('Projekt geändert.');
+					$("#activeProject").html("&nbsp; "+data["projekttitel"]);
+					$('.activeProjectName').attr("value",data["projekttitel"]);
+					$('#modal_edit_project').modal('hide');
+					updateProjects();
+					updateSharedProjects();
+					isSharedWith();
+					updateAllUsers()
+				}
 			},
 			error: function(xhr, desc, err) {
 				console.log(xhr);
@@ -184,24 +198,53 @@ $("document").ready(function(){
 			url: "php/projects.php",
 			data: data,
 			success: function(data) {
-				toastr.success('Projekt geladen.');
-				$("#activeProject").html("&nbsp; "+data["projektName"]); //Projekttitel anzeigen
-				prj_id = parseInt(data["projektID"]); // In Datenbak erzeugte Projekt ID einlesen
-				messpunktNummer = parseInt(data["maxNum"])+1;
-				$('#editProject').show(); // Menüpunkt 'Projekt bearbeiten' anzeigen
-				$('#saveProject').show(); // Menüpunkt 'Projekt speichern' anzeigen
-				$('#deleteProject').show(); // Menüpunkt 'Projekt speichern' anzeigen
-				$('#modal_open_project').modal('hide'); //Modal schließen
-				$('.activeProjectName').attr("value",data["projektName"]);
-				$('.activeProjectID').val(data["projektID"]);
-				$('.activeUserID').val(userID);
-				activeProjectName = data["projektName"];
-				clearMap();
-				loadProjectObjects(); //Objekte einlesen
-				updateProjects(); //Verfügbare Projekte aktualiseren
-				updateSharedProjects(); //Verfügbare mit dem Benutzer geteilte Projekte aktualiseren
-				isSharedWith(); //Aktualisieren, mit wem das geöffnete Projekt geteilt ist
-				updateAllUsers()
+				if(data == "error")
+				{
+					toastr.error('Du kannst dieses Projekt nicht laden.');
+				}
+				else
+				{ 
+					if (data['project_level'] == "own")
+					{
+						toastr.success('Projekt geladen.');
+						$("#activeProject").html("&nbsp; "+data["projektName"]); //Projekttitel anzeigen
+						prj_id = parseInt(data["projektID"]); // In Datenbak erzeugte Projekt ID einlesen
+						messpunktNummer = parseInt(data["maxNum"])+1;
+						$('#editProject').show(); // Menüpunkt 'Projekt bearbeiten' anzeigen
+						$('#saveProject').show(); // Menüpunkt 'Projekt speichern' anzeigen
+						$('#deleteProject').show(); // Menüpunkt 'Projekt löschen' anzeigen
+						$('#modal_open_project').modal('hide'); //Modal schließen
+						$('.activeProjectName').attr("value",data["projektName"]);
+						$('.activeProjectID').val(data["projektID"]);
+						activeProjectName = data["projektName"];
+						clearMap();
+						loadProjectObjects(); //Objekte einlesen
+						updateProjects(); //Verfügbare Projekte aktualiseren
+						updateSharedProjects(); //Verfügbare mit dem Benutzer geteilte Projekte aktualiseren
+						isSharedWith(); //Aktualisieren, mit wem das geöffnete Projekt geteilt ist
+						updateAllUsers()
+					}
+					else
+					{
+						toastr.success('Projekt geladen.');
+						$("#activeProject").html("&nbsp; "+data["projektName"]); //Projekttitel anzeigen
+						prj_id = parseInt(data["projektID"]); // In Datenbak erzeugte Projekt ID einlesen
+						messpunktNummer = parseInt(data["maxNum"])+1;
+						$('#editProject').hide(); // Menüpunkt 'Projekt bearbeiten' anzeigen
+						$('#saveProject').show(); // Menüpunkt 'Projekt speichern' anzeigen
+						$('#deleteProject').hide(); // Menüpunkt 'Projekt löschen' anzeigen
+						$('#modal_open_project').modal('hide'); //Modal schließen
+						$('.activeProjectName').attr("value",data["projektName"]);
+						$('.activeProjectID').val(data["projektID"]);
+						activeProjectName = data["projektName"];
+						clearMap();
+						loadProjectObjects(); //Objekte einlesen
+						updateProjects(); //Verfügbare Projekte aktualiseren
+						updateSharedProjects(); //Verfügbare mit dem Benutzer geteilte Projekte aktualiseren
+						isSharedWith(); //Aktualisieren, mit wem das geöffnete Projekt geteilt ist
+						updateAllUsers()
+					}
+				}
 			},
 			error: function(xhr, desc, err) {
 				console.log(xhr);

@@ -266,12 +266,12 @@ function startDrawingManager(map){
 				        var adresse = result;   
 			        }
 			        var markerContent =
-			        `<div class="text-center "id="messpunktLabel"><b>${object.obj_label}</b> <i class="pull-right fa fa-pencil" style="color:#ccc;"></i></div><br>
-			        <div class="header" style="display:inline-block">
-			        	<div class="col-xs-6"><label for="markerMesstrupp">Zugewiesener Messtrupp</label><select id="markerMesstrupp" onchange="setMesstrupp(${object.obj_nummer}, this.value)"></select><br><br>
+			        `<div class="text-center "id="messpunktLabel" style="width:80vw; max-width:450px"><b>${object.obj_label}</b> <i class="pull-right fa fa-pencil" style="color:#ccc;"></i></div><br>
+			        <div class="header" style="display:inline-block; width:80vw; max-width:450px">
+			        	<div class="col-xs-12 col-sm-6"><label for="markerMesstrupp">Zugewiesener Messtrupp</label><select id="markerMesstrupp" onchange="setMesstrupp(${object.obj_nummer}, this.value)"></select><br><br>
 				        	<div class="btn-group" role="group" aria-label="Optionen">
 								<button type="button" class="btn btn-default btn-danger btnInfoWindow" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button>
-								<div class="btn-group"><button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Farbe <span class="caret"></span></button>
+								<div class="btn-group"><button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><i class="fa fa-tint"></i> &nbsp; <span class="caret"></span></button>
 									<ul class="dropdown-menu" role="menu">
 					      				<li onclick="changeColor(${activeObject.obj_nummer},1);"><a href="#"><span class="symbol symbol_white"></span> Vorgeplanter Messpunkt</a></li>
 					      				<li onclick="changeColor(${activeObject.obj_nummer},2);"><a href="#"><span class="symbol symbol_green"></span> Kein Geruch wahrnehmbar</a></li>
@@ -282,7 +282,7 @@ function startDrawingManager(map){
 	   							</div>
 	   						</div>
 				        </div>
-				        <div class="col-xs-6">
+				        <div class="col-xs-12 col-sm-6">
 			        		<div class="col-xs-1 fa fa-home" aria-hidden="true"></div><div class="col-xs-10" >${adresse}</div><hr>
 			        		<div class="col-xs-1 fa fa-map-marker" aria-hidden="true"></div><div class="col-xs-10" >${object.obj_lat}, ${object.obj_lon}<br>
 			        		(${LLtoUSNG(object.obj_lat, object.obj_lon, 5)})</div>
@@ -325,12 +325,12 @@ function startDrawingManager(map){
 					}
 
 					var markerContent =
-			         `<div class="text-center "id="messpunktLabel"><b>${object.obj_label}</b> <i class="pull-right fa fa-pencil" style="color:#ccc;"></i></div><br>
-			        <div class="header" style="display:inline-block">
-			        	<div class="col-xs-6"><label for="markerMesstrupp">Zugewiesener Messtrupp</label><select id="markerMesstrupp" onchange="setMesstrupp(${object.obj_nummer}, this.value)"></select><br><br>
+			         `<div class="text-center "id="messpunktLabel" style="width:80vw; max-width:450px"><b>${object.obj_label}</b> <i class="pull-right fa fa-pencil" style="color:#ccc;"></i></div><br>
+			        <div class="header" style="display:inline-block; width:80vw; max-width:450px">
+			        	<div class="col-xs-12 col-sm-6"><label for="markerMesstrupp">Zugewiesener Messtrupp</label><select id="markerMesstrupp" onchange="setMesstrupp(${object.obj_nummer}, this.value)"></select><br><br>
 				        	<div class="btn-group" role="group" aria-label="Optionen">
 								<button type="button" class="btn btn-default btn-danger btnInfoWindow" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button>
-								<div class="btn-group"><button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Farbe <span class="caret"></span></button>
+								<div class="btn-group"><button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><i class="fa fa-tint"></i> &nbsp; <span class="caret"></span></button>
 									<ul class="dropdown-menu" role="menu">
 					      				<li onclick="changeColor(${activeObject.obj_nummer},1);"><a href="#"><span class="symbol symbol_white"></span> Vorgeplanter Messpunkt</a></li>
 					      				<li onclick="changeColor(${activeObject.obj_nummer},2);"><a href="#"><span class="symbol symbol_green"></span> Kein Geruch wahrnehmbar</a></li>
@@ -341,7 +341,7 @@ function startDrawingManager(map){
 	   							</div>
 	   						</div>
 				        </div>
-				        <div class="col-xs-6">
+				        <div class="col-xs-12 col-sm-6">
 			        		<div class="col-xs-1 fa fa-home" aria-hidden="true"></div><div class="col-xs-10" >${adresse}</div><hr>
 			        		<div class="col-xs-1 fa fa-map-marker" aria-hidden="true"></div><div class="col-xs-10" >${object.obj_lat}, ${object.obj_lon}<br>
 			        		(${LLtoUSNG(object.obj_lat, object.obj_lon, 5)})</div>

@@ -1,8 +1,21 @@
 ## Changelog
 
+### 1.6.1 (24.09.2018)
+* Feature: Kartenmittelpunkt wird zu Beginn auf den in den Optionen gewählten Ort gesetzt.
+* Security: Diverse Anpassungen an den Benutzerrechten
+* Deprecated: Password-Hashalgorithmus Argon2 wurde wieder entfernt, da PHP häufig ohne Unterstützung compiled wird
+* Style: Anpassung der infowindows an die tatsächliche Fensterbreite
+
+### 1.6.0 (12.09.2018)
+* Feature: Messpunkte werden jetzt anhand der zugewiesenen Fahrzeuge farblich hervorgehoben
+* Feature: Fahrzeugfarben lassen sich über eine Farbpalette wählen
+* Feature: Passworhashes mit Argon2-Algorithmus bei PHP > 7.0 möglich
+* Bug: Diverse Bugfixes, die zu fehlerhaftem Verhalten führten
+
+
 ### 1.5.2 (27.07.2018)
 * Feature: Wetterdaten werden live eingelesen von Openweathermap.com
-* Feature: MET-Modell zeigt jett die AUsbreitungsklasse an und berücksichtigt intensiven Brand und tiefkalte Gase
+* Feature: MET-Modell zeigt jetzt die Ausbreitungsklasse an und berücksichtigt intensiven Brand und tiefkalte Gase
 * Bug: Messkatastersymbol war im mobilen Menü noch falsch dargestellt
 
 ### 1.5.1 (26.07.2018)

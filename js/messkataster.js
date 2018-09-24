@@ -52,7 +52,23 @@ function saveKataster(UID, tableID){ //Speichert das Messkataster
 		url: "php/options.php",
 		data: {"action": "saveKataster", "data": data, "UID": UID} ,
 		success: function(data) {
-			toastr.success('Änderungen gespeichert.');
+			if (data == 'noAdmin')
+			{
+				toastr.error('Du verfügst nicht über die benötigten Rechte.');
+			}
+			else if (data == "successGlobal")
+			{
+				toastr.success('Globale Konfiguration überschrieben.');
+			}
+			else if (data == "successLocal")
+			{
+				toastr.success('Konfiguration überschrieben.');
+				updateKataster('', dataTable);
+			}
+			else
+			{
+				toastr.error('Es ist ein Fehler aufgetreten.');
+			}
 		},
 		error: function(xhr, desc, err) {
 			console.log(xhr);
@@ -68,48 +84,53 @@ function addRow(tableName, tableNameString){ //Fügt eine neue Zeile in das Mess
 
 function loadFixpoints(switchMesspunkte){ // Zeigt das Messkataster auf der Karte an
 	
-	switchMesspunkte.find('i').toggleClass("icon-inactive icon-active"); // Damit Menüpunkt farblich hinterlegt wird
-	if(switchMesspunkte.attr('data-click-state') == 1) { 
-		switchMesspunkte.attr('data-click-state', 0); // Wenn Schalter aktiviert ist, ihn wieder deaktivieren
-		markerArray.forEach(function (elem) {
-			elem.setMap(null);
-		}); // Alle Fixpunkte von der Karte löschen
-		markerArray =[];
-		infoWindow.close();
-	}
-	else {
-		switchMesspunkte.attr('data-click-state', 1); // Wenn Schalter deaktiviert ist, ihn wieder aktivieren
+	switchMesspunkte = [$("#switchMesskataster"), $("#switchMesskatasterMobile")];
 
-		$.each(katasterArray, function (key, value) { // Die Marker an den Messpunkten darstellen
-			var pos = value.Koordinaten.split(",");
-			var marker = new google.maps.Marker({
-			    position: new google.maps.LatLng(Number(pos[0]).toFixed(6),Number(pos[1]).toFixed(6)),
-			    icon: 'images/thumbtack.png',
-			    nummer: value.Nummer,
-			    name: value.Bezeichnung,
-			    adresse: value.Adresse,
-			    odl: value.ODL,
-			    ips: value.IPS,
-			    typ: 'katasterpunkt'
-			});
-			
-			markerArray.push(marker);
-			marker.setMap(map);
+	var j;
+	for (j = 0; j < switchMesspunkte.length; j++) {
+		switchMesspunkte[j].find('i').toggleClass("icon-inactive icon-active"); // Damit Menüpunkt farblich hinterlegt wird
+		if(switchMesspunkte[j].attr('data-click-state') == 1) { 
+			switchMesspunkte[j].attr('data-click-state', 0); // Wenn Schalter aktiviert ist, ihn wieder deaktivieren
+			markerArray.forEach(function (elem) {
+				elem.setMap(null);
+			}); // Alle Fixpunkte von der Karte löschen
+			markerArray =[];
+			infoWindow.close();
+		}
+		else {
+			switchMesspunkte[j].attr('data-click-state', 1); // Wenn Schalter deaktiviert ist, ihn wieder aktivieren
 
-			google.maps.event.addListener(marker,'click',function(){ // Öffnet Infowindow bei Klick auf Marker
-				activeObject = this;
+			$.each(katasterArray, function (key, value) { // Die Marker an den Messpunkten darstellen
+				var pos = value.Koordinaten.split(",");
+				var marker = new google.maps.Marker({
+				    position: new google.maps.LatLng(Number(pos[0]).toFixed(6),Number(pos[1]).toFixed(6)),
+				    icon: 'images/thumbtack.png',
+				    nummer: value.Nummer,
+				    name: value.Bezeichnung,
+				    adresse: value.Adresse,
+				    odl: value.ODL,
+				    ips: value.IPS,
+				    typ: 'katasterpunkt'
+				});
 				
-				infoWindow.setContent(
-					`<div>Messpunkt ${this.nummer} (${this.name})<hr><br/>
-					<div class="fa fa-home"></div> ${this.adresse}<br/><br/>
-					<div class="fa fa-map-marker"></div>${this.getPosition().lat().toFixed(6)}, ${this.getPosition().lng().toFixed(6)} (${LLtoUSNG(this.getPosition().lat(), this.getPosition().lng(), 5)})<br/><br/>
-					Ortsdosisleistung: ${this.odl} nSv/h <br/>
-					Nullrate: ${this.ips} Imp/s</div>`);
+				markerArray.push(marker);
+				marker.setMap(map);
 
-				infoWindow.setPosition(this.getPosition());
-			 	infoWindow.setOptions({pixelOffset: new google.maps.Size(0,-20)});
-			 	infoWindow.open(map);
-			}); // Ende des Eventlisteners
-		}); // Ende each-Loop
-	} //Ende else
+				google.maps.event.addListener(marker,'click',function(){ // Öffnet Infowindow bei Klick auf Marker
+					activeObject = this;
+					
+					infoWindow.setContent(
+						`<div>Messpunkt ${this.nummer} (${this.name})<hr><br/>
+						<div class="fa fa-home"></div> ${this.adresse}<br/><br/>
+						<div class="fa fa-map-marker"></div>${this.getPosition().lat().toFixed(6)}, ${this.getPosition().lng().toFixed(6)} (${LLtoUSNG(this.getPosition().lat(), this.getPosition().lng(), 5)})<br/><br/>
+						Ortsdosisleistung: ${this.odl} nSv/h <br/>
+						Nullrate: ${this.ips} Imp/s</div>`);
+
+					infoWindow.setPosition(this.getPosition());
+				 	infoWindow.setOptions({pixelOffset: new google.maps.Size(0,-20)});
+				 	infoWindow.open(map);
+				}); // Ende des Eventlisteners
+			}); // Ende each-Loop
+		} //Ende else
+	}
 }//Ende function loadFixpoint

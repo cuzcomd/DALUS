@@ -46,12 +46,10 @@ function saveMesstrupps(UID, tableID){ //Speichert die Messtrupps
         	if (headers[index] == "ID")
         	{
         		currentID =$(item).html(); 
-        		console.log(currentID);
         	}
         	if (headers[index] == "Farbe")
         	{
         		let val = $(".cp"+currentID).colorpicker('getValue');
-        		console.log(val);
         		arrayItem[headers[index]] = val;
         	}
         	else
@@ -62,15 +60,30 @@ function saveMesstrupps(UID, tableID){ //Speichert die Messtrupps
     	data.push(arrayItem);
 	});
 	data = JSON.stringify(data);
-		
 	$.ajax({
 		type: "POST",
 		dataType: "json",
 		url: "php/options.php",
-		data: {"action": "saveMesstrupps", "data": data, "UID": UID} ,
+		data: {"action": "saveMesstrupps", "data": data, "UID": UID},
 		success: function(data) {
-			toastr.success('Änderungen gespeichert.');
-			updateMesstruppsMarker() //Aktualisiert die Anzeige direkt nach einer Änderung
+			if (data == 'noAdmin')
+			{
+				toastr.error('Du verfügst nicht über die benötigten Rechte.');
+			}
+			else if (data == "successGlobal")
+			{
+				toastr.success('Globale Konfiguration überschrieben.');
+				updateMesstruppsMarker() //Aktualisiert die Anzeige direkt nach einer Änderung
+			}
+			else if (data == "successLocal")
+			{
+				toastr.success('Konfiguration überschrieben.');
+				updateMesstruppsMarker() //Aktualisiert die Anzeige direkt nach einer Änderung
+			}
+			else
+			{
+				toastr.error('Es ist ein Fehler aufgetreten.');
+			}
 		},
 		error: function(xhr, desc, err) {
 			console.log(xhr);

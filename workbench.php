@@ -44,15 +44,14 @@
 	<script src="js/messkataster.js"></script>
 	<script src="js/messtrupps.js"></script>
 	<script src="js/init.js"></script>
-	<<script src = "js/bootstrap-colorpicker.min.js"></script> <!-- Geocoding von Messpunkten -->
+	<script src = "js/bootstrap-colorpicker.min.js"></script> <!-- Geocoding von Messpunkten -->
 
 	<script> // Initialfunktion
 	OWMAPIkey = "";
 	GoogleAPIkey = "";
+	cityName = "";
 	benutzer = []; //Initialisierung
 	optionen = []; //Initialisierung
-	userAL = ""; //Initialisierung
-	userID = 0; //Initialisierung
 	prj_id = 0; //Initialisierung
 	maxRowID = 0; //Initialisierung
 	messpunktNummer = 1; //Initialisierung
@@ -61,7 +60,6 @@
 	activeObject = null; // Initialisierung
 	activeProjectName = "Unbekanntes Projekt";  //Initialisierung
 	ursprungKoordinaten = ""; //Initialisierung
-	loadOptions(); // Allgemeine Optionen der DALUS-Installation laden
 	loadUser(); // Daten des angemeldeten Benutzers laden
 	updateProjects(); //Verfügbare Projekte aktualisieren
 	updateSharedProjects(); //Verfügbare geteilte Projekte aktualisieren
@@ -73,33 +71,15 @@
 	messtruppArray = []; // Array für Messtrupps
 	var selectedShape; //Initialisierung für aktuell markiertes Geometrieobjekt
 	
-	function loadOptions(){ //Aktualisiert die Punkte im Messkataster
-	var data = [];
-	data = $(this).serialize() + "&" + $.param(data);
-	$.ajax({
-		type: "POST",
-		dataType: "json",
-		url: "php/options.php",
-		data: {"action": "loadOptions"},
-		success: function(data) {
-			OWMAPIkey = data.opt_OWMAPI;
-			cityName = data.opt_city;
-		},
-		error: function(xhr, desc, err) {
-			console.log(xhr);
-			console.log("Details: " + desc + "\nError:" + err);
-		}
-	});//Ende Ajax
-}//Ende Funktion updateKataster
 	function initMap() { // Erzeugung der Karte
 		loadOSMLayer(); // OSM Kartenbilder laden
 		infoWindow = new google.maps.InfoWindow({
-			maxWidth: 350
+			
 		}); //Globale Initialisierung des Infowindows
 		startDrawingManager(map); //Google DrawingManager laden
 		dataTables(); // Lädt die Optionen der datatables
-		updateKataster(userID, dataTable); // Lädt die Messpunkte
-		updateMesstrupps(userID, dataTable3); // Lädt die Messtrupps
+		updateKataster('',dataTable); // Lädt die Messpunkte
+		updateMesstrupps('',dataTable3); // Lädt die Messtrupps
 
 		document.getElementById('calcMET').addEventListener('click', function() { // Beim Klick auf "Zeichnen" MET-Modell erzeugen
 			generateMET(map);
@@ -237,7 +217,7 @@
 				</div>
 				<div class="modal-footer">
 					<div class="row">
-						<div class="col-xs-4 text-center"><a href="CHANGELOG.md" target="_blank" rel="noopener">Version: 1.6.0</a></div>
+						<div class="col-xs-4 text-center"><a href="CHANGELOG.md" target="_blank" rel="noopener">Version: 1.6.1</a></div>
 						<div class="col-xs-4"><a href="https://github.com/cuzcomd/DALUS" target="_blank" rel="noopener"><i class="fa fa-github" aria-hidden="true"></i> GitHub Repository</a></div>
 						<div class="col-xs-4"><a href="mailto:kontakt@cuzcomd.de">kontakt@cuzcomd.de</a></div>
 					</div>
@@ -470,7 +450,6 @@
 				</div>
 				<div class="modal-body">
 					<form action='' method='POST' class='ajax_create_project' role='form'>
-						<input type='hidden' name='username' class="activeUserID" value=''>
 						<div class="form-group">
 							<label for="projekt_titel_new" class="col-form-label">Projekttitel</label>
 							<input class="form-control" type="text" placeholder="Projekttitel" id="projekt_titel_new" name="projekttitel" required>
@@ -531,7 +510,6 @@
 				</div>
 				<div class="modal-body">
 					<form action='' method='POST' class='ajax_edit_project' role='form'>
-						<input type='hidden' class='activeUserID' name='current_user_id' value=''>
 						<input type='hidden' class='activeProjectID' name='current_project_id' value='0'>
 						<div class="form-group">
 							<label for="projekt_titel" class="col-form-label">Projekttitel</label>

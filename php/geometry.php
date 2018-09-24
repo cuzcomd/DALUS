@@ -26,9 +26,6 @@ include("config.php");
 	$stmt->bindParam(':obj_nummer', $obj_nummer, PDO::PARAM_INT);
 	$stmt->bindParam(':obj_typ', $obj_typ, PDO::PARAM_STR);
 	$stmt->execute();
-
-	$_POST["json"] = json_encode($_POST);
-	echo json_encode($_POST);
 }
 
 function saveGeometry(){
@@ -60,11 +57,7 @@ include("config.php");
 	$stmt->bindParam(':obj_parameter', $obj_parameter, PDO::PARAM_STR);
 	$stmt->bindParam(':obj_label', $obj_label, PDO::PARAM_STR);
 	$stmt->bindParam(':obj_messtrupp', $obj_messtrupp, PDO::PARAM_STR);
-	
 	$stmt->execute();
-
-	$_POST["json"] = json_encode($_POST);
-	echo json_encode($_POST);
 }
 
 function loadGeometry(){

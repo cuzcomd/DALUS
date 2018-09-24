@@ -1,4 +1,14 @@
 function loadOSMLayer(){
+	//Kartenmittelpunkt auf die Stadt legen, die in den Optionen angegeben wurde
+	new google.maps.Geocoder().geocode( { 'address': cityName}, function(results, status) {
+		if (status == 'OK') {
+			map.setCenter(results[0].geometry.location);
+		}
+		else {
+			alert('Geocode was not successful for the following reason: ' + status);
+		}
+	});
+
 	var mapTypeIds = [];
 	for(var type in google.maps.MapTypeId) {
 		mapTypeIds.push(google.maps.MapTypeId[type]);
@@ -11,8 +21,8 @@ function loadOSMLayer(){
 			mapTypeIds: mapTypeIds,
 			style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
 			position: google.maps.ControlPosition.BOTTOM_RIGHT
-		},
-		center: {lat: 52.13024, lng: 11.56567700000005} // Koordinaten des Kartenmittelpunkts
+		}//,
+		//center: {lat: 52.13024, lng: 11.56567700000005} // Koordinaten des Kartenmittelpunkts
 	});
 	
 	OSM ='OSM'; //Variable OpenStreetMap definieren

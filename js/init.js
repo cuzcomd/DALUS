@@ -84,7 +84,7 @@ function updateMesstruppsMarker(){ //Aktualisiert die Punkte im Messkataster
 		type: "POST",
 		dataType: "json",
 		url: "php/options.php",
-		data: {"action": "loadMesstrupps", "UID": userID},
+		data: {"action": "loadMesstrupps", "UID": ''},
 		success: function(data) {
 			var obj = JSON.parse(data['0']);
 			$.each(obj, function (key, value) {

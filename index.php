@@ -5,9 +5,9 @@ require('php/config.php');
 
 if(isset($_GET['login'])) { // Überprüft, ob das Loginformular abgeschickt wurde
 	$benutzername = filter_var($_POST['benutzername'], FILTER_SANITIZE_STRING); // Filtert den Benutzernamen von Schadcode
-	$passwort = filter_var($_POST['passwort'], FILTER_SANITIZE_STRING); // Filtert das Passwort von Schadcode
+	$passwort = $_POST['passwort'];
 
-	$stmt = $pdo->prepare("SELECT * FROM users WHERE benutzername = :benutzername"); // Lädt die Daten des registrierten Benutzers
+	$stmt = $pdo->prepare("SELECT id, level, passwort FROM users WHERE benutzername = :benutzername"); // Lädt die Daten des registrierten Benutzers
 	$stmt->bindParam(':benutzername', $benutzername, PDO::PARAM_STR);
 	$stmt->execute();
 	$user = $stmt->fetch();

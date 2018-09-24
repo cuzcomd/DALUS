@@ -10,10 +10,10 @@ function loadUser(){ // Lädt die Daten des angemeldeten Benutzers
 			benutzer = data["benutzer"];
 			optionen = data["optionen"];
 			$("#activeUser").html('&nbsp; '+benutzer.vorname +' '+ benutzer.nachname+'&nbsp;'); //Zeigt den Namen im Optionsmenü an
-			$(".activeUserID").val(benutzer.id); //Setzt die ID des Benutzers als Feldwert
 			$("#username").val(benutzer.benutzername);
-			userID = benutzer.id; //Speichert die Benutzer-ID in einer globalen Variablen
-			userAL = data["accessLevel"]; //Speichert die Zugriffsberechtigung des Benutzers in einer globalen Variablen
+			OWMAPIkey = data["owmapi"].opt_OWMAPI;
+			cityName = optionen.opt_city;
+			$("#owmcity").val(cityName);
 		},
 		error: function(xhr, desc, err) {
 			console.log(xhr);
@@ -34,18 +34,17 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 		success: function(data) {
 			$('.listOfAllUsers').children('option').remove();
 			$('.listOfAllUsersExceptMe').children('option').remove();
-			$.each(data, function (key, value) {
+			$.each(data['benutzer'], function (key, value) {
 				$('.listOfAllUsers')// Fügt eine neue Option hinzu
 				.append($('<option></option>') 
 			 	.attr('value', value.id)
 			 	.text(value.vorname+' '+value.nachname+' ('+value.benutzername+')'));
-
-			 	if (value.id != userID){
-			 		$('.listOfAllUsersExceptMe')// Fügt eine neue Option hinzu
-					.append($('<option></option>') 
-			 		.attr('value', value.id)
-			 		.text(value.benutzername));
-			 	}
+			 });
+			$.each(data['benutzerom'], function (key, value) {
+		 		$('.listOfAllUsersExceptMe')// Fügt eine neue Option hinzu
+				.append($('<option></option>') 
+		 		.attr('value', value.id)
+		 		.text(value.benutzername));
 			});
 		},
 		error: function(xhr, desc, err) {
@@ -75,12 +74,6 @@ $("document").ready(function(){
 						updateSharedProjects(); //Verfügbare mit dem Benutzer geteilte Projekte aktualiseren
 						isSharedWith(); //Aktualisieren, mit wem das geöffnete Projekt geteilt ist
 						updateAllUsers()
-						break;
-					case 'PasswordsDontMatch':
-						toastr.warning('Die Passwörter stimmen nicht überein.');
-						break;
-					case 'WrongPassword':
-						toastr.warning('Das aktuelle Passwort ist nicht korrekt.');
 						break;
 					default:
 					toastr.warning('Fehler aufgetreten.');
