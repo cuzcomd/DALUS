@@ -1,6 +1,73 @@
 ## Changelog
 
+### 1.6.1 (24.09.2018)
+* Feature: Kartenmittelpunkt wird zu Beginn auf den in den Optionen gewählten Ort gesetzt.
+* Security: Diverse Anpassungen an den Benutzerrechten
+* Deprecated: Password-Hashalgorithmus Argon2 wurde wieder entfernt, da PHP häufig ohne Unterstützung compiled wird
+* Style: Anpassung der infowindows an die tatsächliche Fensterbreite
+
+### 1.6.0 (12.09.2018)
+* Feature: Messpunkte werden jetzt anhand der zugewiesenen Fahrzeuge farblich hervorgehoben
+* Feature: Fahrzeugfarben lassen sich über eine Farbpalette wählen
+* Feature: Passworhashes mit Argon2-Algorithmus bei PHP > 7.0 möglich
+* Bug: Diverse Bugfixes, die zu fehlerhaftem Verhalten führten
+
+
+### 1.5.2 (27.07.2018)
+* Feature: Wetterdaten werden live eingelesen von Openweathermap.com
+* Feature: MET-Modell zeigt jetzt die Ausbreitungsklasse an und berücksichtigt intensiven Brand und tiefkalte Gase
+* Bug: Messkatastersymbol war im mobilen Menü noch falsch dargestellt
+
+### 1.5.1 (26.07.2018)
+* Bug: Update der Screenshotfunktion auf neue Version
+* Bug: Wenn ein Messpunkt des Katasters ausgewählt war, kam es in manchen Fällen zu Fehlermeldungen
+* Style: Viele kleine Verbesserungen
+* Style: Codebereinigung und -optimierung
+* Style: Verschieben des Kompassmoduls in die Karte
+* Style: Entschlackung des MET-Fensters
+* Style: Openstreetmap Kart ist nicht länger als Standard ausgewählt (Geschwindigkeitsverbesserung)
+* Security: Erhöhung der Sicherheit bei Anmelden
+
+### 1.5.0 (12.09.2017)
+* Feature: Benutzer können jetzt Messtrupps erstellen und Ihnen Messpunkte zuweisen
+* Feature: Der Benutzerlevel "Editor" ist entfallen. Dafür können Nutzer jetzt individuelle Anpassungen am Messkataster und anderen Optionen vornehmen.
+* Style: Komplette Überarbeitung des Optionsmenüs
+* Style: Komplette Überarbeitung des Infowindows
+* Bug: Style-Datei der Datentabellen wurde nicht geladen
+* Bug: Rechtschreibkorrekturen
+
+### 1.4.3 (29.08.2017)
+* Feature: Infowindows tragen jetzt ein Label, das vom Benutzer individuell festgelegt werden kann
+* Feature: Infowindows zeigen jetzt die Adresse an
+* Feature: Kommentarfelder können beliebig auf der Karte platziert werden
+* Style: Überarbeitung der Werkzeusymbolleiste
+* Bug: Messpunkte werden jetzt immer auf einer höheren Ebene platziert als andere Objekte, sodass sie jederzeit sicher ausgewählt werden können.
+
+### 1.4.2 (28.08.2017)
+* Feature: Administratoren udn Editoren können das Messkataster zentral bearbeiten 
+* Bug: Geteilte Projekte ohne gespeicherte Messpunkte erzeugten einen Fehler bei der Nummerierung
+* Code: Auslagerung aller Javascript-Funktionen in eigene Dateien.
+
+### 1.4.1 (31.07.2017)
+* Feature: Die Adresssuche lässt sich durch einen Klick auf die Lupe starten. 
+* Style: Anpassung der Nutzeroberfläche
+* Bug: Laden des GPS-Moduls hat zu einer fehlerhaften Anzeige der verfügbaren Fahrzeuge geführt.
+* Bug: Ändern des Benutzernamens hat zu einer falschen Rückmeldung geführt.
+* Bug: Unter Chrome für Android wurden modals nicht geschlossen, wenn Buttons im Modal gedrückt wurden.
+* Bug: Die Adresssuche hat die automatische Verfollständigung nicht korrekt angezeigt
+
+### 1.4.0 (28.07.2017)
+* Feature: Neue Nutzerberechtigung "Editor" (Kann Änderungen an manchen Parametern der Datenbank vornehmen, z. B. das Messkataster bearbeiten)
+* Feature: Administratoren haben die Möglichkeit, GPS-Tracking anzuzeigen (Konfiguration über das Frontend ist noch nicht vollständig umgesetzt!!!)
+* Feature: Vor dem Löschen eines Projekts erfolgt eine Sicherheitsabfrage
+* Style: Off-canvas Menü für mobile Endgeräte eingeführt
+* Style: Die Nutzerverwaltung heißt jetzt Optionen und gewährt Konfigurationsmöglichkeiten für die Datenbank und das eigene Nutzerprofil, je nach Berechtigung
+* Bug: Die einzelnen Polygone eines MET-Winkels werden nicht mehr separat in der Datenbank gespeichert
+* Bug: Das Speichern von kml-Dateien ist jetzt unter iOS und Safari direkt möglich.
+
+
 ### 1.3.1 (24.07.2017)
+* Feature: Adressen können jetzt direkt in der Karte gesucht werden
 * Bugfix: Öffnen des Messpunkt-Zeichenwerkzeugs ist in iOS und Safari jetzt möglich
 * Bugfix: Exportierte kml-Dateien tragen automatisch den aktuellen Projektnamen
 * Style: Einige CSS-Parameter sind jetzt in eine externe CSS-Datei verschoben
@@ -9,7 +76,7 @@
 * Feature: Export der Projektgeometrie als kml-Datei
 
 ### 1.2.0 (20.07.2017)
-* Feature: Einführung von Benutzerrechten(Access Levels) Administrator und Benutzer
+* Feature: Einführung von Benutzerrechten (ACL: Access Control Levels) Administrator und Benutzer
 * Feature: Administratoren haben Zugriff auf die Benutzerverwaltung und können neue Nutzer anlegen und Bestehende löschen
 * Bugfix: Der Menüpunkt "Abmelden" hat zu einer falschen Adresse geführt und dei Sitzun nicht korrekt beendet
 

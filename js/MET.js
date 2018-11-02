@@ -1,13 +1,11 @@
-function generateMET(resultsMap, manualLat, manualLon) {
-		if (manualLat !== undefined && manualLon !== undefined) { //Überprüfen, ob MET-Freisetzungsort manuell festgelegt wurde
-			var latitude = manualLat;
-			var longitude = manualLon;
-			var latlng = {lat: Number(latitude), lng: Number(longitude)};
-			new google.maps.Geocoder().geocode({'location': latlng}, function(results, status) {
+function setCoord(){
+	$('#modalMET').modal('hide');
+	var metManListener = google.maps.event.addListener(map, 'click', function(e) {
+		new google.maps.Geocoder().geocode({'location': e.latLng}, function(results, status) {
 				if (status === google.maps.GeocoderStatus.OK) {
-					resultsMap.setCenter(results[0].geometry.location);
-					var adresse = results[1].formatted_address;
-					drawPolygon(resultsMap, latitude, longitude, adresse);
+					var adresse = results[0].formatted_address;
+					document.getElementById('addresse').value = adresse;
+					ursprungKoordinaten = e.latLng;
 				} 
 				else 
 				{
@@ -15,27 +13,40 @@ function generateMET(resultsMap, manualLat, manualLon) {
 					
 				}
 			}); //Ende reverse geocoder
-		} // Ende if(manualLat !== undefined)
-		else{ //Überprüfen, ob MET-Freisetzungsort im Eingabefeld festgelegt wurde
-			var adresse = document.getElementById('addresse').value;
-			new google.maps.Geocoder().geocode({'address': adresse}, function(results, status) {
-				if (status === google.maps.GeocoderStatus.OK) {
-					resultsMap.setCenter(results[0].geometry.location);
-					var latitude = resultsMap.getCenter().lat();
-					var longitude = resultsMap.getCenter().lng();
-					drawPolygon(resultsMap, latitude, longitude, adresse);
-				} 
-				else 
-				{
-					alert('Die Adresse konnte nicht ermittelt werden. Grund: ' + status);
-				}
-			}); //Ende geocoder
-		} //Ende if(manualLat !== undefined)
+		$('#modalMET').modal('show');
+		google.maps.event.removeListener(metManListener); //Entfernt den eventListener, damit die manuelle Auswahl nur einmal ausgeführt wird.
+});
+}
+
+function generateMET(resultsMap) {
+	var adresse = document.getElementById('addresse').value;
+	if(ursprungKoordinaten == '')
+	{
+		new google.maps.Geocoder().geocode({'address': adresse}, function(results, status) {
+			if (status === google.maps.GeocoderStatus.OK) {
+				resultsMap.setCenter(results[0].geometry.location);
+				var latitude = resultsMap.getCenter().lat();
+				var longitude = resultsMap.getCenter().lng();
+				drawPolygon(resultsMap, latitude, longitude, adresse);
+			} 
+			else 
+			{
+				alert('Die Adresse konnte nicht ermittelt werden. Grund: ' + status);
+			}
+		}); //Ende geocoder
+	}
+	else
+	{
+		var latitude = ursprungKoordinaten.lat();
+		var longitude = ursprungKoordinaten.lng();
+		ursprungKoordinaten = '';
+		drawPolygon(resultsMap, latitude, longitude, adresse);
+	}
 	}// Ende function generateMET()
 
 function drawPolygon(map, lat, lon, geoAdresse, winkel, richtung, innen, aussen, counter){
-	marker_color ="black";
-	$('#modal_MET').modal('hide');
+	marker_color ="#000000";
+	$('#modalMET').modal('hide');
 	if (winkel !== undefined) {
 		var ausbreitungswinkel = winkel;
 	} 
@@ -124,7 +135,8 @@ function drawPolygon(map, lat, lon, geoAdresse, winkel, richtung, innen, aussen,
 		fillOpacity: 0.1,
 		geodesic: true,
 		obj_nummer : metCounter,
-		obj_typ : 'polygon2'
+		obj_typ : 'polygon2',
+		zIndex:0
 	});
 	objectArray.push(polygon2);
 
@@ -149,7 +161,8 @@ function drawPolygon(map, lat, lon, geoAdresse, winkel, richtung, innen, aussen,
 		fillOpacity: 0.1,
 		geodesic: true,
 		obj_nummer : metCounter,
-		obj_typ : 'polygon1'
+		obj_typ : 'polygon1',
+		zIndex:0
 	});
 	objectArray.push(polygon1);
 	
@@ -163,7 +176,8 @@ function drawPolygon(map, lat, lon, geoAdresse, winkel, richtung, innen, aussen,
 			map: map,
 			geodesic:true,
 			obj_nummer : metCounter,
-			obj_typ : 'polygonCenter'
+			obj_typ : 'polygonCenter',
+			zIndex:0
 		});
 		objectArray.push(line);
 	}
@@ -171,36 +185,53 @@ function drawPolygon(map, lat, lon, geoAdresse, winkel, richtung, innen, aussen,
 	// Marker am Freisetzungsort erstellen 
 	var marker = new google.maps.Marker({
 		position: new google.maps.LatLng(lat, lon),
-		icon:{url:'images/black.png', anchor: new google.maps.Point(16,16)},
+		icon:{
+			path: google.maps.SymbolPath.CIRCLE,
+			scale: marker_scale,
+			fillColor: '#000000',
+			fillOpacity: 0.4,
+			strokeColor: '#B20000',
+			strokeWeight: marker_strokeWeight},
 		obj_lat: lat,
 		obj_lon: lon,
 		obj_parameter: metParameter,
 		obj_typ: 'met',
 		obj_nummer: metCounter,
-		obj_farbe: 'black',
-			map: map,
-			title: 'Freisetzungsort',
-			draggable:false,
-			poly1: polygon1,
-			poly2: polygon2,
-			centerLine:line
+		obj_farbe: '#000000',
+		map: map,
+		title: 'Freisetzungsort',
+		draggable:false,
+		poly1: polygon1,
+		poly2: polygon2,
+		centerLine:line,
+		zIndex:10
 	});
 
 		objectArray.push(marker);
 		metCounter += 1;
 
+		drawingManager.setOptions({
+						drawingMode: google.maps.drawing.OverlayType.null
+					});
+
 	marker.addListener('click', function() {//Informationsfenster bei Klick auf Marker öffnen
-	activeObject = this; // Setzt den aktuell ausgewählten marker als aktiv
-	infoWindow.setContent('<h5>Freisetzungsort</h5>'+
-		'<div class="fa fa-home"></div> '+adresse+'<br/><hr>' +
-		'<div class="fa fa-map-marker"></div> ' + this.obj_lat +' , ' + this.obj_lon +'<br/> (' + utm_koord + ')<br/><br/>'+
-		'Gef&auml;hrdung im Geb&auml;ude: ' + distanz_innen + ' m<br/>' +
-		'Gef&auml;hrdung im Freien: ' + distanz_aussen + ' m<br/><br/>' +
-		'Windrichtung: ' + windrichtung_initial + '&deg;' + '<br/>' +
-		'Ausbreitungswinkel: ' + ausbreitungswinkel + ' &deg;'  + '<br/><br/>'+
-		'<div class="btn-group" role="group" aria-label="Optionen">'+
-		'<button type="button" class="btn btn-default btn-danger" style="height:46px;" id="deleteButton" onclick="deleteObject();"><i class="fa fa-trash-o"></i></button>')
-	infoWindow.open(map,marker);
+		clearSelectionLoad();
+		if (selectedShape)
+		{
+			selectedShape.setEditable(false);
+			selectedShape = null;
+		}
+		activeObject = this; // Setzt den aktuell ausgewählten Marker als aktiv
+		infoWindow.setContent(`<h5>Freisetzungsort</h5>
+		<div class="fa fa-home"></div> ${adresse}<br/><hr>
+		<div class="fa fa-map-marker"></div> ${this.obj_lat} , ${this.obj_lon}<br/> (${utm_koord})<br/><br/>
+		Gefährdung im Gebäude: ${distanz_innen} m<br/>
+		Gefährdung im Freien: ${distanz_aussen} m<br/><br/>
+		Windrichtung: ${windrichtung_initial}&deg;<br/>
+		Ausbreitungswinkel: ${ausbreitungswinkel} &deg;<br/><br/>
+		<div class="btn-group" role="group" aria-label="Optionen">
+		<button type="button" class="btn btn-default btn-danger" id="deleteButton" ontouchstart="deleteObject()" onclick="deleteObject()"><i class="fa fa-trash-o"></i></button>`)
+		infoWindow.open(map,marker);
 	});
 } //Ende function drawPolygon()
 
@@ -211,40 +242,60 @@ function computeAngle(){
 	var tageszeit = document.getElementById('tageszeit').value;
 	var monat = document.getElementById('monat').value;
 	var brand = document.getElementById('brand').value;
+	var met_classes = {
+		0:{"letter":"A","winkel":90},
+		1:{"letter":"B","winkel":90},
+		2:{"letter":"C","winkel":60},
+		3:{"letter":"D","winkel":60},
+		4:{"letter":"E","winkel":45},
+		5:{"letter":"F","winkel":45},
+		6:{"letter":"G","winkel":45},
+	};
+	var met_class = 0;
 	if(nebel=="true")
-		met_winkel=45;
+	{
+		if(brand=="true") met_class=4;
+		else met_class=5;
+	}
 	else if(wind == "high")
-		met_winkel=60;
+	{
+		if(brand=="true") met_class=2;
+		else met_class=2;
+	}
 	else if(himmel=="true")
-		met_winkel=60;
+	{
+		if(brand=="true") met_class=2;
+		else met_class=3;
+	}
 	else if(tageszeit=="night")
 	{
 		if(wind!="high")
 		{
-			if(brand=="true")
-				met_winkel=60;
-			else
-				met_winkel=45;
+			if(brand=="true") met_class=3;
+			else met_class=4;
 		}
 		else 
-			met_winkel=45;
+			if(brand=="true") met_class=4;
+			else met_class=5;
 	}
 	else if(wind=="low")
 	{
 		if(monat=="om")
 		{
-			if(brand=="true")
-				met_winkel=90;
-			else
-				met_winkel=60;
+			if(brand=="true") met_class=1;
+			else met_class=2;
 		}
 		else
-			met_winkel=90;
+			if(brand=="true") met_class=0;
+			else met_class=1;
 	}
-	else if(brand=="true")
-		met_winkel=90;
-	else
-		met_winkel=60;
+	else if(brand=="true") met_class=1;
+	else met_class=2;
+
+	if (document.getElementById("intens_brand_ja").checked) met_class -= 1;
+	if (met_class < 0) met_class = 0; //Es kann keine kleinere Klasse als A geben, auch wenn das MET-Modell diesen Fehler vorsieht
+	if (document.getElementById("tiefkalt_ja").checked) met_class += 1;
 	
-	document.getElementById("winkel").value=met_winkel; // Berechneten Winkel in MET-Auswahlfeld eintragen	
+	document.getElementById("winkel").value=met_classes[met_class]["winkel"]; // Berechneten Winkel in MET-Auswahlfeld eintragen
+	$("#ausbreitungsklasse").html(met_classes[met_class]["letter"]);
 }

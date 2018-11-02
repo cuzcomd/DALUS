@@ -444,6 +444,6 @@ function mapToObject(){
         //set the xml
         document.getElementById('kmlString').value = xml;
         var downloadLink = document.getElementById('download-link');
-        downloadLink.href = "data:;base64," + btoa($('#kmlString').val());
+        downloadLink.href = "data:application/octet-stream;base64," + btoa($('#kmlString').val());
         downloadLink.download = activeProjectName+".kml"; //Erzuegt den Dateinamen des Downloads aus dem aktuellen Projektnamen
     }

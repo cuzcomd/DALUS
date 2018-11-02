@@ -15,3 +15,9 @@ Es wurde vom Fachdienst ABC der Landeshauptstadt Magdeburg entwickelt.
 <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=geometry,drawing&callback=initMap" async defer></script>
 ```
 6. Rufen Sie die Datei index.php auf.
+
+Dieses Projekt wird kostenlos unterstützt durch
+
+![Browserstack Logo](images/Logo-01.png)
+
+<b>testing made easy with browserStack</b>

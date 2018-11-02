@@ -6,35 +6,30 @@ if (is_ajax()) {
 		case "create": createProject(); break;
 		case "edit": editProject(); break;
 		case "delete": deleteProject(); break;
-		case "loadUser": loadUser(); break;
-		case "editUser": editUser(); break;
-		case "createUser": createUser(); break;
-		case "deleteUser": deleteUser(); break;
 		case "load": loadProject(); break;
 		case "updateProjects": updateProjects(); break;
 		case "updateSharedProjects": updateSharedProjects(); break;
 		case "isSharedWith": isSharedWith(); break;
-		case "updateAllUsers": updateAllUsers(); break;
     }
   }
 }
 
 //Function to check if the request is an AJAX request
 function is_ajax() {
-  return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
+	return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
 }
 
-function createProject(){
+function createProject(){ //Erzeugt eine neues Projekt
 	include("config.php");
-	$project_owner = (!empty($_POST['username']) ? $_POST['username']:'');
+	include("session.php");
 	$project_shared = (!empty($_POST['shared']) ? implode(",", $_POST['shared']):''); //Erzeugt kommaseparierten String aus Array von ausgewählten Benutzernamen
 	$project_name = (!empty($_POST['projekttitel']) ? $_POST['projekttitel']:'');
 
 
 	$stmt = $pdo->prepare("INSERT INTO projects (prj_owner, prj_shared, prj_name, prj_created_at, prj_updated_at) VALUES (:project_owner, :project_shared, :project_name, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) ON DUPLICATE KEY UPDATE prj_updated_at = CURRENT_TIMESTAMP");
-	$stmt->bindParam(':project_owner', $project_owner, PDO::PARAM_INT);
-	$stmt->bindParam(':project_shared', $project_shared, PDO::PARAM_STR, 12);
-	$stmt->bindParam(':project_name', $project_name, PDO::PARAM_STR, 12);
+	$stmt->bindParam(':project_owner', $_SESSION['userid'], PDO::PARAM_INT);
+	$stmt->bindParam(':project_shared', $project_shared, PDO::PARAM_STR);
+	$stmt->bindParam(':project_name', $project_name, PDO::PARAM_STR);
 	$stmt->execute();
 	
 	$projekt_id = $pdo->lastInsertId();
@@ -43,132 +38,115 @@ function createProject(){
   	echo json_encode($returnvalues);
   }
 
-function editProject(){
+function editProject(){ //Aktualisiert das aktuell geöffnete Projekt
 	include("config.php");
+	include("session.php");
 	$project_shared = (!empty($_POST['shared']) ? implode(",", $_POST['shared']):''); //Erzeugt kommaseparierten String aus Array von ausgewählten Benutzernamen
 	$project_name = (!empty($_POST['projekttitel']) ? $_POST['projekttitel']:'');
 	$project_id = (!empty($_POST['current_project_id']) ? $_POST['current_project_id']:'0');
-	
-	$stmt = $pdo->prepare("UPDATE projects SET prj_shared = :project_shared, prj_name = :project_name, prj_updated_at = CURRENT_TIMESTAMP WHERE prj_id = :project_id");
-	$stmt->bindParam(':project_shared', $project_shared, PDO::PARAM_STR, 12);
-	$stmt->bindParam(':project_name', $project_name, PDO::PARAM_STR, 12);
+
+	$stmt = $pdo->prepare("SELECT * FROM projects WHERE prj_id = :project_id");
 	$stmt->bindParam(':project_id', $project_id, PDO::PARAM_INT);
 	$stmt->execute();
-
-	$_POST["json"] = json_encode($_POST);
-	echo json_encode($_POST);
+	$projekt = $stmt->fetch(PDO::FETCH_OBJ);
+		
+	if($_SESSION['userid'] == $projekt->prj_owner) // Prüft, ob der angemeldete Benutzer Besitzer des Projekts ist.
+	{
+		$stmt = $pdo->prepare("UPDATE projects SET prj_shared = :project_shared, prj_name = :project_name, prj_updated_at = CURRENT_TIMESTAMP WHERE prj_id = :project_id");
+		$stmt->bindParam(':project_shared', $project_shared, PDO::PARAM_STR);
+		$stmt->bindParam(':project_name', $project_name, PDO::PARAM_STR);
+		$stmt->bindParam(':project_id', $project_id, PDO::PARAM_INT);
+		$status = $stmt->execute();
+		echo json_encode($_POST);
+	}
+	else
+	{
+		echo json_encode('error');
+	}	
 }
 
-function deleteProject(){
+function deleteProject(){ //Löscht dads aktuell geöffnete Projekt
 	include("config.php");
+	include("session.php");
 	$project_id = (!empty($_POST['prj_id']) ? $_POST['prj_id']:'0');
 
-	$stmt = $pdo->prepare("DELETE FROM projects WHERE prj_id = :project_id");
+	$stmt = $pdo->prepare("SELECT * FROM projects WHERE prj_id = :project_id");
 	$stmt->bindParam(':project_id', $project_id, PDO::PARAM_INT);
 	$stmt->execute();
+	$projekt = $stmt->fetch(PDO::FETCH_OBJ);
 
-	$stmt2 = $pdo->prepare("DELETE FROM objects WHERE obj_prj_id = :project_id");
-	$stmt2->bindParam(':project_id', $project_id, PDO::PARAM_INT);
-	$stmt2->execute();
-
-		$_POST["json"] = json_encode($_POST);
-	echo json_encode($_POST);
-}
-
-function loadUser(){
-	require('session.php');
-	include("config.php");
-
-	$stmt = $pdo->prepare("SELECT * FROM users WHERE id = :userID");
-	$stmt->bindParam(':userID', $userid, PDO::PARAM_INT);
-	$stmt->execute();
-
-	$benutzer = $stmt->fetch(PDO::FETCH_OBJ);//Daten des angemeldeten Benutzers abfragen
-	$benutzerID = $userid;
-	$benutzername = $benutzer->benutzername;
-	$vorname = $benutzer->vorname;
-	$nachname = $benutzer->nachname;
-
-	$returnvalues = array('benutzerID' => $benutzerID,'benutzername' => $benutzername, 'vorname' => $vorname, 'nachname' => $nachname, 'accessLevel' => $accessLevel);
-	  	echo json_encode($returnvalues);
-}
-
-function deleteUser(){
-	require('session.php');
-	include("config.php");
-	$users = (!empty($_POST['users']) ? $_POST['users'] :'');
-
-	if ($accessLevel == "admin")
+	if($_SESSION['userid'] == $projekt->prj_owner)
 	{
-		$stmt = $pdo->prepare("DELETE FROM users WHERE id = :userID");
-		foreach ($users as $value) {
-			$stmt->bindParam(':userID', $value, PDO::PARAM_INT);
-			$stmt->execute();
+		$stmt = $pdo->prepare("DELETE FROM projects WHERE prj_id = :project_id");
+		$stmt->bindParam(':project_id', $project_id, PDO::PARAM_INT);
+		$stmt->execute();
+		
+		$stmt2 = $pdo->prepare("DELETE FROM objects WHERE obj_prj_id = :project_id");
+		$stmt2->bindParam(':project_id', $project_id, PDO::PARAM_INT);
+		$stmt2->execute();
+		echo json_encode('success');
+	}
+	else{
+		echo json_encode('error');
+	}
+}
+
+function loadProject(){ //noch zu prüfen,ob Sicherheit gegeben ist
+	include("config.php");
+	include("session.php");
+
+	$projectName = (!empty($_POST['project_open']) ? $_POST['project_open']:'');
+
+	$stmt = $pdo->prepare("SELECT * FROM projects WHERE prj_name = :prjName");
+	$stmt->bindParam(':prjName', $projectName, PDO::PARAM_STR);
+	$stmt->execute();
+	$projekt = $stmt->fetch(PDO::FETCH_OBJ);//Daten des angemeldeten Benutzers abfragen
+
+	if($_SESSION['userid'] == $projekt->prj_owner || in_array($_SESSION['userid'],explode(',',$projekt->prj_shared))) // Prüft, ob der angemeldete Benutzer Besitzer des Projekts ist oder das Projekt für ihn freigegeben wurde.
+	{
+		$project_level = ($_SESSION['userid'] == $projekt->prj_owner) ? 'own' :'shared';
+
+		$stmt = $pdo->prepare("SELECT MAX(obj_nummer) as maxNummer FROM objects WHERE obj_prj_id = :prjID AND obj_typ = 'marker'");
+		$stmt->bindParam(':prjID', $projektID, PDO::PARAM_INT);
+		$stmt->execute();
+		$max = $stmt->fetch(PDO::FETCH_ASSOC);
+		$maxNumber = $max['maxNummer'];
+
+		if (is_null($maxNumber)) // Überprüft, ob bereits Messpunkte gespeichert sind und legt den Zähler anderenfalls auf 0 fest
+		{
+			$maxNumber = 0;
 		}
-		$return = "ok";
+		$returnvalues = array('projektID' => $projekt->prj_id,'projektName' => $projekt->prj_name, 'maxNum' => $maxNumber, 'project_level' => $project_level);
+		echo json_encode($returnvalues);
 	}
-	else {
-		$return = "noAdmin";
+	else
+	{
+		echo json_encode("error");
 	}
-	echo json_encode($return);
 }
 
-
-function loadProject(){
-include("config.php");
-
-$projectName = (!empty($_POST['project_open']) ? $_POST['project_open']:'');
-
-$stmt = $pdo->prepare("SELECT * FROM projects WHERE prj_name = :prjName");
-$stmt->bindParam(':prjName', $projectName, PDO::PARAM_STR, 12);
-$stmt->execute();
-
-$projekt = $stmt->fetch(PDO::FETCH_OBJ);//Daten des angemeldeten Benutzers abfragen
-$projektID = $projekt->prj_id;
-$projektName = $projekt->prj_name;
-
-$stmt2 = $pdo->prepare("SELECT MAX(obj_nummer) as maxNummer FROM objects WHERE obj_prj_id = :prjID AND obj_typ = 'marker'");
-$stmt2->bindParam(':prjID', $projektID, PDO::PARAM_INT);
-$stmt2->execute();
-$max = $stmt2->fetch(PDO::FETCH_ASSOC);
-$maxNumber = $max['maxNummer'];
-
-$returnvalues = array('projektID' => $projektID,'projektName' => $projektName, 'maxNum' => $maxNumber);
-  	echo json_encode($returnvalues);
-}
-
-function updateProjects(){
+function updateProjects(){ // Lädt die Projekte, die der angemeldete Benutzer erstellt hat.
 	require('session.php');
 	include("config.php");
 	$stmt = $pdo->prepare("SELECT * FROM projects WHERE prj_owner = :prjOwner");
-	$stmt->bindParam(':prjOwner', $userid, PDO::PARAM_STR, 12);
+	$stmt->bindParam(':prjOwner',  $_SESSION['userid'], PDO::PARAM_STR);
 	$stmt->execute();
 
 	$projekte = $stmt->fetchAll();
 	echo json_encode($projekte);
 }
 
-function updateSharedProjects(){
+function updateSharedProjects(){ //Lädt die Projekte, die für den angemeldeten Benutzer freigegeben sind
 	require('session.php');
 	include("config.php");
-	$stmt = $pdo->prepare("SELECT * FROM projects WHERE prj_shared LIKE '%".$userid."%'");
+	$stmt = $pdo->prepare("SELECT * FROM projects WHERE prj_shared LIKE '%". $_SESSION['userid']."%'");
 	$stmt->execute();
 
 	$projekte = $stmt->fetchAll();
 	echo json_encode($projekte);
 }
 
-function updateAllUsers(){
-	require('session.php');
-	include("config.php");
-	$stmt = $pdo->prepare("SELECT * FROM users");
-	$stmt->execute();
-
-	$benutzer = $stmt->fetchAll();
-	echo json_encode($benutzer);
-}
-
-function isSharedWith(){
+function isSharedWith(){ //Lädt alle Benutzer, für die das aktuell geöffnete Projekt freigegeben wurde.
 	require('session.php');
 	include("config.php");
 	
@@ -183,7 +161,6 @@ function isSharedWith(){
 		}
 
 	$stmt2 = $pdo->prepare("SELECT * FROM users ");
-	$stmt2->bindParam(':userID', $userid, PDO::PARAM_INT);
 	$stmt2->execute();
 	$result = $stmt2->fetchAll();
 
@@ -206,76 +183,4 @@ function isSharedWith(){
 	}
 	echo json_encode($sharedUsers);
 }
-
-function editUser(){
-	require('session.php');
-	include("config.php");
-	$username = (!empty($_POST['username']) ? $_POST['username']:'');
-	$password1 = (!empty($_POST['password1']) ? $_POST['password1']:'');
-	$password2 = (!empty($_POST['password2']) ? $_POST['password2']:'');
-	$oldPassword = (!empty($_POST['oldPassword']) ? $_POST['oldPassword']:'');
-
-	$stmt = $pdo->prepare("SELECT * FROM users WHERE id = :userID");
-	$stmt->bindParam(':userID', $userid, PDO::PARAM_INT);
- 	$stmt->execute();
- 	$user = $stmt->fetch();
-
- 	if ($user !== false && password_verify($oldPassword, $user['passwort'])) {
-		if(!empty($_POST['password1']) && !empty($_POST['password2'])){
-			if( $password1 == $password2){
-				$newPassword =  password_hash($password1, PASSWORD_DEFAULT);
- 				$stmt2 = $pdo->prepare("UPDATE users SET benutzername = :username , passwort = :newPassword WHERE id = :userID");
-				$stmt2->bindParam(':newPassword', $newPassword, PDO::PARAM_STR, 12);
-				$stmt2->bindParam(':username', $username, PDO::PARAM_STR, 12);
-				$stmt2->bindParam(':userID', $userid, PDO::PARAM_INT);
-				$stmt2->execute();
-				$return = 'Success';
-			}
-			else{$return = 'PasswordsDontMatch';}
-		}
-		else{
-			$stmt3 = $pdo->prepare("UPDATE users SET benutzername = :username WHERE id = :userID");
-			$stmt3->bindParam(':username', $username, PDO::PARAM_STR, 12);
-			$stmt3->bindParam(':userID', $userid, PDO::PARAM_INT);
-			$stmt3->execute();
-			$return = 'Erfolg';
-		}
-	}
-	else{$return = 'WrongPassword';}
-	echo json_encode($return);
-}
-
-function createUser(){
-	include("config.php");
-	require("session.php");
-	$benutzername = (!empty($_POST['benutzername']) ? $_POST['benutzername']:'');
-	$vorname = (!empty($_POST['vorname']) ? $_POST['vorname']:'');
-	$nachname = (!empty($_POST['nachname']) ? $_POST['nachname']:'');
-	$passwort = password_hash((!empty($_POST['benutzername']) ? $_POST['benutzername']:''), PASSWORD_DEFAULT);
-	$level = (!empty($_POST['level']) ? $_POST['level']:'');
-	
-	if ($accessLevel == "admin")
-	{
-		$stmt = $pdo->prepare("INSERT IGNORE INTO users (benutzername, passwort, level, vorname, nachname, created_at) VALUES (:benutzername, :passwort, :level, :vorname, :nachname, CURRENT_TIMESTAMP)");
-		$stmt->bindParam(':benutzername', $benutzername, PDO::PARAM_STR, 12);
-		$stmt->bindParam(':vorname', $vorname, PDO::PARAM_STR, 12);
-		$stmt->bindParam(':nachname', $nachname, PDO::PARAM_STR, 12);
-		$stmt->bindParam(':passwort', $passwort, PDO::PARAM_STR, 12);
-		$stmt->bindParam(':level', $level, PDO::PARAM_STR, 12);
-		$stmt->execute();
-
-		if($stmt->rowCount() > 0)
-		{
-			$return = 'yes';
-		}
-		else
-		{
-			$return = 'no';
-		}
-	}
-	else{
-	  $return = 'noAdmin';
-	}
-	echo json_encode($return);
-  }
 ?>
