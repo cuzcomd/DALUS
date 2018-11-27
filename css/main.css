@@ -177,7 +177,7 @@ a {
 
 a:hover {
   color: #004a43;
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 a:not([href]):not([tabindex]) {
@@ -13495,9 +13495,8 @@ be a descendant of the grid when it is being dragged.
 }
 
 .app-content {
-  min-height: calc(100vh - 50px);
-  margin-top: 29px;
-  padding: 30px;
+  min-height: calc(100vh - 51px);
+  margin-top: 51px;
   background-color: #E5E5E5;
   -webkit-transition: margin-left 0.3s ease;
   -o-transition: margin-left 0.3s ease;
@@ -13512,7 +13511,6 @@ be a descendant of the grid when it is being dragged.
 
 @media (max-width: 767px) {
   .app-content {
-    margin-top: 50px;
     min-width: 100%;
   }
 }
@@ -13572,6 +13570,7 @@ be a descendant of the grid when it is being dragged.
 }
 
 .app-header__logo {
+  display:none;
   -webkit-box-flex: 1;
       -ms-flex: 1 0 auto;
           flex: 1 0 auto;
@@ -13632,16 +13631,11 @@ be a descendant of the grid when it is being dragged.
   display: flex;
   margin-bottom: 0;
   -webkit-box-pack: end;
-      -ms-flex-pack: end;
-          justify-content: flex-end;
-}
-
-@media (min-width: 768px) {
-  .app-nav {
-    -webkit-box-flex: 1;
-        -ms-flex: 1 0 auto;
-            flex: 1 0 auto;
-  }
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+  -webkit-box-flex: 1;
+  -ms-flex: 1 0 auto;
+  flex: 1 0 auto;
 }
 
 .app-nav__item {
@@ -13670,9 +13664,14 @@ be a descendant of the grid when it is being dragged.
   padding: 10px 0;
 }
 
+@media (max-width: 540px) {
+  .app-search__input {
+    max-width:140px;
+  }
+}
 @media (max-width: 480px) {
   .app-search {
-    display: none;
+    display:none;
   }
 }
 
@@ -14034,6 +14033,11 @@ be a descendant of the grid when it is being dragged.
     -webkit-transition: visibility 0.3s ease;
     -o-transition: visibility 0.3s ease;
     transition: visibility 0.3s ease;
+  }
+  .sidebar-mini.sidenav-toggled .app-sidebar__user,
+  .sidebar-mini.sidenav-toggled .app-sidebar__project-information,
+  .sidebar-mini.sidenav-toggled .app-sidebar__weather{
+    display:none;
   }
 }
 

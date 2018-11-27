@@ -267,24 +267,30 @@ function startDrawingManager(map){
 			        }
 			        var markerContent =
 			        `<div class="text-center "id="messpunktLabel" style="width:80vw; max-width:450px"><b>${object.obj_label}</b> <i class="pull-right fa fa-pencil" style="color:#ccc;"></i></div><br>
-			        <div class="header" style="display:inline-block; width:80vw; max-width:450px">
-			        	<div class="col-xs-12 col-sm-6"><label for="markerMesstrupp">Zugewiesener Messtrupp</label><select id="markerMesstrupp" onchange="setMesstrupp(${object.obj_nummer}, this.value)"></select><br><br>
+			        <div class="header row" style="width:80vw; max-width:450px">
+			        	<div class="col-12 col-sm-7">
+			        		<div class="input-group mb-3">
+			        			<div class="input-group-prepend">
+			        				<label class="input-group-text" for="markerMesstrupp"><i class="fa fa-car"></i></label>
+			        			</div>
+			        			<select id="markerMesstrupp" onchange="setMesstrupp(${object.obj_nummer}, this.value)" class="custom-select" aria-label="Messtrupp" aria-describedby="basic-addon1"></select>
+			        		</div>
 				        	<div class="btn-group" role="group" aria-label="Optionen">
 								<button type="button" class="btn btn-default btn-danger btnInfoWindow" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button>
-								<div class="btn-group"><button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><i class="fa fa-tint"></i> &nbsp; <span class="caret"></span></button>
-									<ul class="dropdown-menu" role="menu">
-					      				<li onclick="changeColor(${activeObject.obj_nummer},1);"><a href="#"><span class="symbol symbol_white"></span> Vorgeplanter Messpunkt</a></li>
-					      				<li onclick="changeColor(${activeObject.obj_nummer},2);"><a href="#"><span class="symbol symbol_green"></span> Kein Geruch wahrnehmbar</a></li>
-					      				<li onclick="changeColor(${activeObject.obj_nummer},3);"><a href="#"><span class="symbol symbol_blue"></span> Geruch wahrnehmbar</a></li>
-					      				<li onclick="changeColor(${activeObject.obj_nummer},4);"><a href="#"><span class="symbol symbol_yellow"></span> Messung unterhalb des Beurteilungswertes</a></li>
-					      				<li onclick="changeColor(${activeObject.obj_nummer},5);"><a href="#"><span class="symbol symbol_red"></span> Messung oberhalb des Beurteilungswertes</a></li>
-	   								</ul>
+								<div class="btn-group"><button type="button" class="btn btn-default dropdown-toggle" id="dropdownMenuButton__farbe" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-tint">&nbsp;</i></button>
+									<div class="dropdown-menu" aria-labelledby="dropdownMenuButton__farbe">
+					      				<a class="dropdown-item" onclick="changeColor(${activeObject.obj_nummer},1);" href="#"><span class="symbol symbol_white"></span> Vorgeplanter Messpunkt</a>
+					      				<a class="dropdown-item" onclick="changeColor(${activeObject.obj_nummer},2);" href="#"><span class="symbol symbol_green"></span> Kein Geruch wahrnehmbar</a>
+					      				<a class="dropdown-item" onclick="changeColor(${activeObject.obj_nummer},3);" href="#"><span class="symbol symbol_blue"></span> Geruch wahrnehmbar</a>
+					      				<a class="dropdown-item" onclick="changeColor(${activeObject.obj_nummer},4);" href="#"><span class="symbol symbol_yellow"></span> Messung unterhalb des Beurteilungswertes</a>
+					      				<a class="dropdown-item" onclick="changeColor(${activeObject.obj_nummer},5);" href="#"><span class="symbol symbol_red"></span> Messung oberhalb des Beurteilungswertes</a>
+	   								</div>
 	   							</div>
 	   						</div>
 				        </div>
-				        <div class="col-xs-12 col-sm-6">
-			        		<div class="col-xs-1 fa fa-home" aria-hidden="true"></div><div class="col-xs-10" >${adresse}</div><hr>
-			        		<div class="col-xs-1 fa fa-map-marker" aria-hidden="true"></div><div class="col-xs-10" >${object.obj_lat}, ${object.obj_lon}<br>
+				        <div class="col-12 col-sm-5">
+			        		<div class="col-1 fa fa-home" aria-hidden="true"></div><div class="col-10" >${adresse}</div><hr>
+			        		<div class="col-1 fa fa-map-marker" aria-hidden="true"></div><div class="col-10" >${object.obj_lat}, ${object.obj_lon}<br>
 			        		(${LLtoUSNG(object.obj_lat, object.obj_lon, 5)})</div>
 			       		</div>
 			        </div><br>
@@ -298,7 +304,7 @@ function startDrawingManager(map){
 						type: 'text',
 						title: 'Bezeichnung',
 						placement: 'bottom',
-						mode: 'popup',
+						mode: 'inline',
 						success: function(response, newValue) {
 							updateLabel(object.obj_nummer, newValue);
 						}
@@ -325,25 +331,31 @@ function startDrawingManager(map){
 					}
 
 					var markerContent =
-			         `<div class="text-center "id="messpunktLabel" style="width:80vw; max-width:450px"><b>${object.obj_label}</b> <i class="pull-right fa fa-pencil" style="color:#ccc;"></i></div><br>
-			        <div class="header" style="display:inline-block; width:80vw; max-width:450px">
-			        	<div class="col-xs-12 col-sm-6"><label for="markerMesstrupp">Zugewiesener Messtrupp</label><select id="markerMesstrupp" onchange="setMesstrupp(${object.obj_nummer}, this.value)"></select><br><br>
+			        `<div class="text-center "id="messpunktLabel" style="width:80vw; max-width:450px"><b>${object.obj_label}</b> <i class="pull-right fa fa-pencil" style="color:#ccc;"></i></div><br>
+			        <div class="header row" style="width:80vw; max-width:450px">
+			        	<div class="col-12 col-sm-7">
+			        		<div class="input-group mb-3">
+			        			<div class="input-group-prepend">
+			        				<label class="input-group-text" for="markerMesstrupp"><i class="fa fa-car"></i></label>
+			        			</div>
+			        			<select id="markerMesstrupp" onchange="setMesstrupp(${object.obj_nummer}, this.value)" class="custom-select" aria-label="Messtrupp" aria-describedby="basic-addon1"></select>
+			        		</div>
 				        	<div class="btn-group" role="group" aria-label="Optionen">
 								<button type="button" class="btn btn-default btn-danger btnInfoWindow" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button>
-								<div class="btn-group"><button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><i class="fa fa-tint"></i> &nbsp; <span class="caret"></span></button>
-									<ul class="dropdown-menu" role="menu">
-					      				<li onclick="changeColor(${activeObject.obj_nummer},1);"><a href="#"><span class="symbol symbol_white"></span> Vorgeplanter Messpunkt</a></li>
-					      				<li onclick="changeColor(${activeObject.obj_nummer},2);"><a href="#"><span class="symbol symbol_green"></span> Kein Geruch wahrnehmbar</a></li>
-					      				<li onclick="changeColor(${activeObject.obj_nummer},3);"><a href="#"><span class="symbol symbol_blue"></span> Geruch wahrnehmbar</a></li>
-					      				<li onclick="changeColor(${activeObject.obj_nummer},4);"><a href="#"><span class="symbol symbol_yellow"></span> Messung unterhalb des Beurteilungswertes</a></li>
-					      				<li onclick="changeColor(${activeObject.obj_nummer},5);"><a href="#"><span class="symbol symbol_red"></span> Messung oberhalb des Beurteilungswertes</a></li>
-	   								</ul>
+								<div class="btn-group"><button type="button" class="btn btn-default dropdown-toggle" id="dropdownMenuButton__farbe" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-tint">&nbsp;</i></button>
+									<div class="dropdown-menu" aria-labelledby="dropdownMenuButton__farbe">
+					      				<a class="dropdown-item" onclick="changeColor(${activeObject.obj_nummer},1);" href="#"><span class="symbol symbol_white"></span> Vorgeplanter Messpunkt</a>
+					      				<a class="dropdown-item" onclick="changeColor(${activeObject.obj_nummer},2);" href="#"><span class="symbol symbol_green"></span> Kein Geruch wahrnehmbar</a>
+					      				<a class="dropdown-item" onclick="changeColor(${activeObject.obj_nummer},3);" href="#"><span class="symbol symbol_blue"></span> Geruch wahrnehmbar</a>
+					      				<a class="dropdown-item" onclick="changeColor(${activeObject.obj_nummer},4);" href="#"><span class="symbol symbol_yellow"></span> Messung unterhalb des Beurteilungswertes</a>
+					      				<a class="dropdown-item" onclick="changeColor(${activeObject.obj_nummer},5);" href="#"><span class="symbol symbol_red"></span> Messung oberhalb des Beurteilungswertes</a>
+	   								</div>
 	   							</div>
 	   						</div>
 				        </div>
-				        <div class="col-xs-12 col-sm-6">
-			        		<div class="col-xs-1 fa fa-home" aria-hidden="true"></div><div class="col-xs-10" >${adresse}</div><hr>
-			        		<div class="col-xs-1 fa fa-map-marker" aria-hidden="true"></div><div class="col-xs-10" >${object.obj_lat}, ${object.obj_lon}<br>
+				        <div class="col-12 col-sm-5">
+			        		<div class="col-1 fa fa-home" aria-hidden="true"></div><div class="col-10" >${adresse}</div><hr>
+			        		<div class="col-1 fa fa-map-marker" aria-hidden="true"></div><div class="col-10" >${object.obj_lat}, ${object.obj_lon}<br>
 			        		(${LLtoUSNG(object.obj_lat, object.obj_lon, 5)})</div>
 			       		</div>
 			        </div><br>

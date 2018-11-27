@@ -16,7 +16,7 @@ document.getElementById('switchGPS').addEventListener('click', function() {// GP
 						success: function(data) {
 							var obj = JSON.parse(data[0]);
 							$.each(obj, function (key, value) {
-								$('<div class="row"><div class="checkbox"><label class="col-xs-10"><input type="checkbox" name="car" onchange="loadGPS(this,\''+value.Abkürzung+'\',\''+value.Farbe+'\');">'+value.Bezeichnung+' </label><div style="background:'+value.Farbe+';" class="col-xs-1">&nbsp;</div></div></div>').appendTo('#gpsLoadedCars');
+								$('<div class="row"><div class="checkbox"><label class="col-10"><input type="checkbox" name="car" onchange="loadGPS(this,\''+value.Abkürzung+'\',\''+value.Farbe+'\');">'+value.Bezeichnung+' </label><div style="background:'+value.Farbe+';" class="col-1">&nbsp;</div></div></div>').appendTo('#gpsLoadedCars');
 							});
 						},					
 						error: function(xhr, desc, err) {

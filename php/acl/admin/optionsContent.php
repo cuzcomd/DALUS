@@ -7,26 +7,26 @@
 				    <form id ="addNewUser" action='' method='POST' class='ajax_create_user form-horizontal' role='form'>
 				    <div class="col-12">
 						<div class="form-group">
-							<label for="newBenutzername" class="col-xs-4 control-label">Benutzername:</label>
-							<div class="col-xs-7">
+							<label for="newBenutzername" class="col-4 control-label">Benutzername:</label>
+							<div class="col-7">
 						    	<input type="text" class="form-control" id="newBenutzername" name="benutzername" maxlength="20" required>
 						    </div>
 						</div>
 						<div class="form-group">
-						    <label for="newVorname" class="col-xs-4 control-label">Vorname:</label>
-						    <div class="col-xs-7">
+						    <label for="newVorname" class="col-4 control-label">Vorname:</label>
+						    <div class="col-7">
 						    	<input type="test" class="form-control" id="newVorname" name="vorname" maxlength="20" required>
 						    </div>
 						</div>
 						<div class="form-group">
-							<label for="newNachname" class="col-xs-4 control-label">Nachname:</label>
-							<div class="col-xs-7">
+							<label for="newNachname" class="col-4 control-label">Nachname:</label>
+							<div class="col-7">
 						    	<input type="text" class="form-control" id="newNachname" name="nachname" maxlength="20" required>
 						    </div>
 						</div>
 						<div class="form-group">
-						    <label for="newPasswort" class="col-xs-4 control-label">Passwort:</label>
-						    <div class="col-xs-7">
+						    <label for="newPasswort" class="col-4 control-label">Passwort:</label>
+						    <div class="col-7">
 						    	<input type="password" class="form-control" id="newPasswort" name="passwort" required>
 						    </div>
 						</div>

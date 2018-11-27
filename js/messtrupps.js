@@ -68,21 +68,21 @@ function saveMesstrupps(UID, tableID){ //Speichert die Messtrupps
 		success: function(data) {
 			if (data == 'noAdmin')
 			{
-				toastr.error('Du verfügst nicht über die benötigten Rechte.');
+				alertify.error('Du verfügst nicht über die benötigten Rechte.');
 			}
 			else if (data == "successGlobal")
 			{
-				toastr.success('Globale Konfiguration überschrieben.');
+				alertify.success('Globale Konfiguration überschrieben.');
 				updateMesstruppsMarker() //Aktualisiert die Anzeige direkt nach einer Änderung
 			}
 			else if (data == "successLocal")
 			{
-				toastr.success('Konfiguration überschrieben.');
+				alertify.success('Konfiguration überschrieben.');
 				updateMesstruppsMarker() //Aktualisiert die Anzeige direkt nach einer Änderung
 			}
 			else
 			{
-				toastr.error('Es ist ein Fehler aufgetreten.');
+				alertify.error('Es ist ein Fehler aufgetreten.');
 			}
 		},
 		error: function(xhr, desc, err) {

@@ -49,8 +49,8 @@
 					<div id="geocoder container">
 						<form id="input-form-met" class="form-horizontal" role="form">
 							<div class="form-group row" data-toggle="tooltip" title="Freisetzungsort">
-								<label class="control-label col-xs-12 col-sm-3" for="addresse">Scha&shy;dens&shy;ort</label>
-								<div class="col-xs-12 col-sm-5">
+								<label class="control-label col-12 col-sm-3" for="addresse">Scha&shy;dens&shy;ort</label>
+								<div class="col-8 col-sm-6">
 									<div class="input-group">
 										<div class="input-group-prepend">
 											<span class="input-group-text"><i class="fa fa-home"></i></span>
@@ -58,14 +58,14 @@
 										<input id="addresse" class="form-control" type="textbox" value="Alt Diesdorf 4, Magdeburg">
 									</div>
 								</div>
-								<div class="col-xs-12 col-sm-4 geocoderButtons">
+								<div class="col-4 col-sm-2 geocoderButtons">
 									<button type="button" class="btn btn-default" id="geocode" data-toggle="tooltip" title="MET Freisetzungsort manuell festlegen" onclick="setCoord()"><i class="fa fa-crosshairs"></i> Wählen</button>
 								</div>
 							</div>
 	
 							<div class="form-group row" data-toggle="tooltip" title="Ausbreitungswinkel">
-								<label class="control-label col-xs-12 col-sm-3" for="winkel">Aus&shy;brei&shy;tungs&shy;winkel</label>
-								<div class="col-xs-12 col-sm-5">
+								<label class="control-label col-12 col-sm-3" for="winkel">Aus&shy;brei&shy;tungs&shy;winkel</label>
+								<div class="col-8 col-sm-4">
 									<div class="input-group">
 										<div class="input-group-prepend">
 											<span class="input-group-text"><i class="fa fa-arrows-h"></i></span>
@@ -81,13 +81,13 @@
 										</div>
 									</div>
 								</div>
-								<div class="col-xs-12 col-sm-3">
+								<div class="col-4 col-sm-2 offset-sm-2">
 									<button type="button" class="btn btn-default" id="setWinkel" data-toggle="tooltip" title="Ausbreitungswinkel bestimmen" onclick="$('#modal_winkel').modal('show');"><i class="fa fa-calculator"></i> Ermitteln</button>
 								</div>
 							</div>
 							<div class="form-group row" data-toggle="tooltip" title="Windrichtung">
-								<label class="control-label col-xs-12 col-sm-3" for="windrichtung">Wind&shy;richtung</label>
-								<div class="col-xs-12 col-sm-5">
+								<label class="control-label col-12 col-sm-3" for="windrichtung">Wind&shy;richtung</label>
+								<div class="col-8 col-sm-4">
 									<div class="input-group">
 										<div class="input-group-prepend">
 											<span class="input-group-text"><i class="fa fa-location-arrow"></i></span>
@@ -101,8 +101,8 @@
 							</div>
 	
 							<div class="form-group row" data-toggle="tooltip" title="Gefährdung für Personen im Gebäude">
-								<label class="control-label col-xs-12 col-sm-3" for="distanz 1">Gefährdung für Personen im Gebäude</label>
-								<div class="col-xs-12 col-sm-5">
+								<label class="control-label col-12 col-sm-3" for="distanz 1">Gefährdung für Personen im Gebäude</label>
+								<div class="col-8 col-sm-4">
 									<div class="input-group">
 										<div class="input-group-prepend">
 											<span class="input-group-text"><i class="fa fa-exclamation"></i> <i class="fa fa-home"></i></span>
@@ -116,8 +116,8 @@
 							</div>
 								
 							<div class="form-group row" data-toggle="tooltip" title="Gefährdung für Personen im Freien">
-								<label class="control-label col-xs-12 col-sm-3" for="distanz 1">Gefährdung für Personen im Freien</label>
-								<div class="col-xs-12 col-sm-5">
+								<label class="control-label col-12 col-sm-3" for="distanz 1">Gefährdung für Personen im Freien</label>
+								<div class="col-8 col-sm-4">
 									<div class="input-group">
 										<div class="input-group-prepend">
 											<span class="input-group-text"><i class="fa fa-exclamation"></i> <i class="fa fa-street-view"></i></span>
@@ -149,8 +149,8 @@
 			<div class="modal-body">
 				<form id="form_winkelrechner" class="form-horizontal">
 					<div class="form-group">
-						<label for="nebel" class="col-xs-4 form-control-label">Nebel</label>
-						<div class="col-xs-8">
+						<label for="nebel" class="col-4 form-control-label">Nebel</label>
+						<div class="col-8">
 							<select id="nebel" name="nebel" class="form-control">
 								<option value="true" label="Ja">Ja</option>
 								<option value="false" label="Nein">Nein</option>
@@ -159,8 +159,8 @@
 					</div>
 
 					<div class="form-group">	
-						<label for="windgeschwindigkeit" class="col-xs-4 form-control-label">Wind&shy;ge&shy;schwin&shy;dig&shy;keit</label>
-						<div class="col-xs-8">
+						<label for="windgeschwindigkeit" class="col-4 form-control-label">Wind&shy;ge&shy;schwin&shy;dig&shy;keit</label>
+						<div class="col-8">
 							<select id="windgeschwindigkeit" name="windgeschwindigkeit" class="form-control">
 								<option value="high" label="gr&ouml;&szlig;er 5 m/s (18 km/h)">gr&ouml;&szlig;er 5 m/s (18 km/h)</option>
 								<option value="medium" label="zwischen 1 m/s (4 km/h) und 5 m/s (18 km/h)">zwischen 1 m/s (4 km/h) und 5 m/s (18 km/h)</option>
@@ -170,8 +170,8 @@
 					</div>
 
 					<div class="form-group">	
-						<label for="himmel" class="col-xs-4 form-control-label">Bedeckter Himmel</label>
-						<div class="col-xs-8">
+						<label for="himmel" class="col-4 form-control-label">Bedeckter Himmel</label>
+						<div class="col-8">
 							<select id="himmel" name="himmel" class="form-control">
 								<option value="true" label="mehr als 50 %">mehr als 50 %</option>
 								<option value="false" label="weniger als 50 %">weniger als 50 %</option>
@@ -180,8 +180,8 @@
 					</div>
 
 					<div class="form-group">
-						<label for="tageszeit" class="col-xs-4 form-control-label">Tageszeit</label>
-						<div class="col-xs-8">
+						<label for="tageszeit" class="col-4 form-control-label">Tageszeit</label>
+						<div class="col-8">
 							<select id="tageszeit" name="tageszeit" class="form-control">
 								<option value="day" label="Tag">Tag</option>
 								<option value="night" label="Nacht">Nacht</option>
@@ -190,8 +190,8 @@
 					</div>
 				
 					<div class="form-group">
-						<label for="monat" class="col-xs-4 form-control-label">Monat</label>
-						<div class="col-xs-8">
+						<label for="monat" class="col-4 form-control-label">Monat</label>
+						<div class="col-8">
 							<select id="monat" name="monat" class="form-control">
 								<option value="om" label="Oktober - M&auml;rz">Oktober - M&auml;rz</option>
 								<option value="as" label="April - September">April - September</option>
@@ -200,8 +200,8 @@
 					</div>
 
 					<div class="form-group">
-						<label for="brand" class="col-xs-4 form-control-label">Brand</label>
-						<div class="col-xs-8">
+						<label for="brand" class="col-4 form-control-label">Brand</label>
+						<div class="col-8">
 							<select id="brand" name="brand" class="form-control">
 								<option value="true" label="Ja">Ja</option>
 								<option value="false" label="Nein">Nein</option>
@@ -209,15 +209,15 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="intensiverbrand" class="col-xs-4 form-control-label">Intensiver Brand</label>
-						<div class="col-xs-8" id="intensiverbrand">
+						<label for="intensiverbrand" class="col-4 form-control-label">Intensiver Brand</label>
+						<div class="col-8" id="intensiverbrand">
 							<label class="radio-inline"><input type="radio" id="intens_brand_ja" name="intens_brand" value="ja">Ja</label>
 							<label class="radio-inline"><input type="radio" id="intens_brand_nein" name="intens_brand" value="nein" checked>Nein</label>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="tiefkalt" class="col-xs-4 form-control-label">Tiefkaltes Gas</label>
-						<div class="col-xs-8" id ="tiefkalt">
+						<label for="tiefkalt" class="col-4 form-control-label">Tiefkaltes Gas</label>
+						<div class="col-8" id ="tiefkalt">
 							<label class="radio-inline"><input type="radio" id="tiefkalt_ja" name="tiefkalt" value="ja">Ja</label>
 							<label class="radio-inline"><input type="radio" id="tiefkalt_nein" name="tiefkalt" value="nein" checked>Nein</label>
 						</div>

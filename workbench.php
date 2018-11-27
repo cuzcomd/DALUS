@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="de">
   <head>
-    meta charset="UTF-8"/>
+  <meta charset="UTF-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="Webanwendung zur Ausbreitungsabschätzung von Schadstoffen in der Atmosphäre für Feuerwehren.">
@@ -17,11 +17,12 @@
   <!-- Main CSS-->
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/alertify.min.css">
+  <link rel="stylesheet" href="css/alertify.bootstrap.min.css">
   <link rel="stylesheet" href="css/bootstrap-colorpicker.min.css">
   <link rel="stylesheet" href="css/bootstrap-editable.css">
   <link rel="stylesheet" href="https://cdn.datatables.net/v/bs4/dt-1.10.18/fh-3.1.4/r-2.2.2/sc-1.5.0/sl-1.2.6/datatables.min.css">
-  <link rel="stylesheet" href="css/toastr.min.css">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="css/fontawesome.min.css">
   </head>
   <?php
     require "php/modals.php"
@@ -51,9 +52,9 @@
           <button class="app-search__button" id="startSearch"><i class="fa fa-search"></i></button>
         </li>
         <!-- User Menu-->
-        <li class="dropdown"><a class="app-nav__item" href="#" data-toggle="dropdown" aria-label="Profiloptionen"><i class="fa fa-user fa-lg"></i></a>
+        <li class="dropdown"><a class="app-nav__item" href="#" data-toggle="dropdown" aria-label="Optionen"><i class="fa fa-ellipsis-v fa-lg"></i></a>
           <ul class="dropdown-menu settings-menu dropdown-menu-right">
-            <li><a class="dropdown-item" data-toggle="modal"  href='#modal_options'"><i class="fa fa-cog fa-lg"></i> Einstellungen</a></li>
+            <li><a class="dropdown-item" data-toggle="modal"  href='#modal_options'"><i class="fa fa-cogs fa-lg"></i> Einstellungen</a></li>
             <li><a class="dropdown-item" onclick="printMap()" href="javascript:;"><i class="fa fa-print fa-lg"></i> Karte drucken</a></li>
             <li><a class="dropdown-item" data-toggle="modal" href='#modal_license' ><i class="fa fa-info-circle fa-lg"></i> Über DALUS</a></li>
             <li><a class="dropdown-item" href="php/logout"><i class="fa fa-sign-out fa-lg"></i> Abmelden</a></li>
@@ -103,47 +104,49 @@
     </main>
     <div id="modul-Kompass" class="modul-Kompass"><img src="images/arrow.png" alt="Windrose" id="arrow"/></div>
     <!-- Essential javascripts for application to work-->
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script src="js/plugins/jquery.min.js"></script>
+    <script src="js/plugins/popper.min.js"></script>
+   <script src="js/plugins/bootstrap.min.js"></script>
     <script src="js/main.js"></script>
     <!-- The javascript plugin to display page loading on top-->
     <script src="js/plugins/pace.min.js"></script>
     <!-- Page specific javascripts-->
-    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.18/fh-3.1.4/r-2.2.2/sc-1.5.0/sl-1.2.6/datatables.min.js"></script>
-    <script src="js/dataTables.cellEdit.js"></script>
+    <script src="js/plugins/datatables.min.js"></script>
+    <script src="js/plugins/dataTables.cellEdit.js"></script>
     <script src="js/OSM.js"></script>
     <script src="js/users.js"></script>
     <script src="js/objects.js"></script>
     <script src="js/messkataster.js"></script>
     <script src="js/messtrupps.js"></script>
     <script src="js/init.js"></script>
-    <script src="js/bootstrap-colorpicker.min.js"></script>
-  <script>
+    <script src="js/plugins/bootstrap-colorpicker.min.js"></script>
+    <script>
     OWMAPIkey = "";
-  GoogleAPIkey = "";
-  cityName = "Magdeburg";
-  benutzer = []; //Initialisierung
-  optionen = []; //Initialisierung
-  prj_id = 0; //Initialisierung
-  maxRowID = 0; //Initialisierung
-  messpunktNummer = 1; //Initialisierung
-  objectNummer = 1; // Initialisierung
-  metCounter = 1; // Initialisierung
-  activeObject = null; // Initialisierung
-  activeProjectName = "Unbekanntes Projekt";  //Initialisierung
-  ursprungKoordinaten = ""; //Initialisierung
-  loadUser(); // Daten des angemeldeten Benutzers laden
-  updateProjects(); //Verfügbare Projekte aktualisieren
-  updateSharedProjects(); //Verfügbare geteilte Projekte aktualisieren
-  isSharedWith(); //Aktualisieren, mit wem das Projekt geteilt wird
-  updateAllUsers() //Aktulisiert alle verfügbaren Benutzer
-  objectArray = []; //Array für temporär erzeugte Objekte
-  deleteArray = []; // Array für temporär gelöschte Objekte
-  markerArray =[]; // Array für temporär erzeugte Marker
-  messtruppArray = []; // Array für Messtrupps
-  var selectedShape; //Initialisierung für aktuell markiertes Geometrieobjekt
+    GoogleAPIkey = "";
+    cityName = "Magdeburg";
+    benutzer = []; //Initialisierung
+    optionen = []; //Initialisierung
+    prj_id = 0; //Initialisierung
+    maxRowID = 0; //Initialisierung
+    messpunktNummer = 1; //Initialisierung
+    objectNummer = 1; // Initialisierung
+    metCounter = 1; // Initialisierung
+    activeObject = null; // Initialisierung
+    activeProjectName = "Unbekanntes Projekt";  //Initialisierung
+    ursprungKoordinaten = ""; //Initialisierung
+    loadUser(); // Daten des angemeldeten Benutzers laden
+    updateProjects(); //Verfügbare Projekte aktualisieren
+    updateSharedProjects(); //Verfügbare geteilte Projekte aktualisieren
+    isSharedWith(); //Aktualisieren, mit wem das Projekt geteilt wird
+    updateAllUsers() //Aktulisiert alle verfügbaren Benutzer
+    objectArray = []; //Array für temporär erzeugte Objekte
+    deleteArray = []; // Array für temporär gelöschte Objekte
+    markerArray =[]; // Array für temporär erzeugte Marker
+    messtruppArray = []; // Array für Messtrupps
+    var selectedShape; //Initialisierung für aktuell markiertes Geometrieobjekt
+
     function initMap() {
+    alertify.set('notifier','position', 'bottom-center');
     loadOSMLayer(); // OSM Kartenbilder laden
     infoWindow = new google.maps.InfoWindow({}); //Globale Initialisierung des Infowindows
     startDrawingManager(map); //Google DrawingManager laden
@@ -241,17 +244,16 @@
   <script src="js/module.js"></script>
   <script src="js/googleDrawingManager.js"></script>
   <textarea id="kmlString"></textarea>  <!-- unsichbares Textfeld  als Zwischenspeicher für kml-Export-->
-  <script src = "https://maps.googleapis.com/maps/api/js?libraries=geometry,drawing,places&callback=initMap" async defer></script>
-  <script src = "js/bootstrap-editable.min.js"></script>  <!-- Script mit Funktionen zur direkten Bearbeitung des Inhalts von DOM-Elementen  -->
-  <script src = "js/html2canvas.min.js" defer></script>  <!-- Script zum erzuegen eines Screenshots der google-Karte  -->
+  <script src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyDY_NrEuhiUpKDhL7TbzNd-Vmvl266lzaM&libraries=geometry,drawing,places&callback=initMap" async defer></script>
+  <script src = "js/plugins/bootstrap-editable.min.js"></script>  <!-- Script mit Funktionen zur direkten Bearbeitung des Inhalts von DOM-Elementen  -->
+  <script src = "js/plugins/html2canvas.min.js" defer></script>  <!-- Script zum erzuegen eines Screenshots der google-Karte  -->
   <script src = "js/usng.min.js" defer></script> <!-- Script für Umwandlung von Geokoordinaten in UTM-Ref Koordinaten -->
   <script src = "js/MET.js" defer></script> <!-- Adresse des MET-Modells durch Eingabemaske oder manuelle Festlegung bestimmen -->
   <script src = "js/project.js" defer></script> <!--  Script mit Funktionen zur Projektverwaltung-->
   <script src = "js/helpers.js" defer></script> <!-- Script mit Hilfsfunktionen  -->
   <script src = "js/xmlwriter.js" defer></script> <!-- Script zum erzeugen einer kml-Datei -->
   <script src = "js/exportKml.js" defer></script> <!-- Script zum Export der Geometriedaten als kml-Datei -->
-  <script src = "js/alertify.min.js" defer></script> <!-- Script zur Anzeige von Popupbenachrichtigungen -->
-  <script src = "js/toastr.min.js" defer></script> <!-- Script zum dynamischen Anzeigen von Statusmeldungen -->
+  <script src = "js/plugins/alertify.min.js" defer></script> <!-- Script zur Anzeige von Popupbenachrichtigungen -->
   <script src = "js/geocoder.js" defer></script> <!-- Geocoding von Messpunkten -->
   <script src = "js/openweathermap.js" defer></script> <!-- Geocoding von Messpunkten -->
   </body>

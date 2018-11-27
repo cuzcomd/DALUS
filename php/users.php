@@ -98,8 +98,15 @@ function editUser(){
 
  	if ($user !== false) {
 		if(!empty($_POST['newPassword']))
-		{
-			$newPasswordHash =  password_hash($newPassword, PASSWORD_BCRYPT);
+		{	
+			if (defined('PASSWORD_ARGON2I'))
+			{
+				$newPasswordHash =  password_hash($newPassword, PASSWORD_ARGON2I);
+			}
+			else
+			{
+				$newPasswordHash =  password_hash($newPassword, PASSWORD_BCRYPT);
+			}
 			$stmt2 = $pdo->prepare("UPDATE users SET benutzername = :username , passwort = :newPasswordHash WHERE id = :userID");
 			$stmt2->bindParam(':newPasswordHash', $newPasswordHash, PDO::PARAM_STR);
 			$stmt2->bindParam(':username', $username, PDO::PARAM_STR, 12);
@@ -131,7 +138,15 @@ function createUser(){
 	$benutzername = (!empty($_POST['benutzername']) ? $_POST['benutzername']:'');
 	$vorname = (!empty($_POST['vorname']) ? $_POST['vorname']:'');
 	$nachname = (!empty($_POST['nachname']) ? $_POST['nachname']:'');
-	$passwort = password_hash((!empty($_POST['benutzername']) ? $_POST['benutzername']:''), PASSWORD_BCRYPT);
+	if (defined('PASSWORD_ARGON2I'))
+			{
+				$passwort = password_hash((!empty($_POST['benutzername']) ? $_POST['benutzername']:''), PASSWORD_ARGON2I);
+			}
+			else
+			{
+				$passwort = password_hash((!empty($_POST['benutzername']) ? $_POST['benutzername']:''), PASSWORD_BCRYPT);
+			}
+	
 	$level = (!empty($_POST['level']) ? $_POST['level']:'');
 	
 	if ($accessLevel == "admin")

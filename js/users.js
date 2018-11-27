@@ -68,7 +68,7 @@ $("document").ready(function(){
 				switch(data){
 					case 'Success':
 						$('#modalUserSettings').modal('hide'); //Modal schließen
-						toastr.success('Daten geändert.');
+						alertify.success('Daten geändert.');
 						loadUser(); //Lädt neue Nutzerdaten
 						updateProjects(); //Verfügbare Projekte aktualiseren
 						updateSharedProjects(); //Verfügbare mit dem Benutzer geteilte Projekte aktualiseren
@@ -76,7 +76,7 @@ $("document").ready(function(){
 						updateAllUsers()
 						break;
 					default:
-					toastr.warning('Fehler aufgetreten.');
+					alertify.warning('Fehler aufgetreten.');
 						break;
 				}
 			},
@@ -101,7 +101,7 @@ $("document").ready(function(){
 				switch(data){
 					case 'yes':
 						$('#modalUserSettings').modal('hide'); //Modal schließen
-						toastr.success('Neuen Benutzer angelegt.');
+						alertify.success('Neuen Benutzer angelegt.');
 						updateProjects();
 						updateSharedProjects();
 						isSharedWith();
@@ -109,15 +109,15 @@ $("document").ready(function(){
 						break;
 
 					case 'no':
-						toastr.warning('Dieser Benutzername ist schon vorhanden .');
+						alertify.warning('Dieser Benutzername ist schon vorhanden .');
 						break;
 
 					case 'noAdmin':
-						toastr.warning('Sie verfügen nicht über die notwendigen Rechte, um diese Aktion auszuführen. Wenden Sie sich an einen Administrator.');
+						alertify.warning('Sie verfügen nicht über die notwendigen Rechte, um diese Aktion auszuführen. Wenden Sie sich an einen Administrator.');
 						break;
 
 					default:
-						toastr.warning('Fehler aufgetreten.');
+						alertify.warning('Fehler aufgetreten.');
 						break;
 				}
 			},
@@ -141,7 +141,7 @@ $("document").ready(function(){
 			success: function(data) {
 				switch(data){
 					case 'ok':
-						toastr.success('Nutzer gelöscht.');
+						alertify.success('Nutzer gelöscht.');
 						loadUser(); //Lädt neue Nutzerdaten
 						updateProjects(); //Verfügbare Projekte aktualiseren
 						updateSharedProjects(); //Verfügbare mit dem Benutzer geteilte Projekte aktualiseren
@@ -150,11 +150,11 @@ $("document").ready(function(){
 						break;
 
 					case 'noAdmin':
-						toastr.warning('Sie verfügen nicht über die notwendigen Rechte, um diese Aktion auszuführen. Wenden Sie sich an einen Administrator.');
+						alertify.warning('Sie verfügen nicht über die notwendigen Rechte, um diese Aktion auszuführen. Wenden Sie sich an einen Administrator.');
 						break;
 
 					default:
-						toastr.warning('Fehler aufgetreten.');
+						alertify.warning('Fehler aufgetreten.');
 						break;
 				}
 			},

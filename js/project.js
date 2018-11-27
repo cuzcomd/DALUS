@@ -63,7 +63,7 @@ function saveProjectStatus(){ // Erzeugt neue Messpunkte oder aktualisiert Vorha
 		return false;
 	});//Ende forEach()
 	setTimeout(function() {
-			toastr.success('Projekt gespeichert. <span class="label label-info"><span class="fa fa-pencil" aria-hidden="true"></span> '+ objectArray.length+'</span> <span class="label label-danger"><span class="fa fa-trash" aria-hidden="true"></span> '+ deleteArray.length+'</span>'); //Zeigt an, wie viele Objekte gespeichert und gelöscht wurden
+			alertify.success('Projekt gespeichert. <span class="label label-info"><span class="fa fa-pencil" aria-hidden="true"></span> '+ objectArray.length+'</span> <span class="label label-danger"><span class="fa fa-trash" aria-hidden="true"></span> '+ deleteArray.length+'</span>'); //Zeigt an, wie viele Objekte gespeichert und gelöscht wurden
 			deleteArray.length = 0; // Leert den Array der zu löschenden Elemente nach dem Speichern des Projekts
 	}, 100);//Ende setTimeout
 }// Ende Funktion saveProjectStatus
@@ -74,43 +74,39 @@ function deleteProject(){ // Löscht das aktuelle Projekt, sowie alle dazugehör
 		"prj_id": prj_id
 	};
 	data = $(this).serialize() + "&" + $.param(data);
-	alertify.confirm("Soll das Projekt wirklich gelöscht werden?", function (e) {
-	    if (e) {
-	    	 $.ajax({
-				type: "POST",
-				dataType: "json",
-				url: "php/projects.php",
-				data: data,
-				success: function(data) {
-					if(data == "success")
-					{
-						$(".app-sidebar__project-information").html("&nbsp; Kein Projekt geöffnet");
-						$('#editProject').hide(); // Menüpunkt 'Projekt bearbeiten' anzeigen
-						$('#saveProject').hide(); // Menüpunkt 'Projekt speichern' anzeigen
-						$('#deleteProject').hide(); // Menüpunkt 'Projekt speichern' anzeigen
-						prj_id = 0;
-						clearMap();
-						loadProjectObjects();
-						updateProjects();
-						updateSharedProjects();
-						isSharedWith();
-						updateAllUsers()
-						toastr.error('Projekt gelöscht.');
-					}
-					else
-					{
-						toastr.error('Du kannst dieses Projekt nicht löschen. Wende dich an den Ersteller.');
-					}
-				},
-				error: function(xhr, desc, err) {
-					console.log(xhr);
-					console.log("Details: " + desc + "\nError:" + err);
+	alertify.confirm('Soll das Projekt wirklich gelöscht werden?', function () {
+    	 $.ajax({
+			type: "POST",
+			dataType: "json",
+			url: "php/projects.php",
+			data: data,
+			success: function(data) {
+				if(data == "success")
+				{
+					$(".app-sidebar__project-information").html("&nbsp; Kein Projekt geöffnet");
+					$('#editProject').hide(); // Menüpunkt 'Projekt bearbeiten' anzeigen
+					$('#saveProject').hide(); // Menüpunkt 'Projekt speichern' anzeigen
+					$('#deleteProject').hide(); // Menüpunkt 'Projekt speichern' anzeigen
+					prj_id = 0;
+					clearMap();
+					loadProjectObjects();
+					updateProjects();
+					updateSharedProjects();
+					isSharedWith();
+					updateAllUsers()
+					alertify.error('Projekt gelöscht.');
 				}
-			}); //Ende ajax
-			
-			return false;
-		} // Ende if
-	}); // Ende alerify
+				else
+				{
+					alertify.error('Du kannst dieses Projekt nicht löschen. Wende dich an den Ersteller.');
+				}
+			},
+			error: function(xhr, desc, err) {
+				console.log(xhr);
+				console.log("Details: " + desc + "\nError:" + err);
+			}
+		}); //Ende ajax
+	}).set({'labels':{ok:'Ja', cancel:'Nein'}}); // Ende alerify
 } //Ende Funktion deleteProject()
 
 $("document").ready(function(){
@@ -127,7 +123,7 @@ $("document").ready(function(){
 			url: "php/projects.php",
 			data: data,
 			success: function(data) {
-				toastr.success('Neues Projekt angelegt.');
+				alertify.success('Neues Projekt angelegt.');
 				$(".app-sidebar__project-information").html(data["projekttitel"]);
 				$('.activeProjectName').attr("value",data["projekttitel"]);
 				$('.activeProjectID').val(data["projekt_id"]);
@@ -165,11 +161,11 @@ $("document").ready(function(){
 			success: function(data) {
 				if(data == "error")
 				{
-					toastr.error('Du kannst dieses Projekt nicht ändern. Bitte wende dich an den Ersteller.');
+					alertify.error('Du kannst dieses Projekt nicht ändern. Bitte wende dich an den Ersteller.');
 				}
 				else
 				{
-					toastr.success('Projekt geändert.');
+					alertify.success('Projekt geändert.');
 					$(".app-sidebar__project-information").html(data["projekttitel"]);
 					$('.activeProjectName').attr("value",data["projekttitel"]);
 					$('#modal_edit_project').modal('hide');
@@ -200,13 +196,13 @@ $("document").ready(function(){
 			success: function(data) {
 				if(data == "error")
 				{
-					toastr.error('Du kannst dieses Projekt nicht laden.');
+					alertify.error('Du kannst dieses Projekt nicht laden.');
 				}
 				else
 				{ 
 					if (data['project_level'] == "own")
 					{
-						toastr.success('Projekt geladen.');
+						alertify.success('Projekt geladen');
 						$(".app-sidebar__project-information").html(data["projektName"]); //Projekttitel anzeigen
 						prj_id = parseInt(data["projektID"]); // In Datenbak erzeugte Projekt ID einlesen
 						messpunktNummer = parseInt(data["maxNum"])+1;
@@ -226,7 +222,7 @@ $("document").ready(function(){
 					}
 					else
 					{
-						toastr.success('Projekt geladen.');
+						alertify.success('Projekt geladen.');
 						$(".app-sidebar__project-information").html(data["projektName"]); //Projekttitel anzeigen
 						prj_id = parseInt(data["projektID"]); // In Datenbak erzeugte Projekt ID einlesen
 						messpunktNummer = parseInt(data["maxNum"])+1;

@@ -1,4 +1,4 @@
-<?php 
+<?php
 session_start();
 session_regenerate_id();
 require('php/config.php');
@@ -33,11 +33,12 @@ if(isset($_GET['login'])) { // Überprüft, ob das Loginformular abgeschickt wur
 	<title>Digitale Ausbreitungsabschätzung Luftgetragener Schadstoffe (DALUS)</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<script src="js/plugins/jquery.min.js"></script>
+	<script src="js/plugins/bootstrap.min.js"></script>
+	<script src="js/plugins/alertify.min.js"></script>
 	<link href="css/floating-labels.css" rel="stylesheet">
+	<link href="css/alertify.bootstrap.min.css" rel="stylesheet">
 	<link href='https://fonts.googleapis.com/css?family=Graduate' rel='stylesheet' type='text/css'>
 	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 	<!--[if lt IE 9]>
@@ -54,7 +55,6 @@ if(isset($_GET['login'])) { // Überprüft, ob das Loginformular abgeschickt wur
 	<meta name="theme-color" content="#ffffff">
 </head>
 <body>
-
 	<form class="form-signin" action="?login=1" method="post">
       <div class="text-center mb-4">
         <img class="mb-4" src="images/dalus_logo.svg" alt="" width="364" height="182">
@@ -74,13 +74,16 @@ if(isset($_GET['login'])) { // Überprüft, ob das Loginformular abgeschickt wur
       <button class="btn btn-lg btn-primary btn-block btn-login" type="submit">Anmelden</button>
       <p class="mt-5 mb-3 text-muted text-center">Fachdienst ABC - Landeshauptstadt Magdburg</p>
     </form>
+    <div>
 	<?php 
 		if(isset($errorMessage)) {
-			echo '<div class="alert alert-danger alert-dismissible fade in col-xs-4 col-xs-push-4 alert-trim" role="alert">
+			echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
 			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-			<h4>' .$errorMessage .'</h4>
-			<p>Bitte erneut versuchen</p> </div>';
+			<h4 class="alert-heading">' .$errorMessage .'</h4>
+			<hr>
+			<p class="mb-0">Bitte erneut versuchen</p> </div>';
 		}
 	?>
+</div>
 </body>
 </html>

@@ -19,8 +19,8 @@ function loadOSMLayer(){
 		mapTypeId: "roadmap",
 		mapTypeControlOptions: {
 			mapTypeIds: mapTypeIds,
-			style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-			position: google.maps.ControlPosition.BOTTOM_RIGHT
+			style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
+			position: google.maps.ControlPosition.TOP_RIGHT
 		}//,
 		//center: {lat: 52.13024, lng: 11.56567700000005} // Koordinaten des Kartenmittelpunkts
 	});
@@ -39,7 +39,7 @@ function loadOSMLayer(){
 			return "https://tile.openstreetmap.org/" + zoom + "/" + x + "/" + coord.y + ".png";
 		},
 		tileSize: new google.maps.Size(256, 256),
-		name: "OpenStreetMap",
+		name: "OSM",
 		maxZoom: 18
 	}));	
 }//Ende Funktion loadOSMLayer
