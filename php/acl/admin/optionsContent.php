@@ -91,8 +91,8 @@
        </tbody>
     </table>
     <button role="button" class="btn btn-default" onclick ="addRow(dataTable2,'dataTable2')"><i class="fa fa-plus-square"></i> Neuen Messpunkt hinzufügen</button>
-    <button role="button" class="btn btn-primary" onclick="updateKataster('su', dataTable2)"><i class="fa fa-refresh"></i> Vorlage laden</button>
-    <button role="button" class="btn btn-danger" onclick="saveKataster('su', '#katasterGlobal')"><i class="fa fa-floppy-o"></i> Vorlage überschreiben</button>
+    <button role="button" class="btn btn-primary" onclick="updateKataster('su', dataTable2)"><i class="fa fa-refresh"></i> Systemeinstellungen laden</button>
+    <button role="button" class="btn btn-danger" onclick="saveKataster('su', '#katasterGlobal')"><i class="fa fa-floppy-o"></i> Systemeinstellungen überschreiben</button>
 </div> <!-- Ende messkatasterGlobal -->
 
 <div id="truppsGlobal" class="tab-pane fade">
@@ -109,7 +109,7 @@
        <tbody>
        </tbody>
     </table>
-    <button role="button" class="btn btn-default" onclick ="addRowMesstrupps(dataTable4,'dataTable4')"><i class="fa fa-plus-square"></i> Neuen Messtrupp hinzufügen</button>
-    <button role="button" class="btn btn-primary" onclick="updateMesstrupps('su', dataTable4)"><i class="fa fa-refresh"></i> Vorlage laden</button>
-    <button role="button" class="btn btn-danger" onclick="saveMesstrupps('su', '#messtruppsGlobal')"><i class="fa fa-floppy-o"></i> Vorlage überschreiben</button>
+    <button role="button" class="btn btn-default" onclick ="addRowMesstrupps(dataTable4,'dataTable4',4)"><i class="fa fa-plus-square"></i> Neuen Messtrupp hinzufügen</button>
+    <button role="button" class="btn btn-primary" onclick="updateMesstrupps('su', dataTable4,4)"><i class="fa fa-refresh"></i> Systemeinstellungen laden</button>
+    <button role="button" class="btn btn-danger" onclick="saveMesstrupps('su', '#messtruppsGlobal',4)"><i class="fa fa-floppy-o"></i> Systemeinstellungen überschreiben</button>
 </div> <!-- Ende messkatasterGlobal -->

@@ -415,19 +415,16 @@ function clearSelectionLoad() {
 } //Ende der Funktion clearSelection()
 
 function deleteObject(){
-	if(activeObject && activeObject.typ != "katasterpunkt"){ //Führt den Löschvorgang nur aus, wenn ein Objekt ausgewählt wurde und es sich nicht um einen Punkkt des Messkatasters handelt.
+	if(activeObject && activeObject.typ != "katasterpunkt"){ //Führt den Löschvorgang nur aus, wenn ein Objekt ausgewählt wurde und es sich nicht um einen Punkt des Messkatasters handelt.
 		var index = objectArray.findIndex(x => x.obj_nummer == activeObject.obj_nummer && x.obj_typ == activeObject.obj_typ);
 		objectArray.splice(index,1); // Löscht das Objekt aus dem Objekt-Array
 		let deleteObject = {nummer:activeObject.obj_nummer, typ:activeObject.obj_typ}; //Erzeugt das zu löschende Objekt
 		deleteArray.push(deleteObject); //Verschiebt das zu löschende Objekt in den Lösch-Array
-		infoWindow.setMap(null);
+		infoWindow.setMap(null); // Löscht das Infowindow
 		activeObject.setMap(null);// Löscht das Objekt von der Karte
-
-		if (activeObject.poly1 !== undefined && activeObject.poly2 !== undefined){ // Überprüft, ob es sich um einen MET-Marker handelt (dieser besitzt zwei Ausbreitungspolygone)
-			activeObject.poly1.setMap(null);// Löscht das zugehörige Ausbreitungspolygon von der Karte
-			activeObject.poly2.setMap(null);// Löscht das zugehörige Ausbreitungspolygon von der Karte
-			activeObject.centerLine.setMap(null);// Löscht das zugehörige Ausbreitungspolygon von der Karte
-		}
+		activeObject.poly1 !== undefined ? activeObject.poly1.setMap(null) : '';// Löscht das zugehörige Ausbreitungspolygon von der Karte
+		activeObject.poly2 !== undefined ? activeObject.poly2.setMap(null) : '';// Löscht das zugehörige Ausbreitungspolygon von der Karte
+		activeObject.centerLine !== undefined ? activeObject.centerLine.setMap(null) : '';// Löscht das zugehörige Ausbreitungspolygon von der Karte
 		activeObject = null; //Aktives Objekt zurücksetzen
 	}// Ende if (activeObject)
 }// Ende Funktion deleteObject()

@@ -13615,7 +13615,7 @@ be a descendant of the grid when it is being dragged.
 }
 
 .app-sidebar__toggle:before {
-  content: "\f0c9";
+  content: "\f0ec";
   font-size: 21px;
 }
 

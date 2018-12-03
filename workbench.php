@@ -54,7 +54,7 @@
         <!-- User Menu-->
         <li class="dropdown"><a class="app-nav__item" href="#" data-toggle="dropdown" aria-label="Optionen"><i class="fa fa-ellipsis-v fa-lg"></i></a>
           <ul class="dropdown-menu settings-menu dropdown-menu-right">
-            <li><a class="dropdown-item" data-toggle="modal"  href='#modal_options'"><i class="fa fa-cogs fa-lg"></i> Einstellungen</a></li>
+            <li><a class="dropdown-item" data-toggle="modal"  href='#modal_options'"><i class="fa fa-sliders fa-lg"></i> Einstellungen</a></li>
             <li><a class="dropdown-item" onclick="printMap()" href="javascript:;"><i class="fa fa-print fa-lg"></i> Karte drucken</a></li>
             <li><a class="dropdown-item" data-toggle="modal" href='#modal_license' ><i class="fa fa-info-circle fa-lg"></i> Über DALUS</a></li>
             <li><a class="dropdown-item" href="php/logout"><i class="fa fa-sign-out fa-lg"></i> Abmelden</a></li>
@@ -152,7 +152,7 @@
     startDrawingManager(map); //Google DrawingManager laden
     dataTables(); // Lädt die Optionen der datatables
     updateKataster('',dataTable); // Lädt die Messpunkte
-    updateMesstrupps('',dataTable3); // Lädt die Messtrupps
+    updateMesstrupps('',dataTable3,3); // Lädt die Messtrupps
     document.getElementById('calcMET').addEventListener('click', function() { // Beim Klick auf "Zeichnen" MET-Modell erzeugen
       generateMET(map);
     });
@@ -244,7 +244,7 @@
   <script src="js/module.js"></script>
   <script src="js/googleDrawingManager.js"></script>
   <textarea id="kmlString"></textarea>  <!-- unsichbares Textfeld  als Zwischenspeicher für kml-Export-->
-  <script src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyDY_NrEuhiUpKDhL7TbzNd-Vmvl266lzaM&libraries=geometry,drawing,places&callback=initMap" async defer></script>
+  <script src = "https://maps.googleapis.com/maps/api/js?libraries=geometry,drawing,places&callback=initMap" async defer></script>
   <script src = "js/plugins/bootstrap-editable.min.js"></script>  <!-- Script mit Funktionen zur direkten Bearbeitung des Inhalts von DOM-Elementen  -->
   <script src = "js/plugins/html2canvas.min.js" defer></script>  <!-- Script zum erzuegen eines Screenshots der google-Karte  -->
   <script src = "js/usng.min.js" defer></script> <!-- Script für Umwandlung von Geokoordinaten in UTM-Ref Koordinaten -->
