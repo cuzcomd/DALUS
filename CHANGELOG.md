@@ -1,5 +1,14 @@
 ## Changelog
 
+### 2.0.0 (03.12.2018)
+* Style: Komplettes Update auf Bootstrap 4
+* Style: Wechsel auf ein modernes Dashbord-Template
+* Security: Update aller Javascript-Bibliotheken auf aktuelle Version
+* Security: Unterstützung von Argon2 als Passwort-Hashalgorithmus
+* Feature: Einführung Ausbreitungsklasse für MET-Modell
+* Bug: Diverse kleine Fehlerkorrekturen
+* Style: Google-Kartendaten werden als Standardeinstellung geladen
+
 ### 1.6.1 (24.09.2018)
 * Feature: Kartenmittelpunkt wird zu Beginn auf den in den Optionen gewählten Ort gesetzt.
 * Security: Diverse Anpassungen an den Benutzerrechten
