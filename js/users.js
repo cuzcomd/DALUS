@@ -11,8 +11,7 @@ function loadUser(){ // Lädt die Daten des angemeldeten Benutzers
 			optionen = data["optionen"];
 			$(".app-sidebar__user-name").html(benutzer.vorname +' '+ benutzer.nachname); //Zeigt den Namen im Optionsmenü an
 			$("#username").val(benutzer.benutzername);
-			OWMAPIkey = data["owmapi"].opt_OWMAPI;
-			cityName = optionen.opt_city;
+			cityName= optionen;
 			$("#owmcity").val(cityName);
 		},
 		error: function(xhr, desc, err) {
@@ -56,7 +55,8 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 
 
 $("document").ready(function(){
-	$(".ajax_edit_user").submit(function(){
+	$(".ajax_edit_user").on('submit', function (e) {
+		e.preventDefault();
 		var data = {"action": "editUser"};
 		data = $(this).serialize() + "&" + $.param(data);
 		$.ajax({

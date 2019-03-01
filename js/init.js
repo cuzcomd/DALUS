@@ -1,3 +1,4 @@
+	
 function updateProjects(){ //Aktualisiert die Liste der Projekte, die für den angemeldeten Benutzer sichtbar sind
 	$('#projectOpen').children('option').remove();// Leert die Liste aller verfügbaren Optionen
 	var data = {"action": "updateProjects"};

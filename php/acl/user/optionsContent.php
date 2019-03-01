@@ -1,5 +1,5 @@
 <div id="editProfile" class="tab-pane fade show active">
-	<form id ="editUSerProfile" action='' method='POST' class='ajax_edit_user col-md-6' role='form'>
+	<form id ="editUserProfile" action='' method='POST' class='ajax_edit_user col-md-6' role='form'>
 		<div class="form-group">
 			<label for="username" class="control-label">Benutzername</label>
             <input class="form-control" id="username" type="text" placeholder="Benutzername" name="username" required>

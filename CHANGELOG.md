@@ -1,5 +1,11 @@
 ## Changelog
 
+###2.0.1
+* Security: Einlesen von API-Keys über Datenbank, statt bisher hard coded
+* Bug: Ändern der Benutzerdaten hat zu einem Reload der Seite gehführt
+* Code: Restrukturierung der JavaScript-Bibliotheken und Modularisierung der php-Dateien
+
+
 ### 2.0.0 (03.12.2018)
 * Style: Komplettes Update auf Bootstrap 4
 * Style: Wechsel auf ein modernes Dashbord-Template

@@ -1,4 +1,5 @@
 <?php
+
 if (is_ajax()) {
   if (isset($_POST["action"]) && !empty($_POST["action"])) { //Checks if action value exists
     $action = $_POST["action"];
@@ -20,16 +21,13 @@ function is_ajax() {
 function loadUser(){
 	require('session.php');
 	include("config.php");
-
+	
 	$stmt = $pdo->prepare("SELECT vorname, nachname, benutzername FROM users WHERE id = :userID");
 	$stmt->bindParam(':userID', $_SESSION['userid'], PDO::PARAM_INT);
 	$stmt->execute();
 	$benutzer = $stmt->fetch(PDO::FETCH_OBJ);//Daten des angemeldeten Benutzers abfragen
 
-	$stmt2 = $pdo->prepare("SELECT opt_city FROM options WHERE opt_UID = :userID AND opt_city > ''");
-	$stmt2->bindParam(':userID', $_SESSION['userid'], PDO::PARAM_INT);
-	$stmt2->execute();
-	$optionen = $stmt2->fetch(PDO::FETCH_OBJ);//Optionen des angemeldeten Benutzers abfragen
+	$optionen = $_SESSION['city'];
 
 	if(!$optionen) // Prüft, ob Stadt in den persönlichen Benutzereinstellungen hinterlegt war. Falls nicht wird die globale Konfiguration geladen
 	{
@@ -38,11 +36,7 @@ function loadUser(){
 		$optionen = $stmt3->fetch(PDO::FETCH_OBJ);
 	}
 
-	$stmt4 = $pdo->prepare("SELECT opt_OWMAPI FROM options WHERE opt_UID = '0'");
-	$stmt4->execute();
-	$owmapi = $stmt4->fetch(PDO::FETCH_OBJ);//Openweathermap API-key aus globaler Konfiguration laden
-
-	$returnvalues = array('benutzer'=>$benutzer, 'accessLevel' => $accessLevel, 'optionen' => $optionen, 'owmapi' => $owmapi);
+		$returnvalues = array('benutzer'=>$benutzer, 'accessLevel' => $accessLevel, 'optionen' => $optionen);
 	  	echo json_encode($returnvalues);
 }
 
@@ -83,13 +77,13 @@ function updateAllUsers(){
 	echo json_encode(array('benutzer'=>$benutzer, 'benutzerom' => $benutzerom));
 }
 
-
 function editUser(){
 	require('session.php');
 	include("config.php");
 	$username = (!empty($_POST['username']) ? $_POST['username']:'');
 	$newPassword = (!empty($_POST['newPassword']) ? $_POST['newPassword']:'');
 	$owmcity = (!empty($_POST['owmcity']) ? $_POST['owmcity']:'Magdeburg');
+	$_SESSION['city'] = $owmcity;
 
 	$stmt = $pdo->prepare("SELECT * FROM users WHERE id = :userID");
 	$stmt->bindParam(':userID', $_SESSION['userid'], PDO::PARAM_INT);
@@ -107,25 +101,24 @@ function editUser(){
 			{
 				$newPasswordHash =  password_hash($newPassword, PASSWORD_BCRYPT);
 			}
+
 			$stmt2 = $pdo->prepare("UPDATE users SET benutzername = :username , passwort = :newPasswordHash WHERE id = :userID");
 			$stmt2->bindParam(':newPasswordHash', $newPasswordHash, PDO::PARAM_STR);
-			$stmt2->bindParam(':username', $username, PDO::PARAM_STR, 12);
+			$stmt2->bindParam(':username', $username, PDO::PARAM_STR);
 			$stmt2->bindParam(':userID', $_SESSION['userid'], PDO::PARAM_INT);
 			$stmt2->execute();
-			$return = 'Success';
-			
+			$return = 'Success';		
 		}
 		else
 		{
 			$stmt3 = $pdo->prepare("UPDATE users SET benutzername = :username WHERE id = :userID");
-			$stmt3->bindParam(':username', $username, PDO::PARAM_STR, 12);
+			$stmt3->bindParam(':username', $username, PDO::PARAM_STR);
 			$stmt3->bindParam(':userID', $_SESSION['userid'], PDO::PARAM_INT);
 			$stmt3->execute();
 			$return = 'Success';
 		}
-
 		$stmt4 = $pdo->prepare("UPDATE options SET opt_city = :owmcity WHERE opt_UID = :userID");
-			$stmt4->bindParam(':owmcity', $owmcity, PDO::PARAM_STR, 12);
+			$stmt4->bindParam(':owmcity', $owmcity, PDO::PARAM_STR);
 			$stmt4->bindParam(':userID', $_SESSION['userid'], PDO::PARAM_INT);
 			$stmt4->execute();
 	}

@@ -1,5 +1,5 @@
 $(document).ready(function() {
-$.getJSON("https://api.openweathermap.org/data/2.5/weather?q="+ cityName +"&appid=" + OWMAPIkey +"&units=metric&lang=de", function(data) {
+    $.getJSON("https://api.openweathermap.org/data/2.5/weather?q="+ cityName +"&appid=" + OWMAPIkey +"&units=metric&lang=de", function(data) {
         
         let city = data["name"];
         let temp = data["main"]["temp"];

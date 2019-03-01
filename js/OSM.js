@@ -21,8 +21,7 @@ function loadOSMLayer(){
 			mapTypeIds: mapTypeIds,
 			style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
 			position: google.maps.ControlPosition.TOP_RIGHT
-		}//,
-		//center: {lat: 52.13024, lng: 11.56567700000005} // Koordinaten des Kartenmittelpunkts
+		}
 	});
 	
 	OSM ='OSM'; //Variable OpenStreetMap definieren

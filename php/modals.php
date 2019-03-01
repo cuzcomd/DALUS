@@ -29,7 +29,7 @@
 				</div>
 				<div class="container-fluid">
 					<div class="row">
-						<div class="col"><a href="CHANGELOG.md" target="_blank" rel="noopener">Version: 2.0.0</a></div>
+						<div class="col"><a href="CHANGELOG.md" target="_blank" rel="noopener">Version: 2.0.1</a></div>
 						<div class="col"><a href="https://github.com/cuzcomd/DALUS" target="_blank" rel="noopener"><i class="fa fa-github" aria-hidden="true"></i> GitHub Repository</a></div>
 						<div class="col"><a href="mailto:kontakt@cuzcomd.de">kontakt@trott-md.de</a></div>
 					</div>

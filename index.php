@@ -7,7 +7,7 @@ if(isset($_GET['login'])) { // Überprüft, ob das Loginformular abgeschickt wur
 	$benutzername = filter_var($_POST['benutzername'], FILTER_SANITIZE_STRING); // Filtert den Benutzernamen von Schadcode
 	$passwort = $_POST['passwort'];
 
-	$stmt = $pdo->prepare("SELECT id, level, passwort FROM users WHERE benutzername = :benutzername"); // Lädt die Daten des registrierten Benutzers
+	$stmt = $pdo->prepare("SELECT id, level, passwort  FROM users WHERE benutzername = :benutzername"); // Lädt die Daten des registrierten Benutzers
 	$stmt->bindParam(':benutzername', $benutzername, PDO::PARAM_STR);
 	$stmt->execute();
 	$user = $stmt->fetch();
@@ -20,6 +20,24 @@ if(isset($_GET['login'])) { // Überprüft, ob das Loginformular abgeschickt wur
 		$stmt = $pdo->prepare("UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = :id"); // Speichert Loginzeit in der Datenbank
 		$stmt->bindParam(':id', $_SESSION['userid'], PDO::PARAM_INT);
 		$stmt->execute();
+
+		$stmt = $pdo->prepare("SELECT opt_city FROM options WHERE opt_UID = :id AND opt_city > ''");
+		$stmt->bindParam(':id', $_SESSION['userid'], PDO::PARAM_INT);
+		$stmt->execute();
+		$options = $stmt->fetch();
+		$_SESSION['city'] = $options['opt_city']; // Gespeicherten Kartenmittelpunkt einlesen
+
+		$stmt = $pdo->prepare("SELECT opt_OWMAPI, opt_googleAPI FROM options WHERE opt_UID = '0'");
+		$stmt->execute();
+		$apifetch = $stmt->fetch();
+		$_SESSION['OWMAPIkey'] = $apifetch['opt_OWMAPI'];
+		$_SESSION['googleAPIkey'] = $apifetch['opt_googleAPI'];
+
+		if(!$options)
+			{
+				$_SESSION['city'] = "Berlin"; //Falls keine Stadt hinterlegt ist, wird Berlin als Standardwert genutzt.
+			}
+
 		header("Location: workbench"); /* Browser auf die Workbench umleiten */
 		exit();
 	} else {
