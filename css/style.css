@@ -1,0 +1,335 @@
+:root {
+  --blue: #007bff;
+  --indigo: #6610f2;
+  --purple: #6f42c1;
+  --pink: #e83e8c;
+  --red: #dc3545;
+  --orange: #fd7e14;
+  --yellow: #ffc107;
+  --green: #28a745;
+  --teal: #20c997;
+  --cyan: #17a2b8;
+  --white: #FFF;
+  --gray: #6c757d;
+  --gray-dark: #343a40;
+  --primary: #009688;
+  --secondary: #6c757d;
+  --success: #28a745;
+  --info: #17a2b8;
+  --warning: #ffc107;
+  --danger: #dc3545;
+  --light: #f8f9fa;
+  --dark: #343a40;
+  --breakpoint-xs: 0;
+  --breakpoint-sm: 576px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 992px;
+  --breakpoint-xl: 1200px;
+  --font-family-sans-serif: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+#arrow{
+	vertical-align:middle;
+	height:200px;
+} 
+
+#form_winkelrechner{
+	padding-bottom:15px;
+}
+
+
+#messpunktdiv, #saveProject, #deleteProject, #editProject, #kmlString, #module1{
+	display:none;
+}
+
+#messpunktLabel{
+	line-height:30px;
+	font-size:30px;
+	padding-bottom: 5px;
+}
+
+#target {
+	width: 345px;
+}
+
+#wrapper_winkelrechner{
+ 	display:flex;
+ 	flex-wrap:wrap;
+ }
+
+.btn-met{
+	box-shadow: none !important;
+	padding:0;
+}
+
+.dalus-logo{
+	padding-left: 3px;
+	margin:3px auto;
+	float:left;
+}
+
+.dropdown-backdrop {
+	display:none;
+}
+
+.dropdown-menu>li>a{
+	padding:10px 20px;
+}
+
+.dropdown-options{
+	background:#eee;
+}
+
+.icon-active{
+	color:rgb(39, 160, 79);
+}
+
+.funkyradio div {
+  clear: both;
+  overflow: hidden;
+}
+
+.funkyradio label {
+  width: 100%;
+  border-radius: 3px;
+  border: 1px solid #D1D3D4;
+  font-weight: normal;
+}
+
+.funkyradio input[type="radio"]:empty,
+.funkyradio input[type="checkbox"]:empty {
+  display: none;
+}
+
+.funkyradio input[type="radio"]:empty ~ label,
+.funkyradio input[type="checkbox"]:empty ~ label {
+  position: relative;
+  line-height: 2.5em;
+  text-indent: 3.25em;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+.funkyradio input[type="radio"]:empty ~ label:before,
+.funkyradio input[type="checkbox"]:empty ~ label:before {
+  position: absolute;
+  display: block;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  content: '';
+  width: 2.5em;
+  background: #D1D3D4;
+  border-radius: 3px 0 0 3px;
+}
+
+.funkyradio input[type="radio"]:hover:not(:checked) ~ label,
+.funkyradio input[type="checkbox"]:hover:not(:checked) ~ label {
+  color: #888;
+}
+
+.funkyradio input[type="radio"]:hover:not(:checked) ~ label:before,
+.funkyradio input[type="checkbox"]:hover:not(:checked) ~ label:before {
+  content: '\2714';
+  text-indent: .9em;
+  color: #C2C2C2;
+}
+
+.funkyradio input[type="radio"]:checked ~ label,
+.funkyradio input[type="checkbox"]:checked ~ label {
+  color: #777;
+}
+
+.funkyradio input[type="radio"]:checked ~ label:before,
+.funkyradio input[type="checkbox"]:checked ~ label:before {
+  content: '\2714';
+  text-indent: .9em;
+  color: #333;
+  background-color: #ccc;
+}
+
+.funkyradio input[type="radio"]:focus ~ label:before,
+.funkyradio input[type="checkbox"]:focus ~ label:before {
+  box-shadow: 0 0 0 3px #999;
+}
+
+.funkyradio-default input[type="radio"]:checked ~ label:before,
+.funkyradio-default input[type="checkbox"]:checked ~ label:before {
+  color: #333;
+  background-color: #ccc;
+}
+
+.funkyradio-primary input[type="radio"]:checked ~ label:before,
+.funkyradio-primary input[type="checkbox"]:checked ~ label:before {
+  color: #fff;
+  background-color: #337ab7;
+}
+
+.funkyradio-success input[type="radio"]:checked ~ label:before,
+.funkyradio-success input[type="checkbox"]:checked ~ label:before {
+  color: #fff;
+  background-color: #5cb85c;
+}
+
+.funkyradio-danger input[type="radio"]:checked ~ label:before,
+.funkyradio-danger input[type="checkbox"]:checked ~ label:before {
+  color: #fff;
+  background-color: #d9534f;
+}
+
+.funkyradio-warning input[type="radio"]:checked ~ label:before,
+.funkyradio-warning input[type="checkbox"]:checked ~ label:before {
+  color: #fff;
+  background-color: #f0ad4e;
+}
+
+.funkyradio-info input[type="radio"]:checked ~ label:before,
+.funkyradio-info input[type="checkbox"]:checked ~ label:before {
+  color: #fff;
+  background-color: #5bc0de;
+}
+
+.input-group-text{
+	min-width:50px;
+}
+
+.modal a{
+	color:#333;
+}
+
+.module{
+	border-top:1px solid #eee;
+}
+
+.modul-Kompass{
+	position:absolute;
+	bottom:50px;
+	right:50px;
+	width:200px;
+	height:200px;
+	border-radius:100px;
+
+	background: url('../images/windrose.png') rgba(255,255,255, 0.5);
+	background-size:contain;
+	background-repeat: no-repeat;
+	background-position:center;
+	text-align:center;
+	line-height:100%;
+}
+
+.moduleWrapper{
+ 	display:flex;
+ 	flex-direction:column;
+ 	color:#a3bcd3;
+ 	padding:15px;
+ }
+
+
+.nav-subheading{
+	background-color: #009688;
+	background: var(--primary);
+	padding: 10px 15px;
+    color: #eee;
+    font-weight: 700;
+}
+.app-sidebar__user-name, .app-sidebar__project-information{
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.symbol{
+	width:16px;
+	height:16px;
+	border: 1px solid #000;
+	border-radius:8px;
+	display:inline-block;
+	vertical-align: middle;
+}
+
+.symbol_white{
+	background:#fff;
+}
+
+.symbol_green{
+	background:#7BC790;
+}
+
+.symbol_blue{
+	background:#7DA2C9;
+}
+
+.symbol_yellow{
+	background:#F0F484;
+}
+
+.symbol_red{
+	background:#DE6868;
+}
+.tab-content {
+	padding-top:10px;
+}
+
+.app-sidebar__weather{
+	color:#ffffff;
+	padding-bottom:20px;
+}
+
+.app-sidebar__weather i{
+	padding-right:5px;
+	min-width:20px;
+}
+.werkzeuge{
+	padding: 5px 15px;
+	font-size:14px;
+}
+
+.werkzeuge a{
+	padding:10px 14px !important;
+}
+
+.werkzeuge-top{
+	margin:5px 0 0 5px;
+	display:inline-block;
+}
+
+.werkzeuge-top>ul>li>a{
+	padding:10px 25px;
+}
+
+@media (max-device-width: 1024px){
+	.tab-content{
+		margin: 0 auto;
+		padding-bottom:10px;
+	}
+} 
+
+@media (max-width: 470px){
+	.werkzeuge-top>ul>li>a{
+	padding:10px 15px;
+}
+}
+
+@media (min-width: 768px){
+	.modalOptions{
+	    width: 95vw;
+	}
+
+	.navbar-toggle {
+	    display: inline-block;
+	}
+}
+
+@media (max-width: 991px){
+	.modal.in { 
+		display:block!important;
+	}
+
+	.nav-werkzeuge{
+		border-bottom: none;
+	}
+}
