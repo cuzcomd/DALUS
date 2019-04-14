@@ -34,3 +34,17 @@ function toggleNav(modalID){ //Schließt das off-canvas Menü und blendet ein Mo
 		$(modalID).modal('show');
 	}
 }
+
+function checkUserName(name){ // Prüft, ob neuer Nutzername bereits vorhanden ist und gibt dann ein visuelles Feedback
+		if (arrayOfUsers.includes(name))
+		{
+			$("#changeUserData").attr("disabled", true);
+			$("#username").css("border-color","var(--danger)");
+			$("#nameCheck").html("<i class='fa fa-warning'>");
+		}
+		else{
+			$("#changeUserData").attr("disabled", false);
+			$("#username").css("border-color","var(--success)");
+			$("#nameCheck").html("<i class='fa fa-check'>");
+		}
+	}

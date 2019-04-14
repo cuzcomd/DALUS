@@ -38,6 +38,7 @@ function updateAllUsers(){ //Aktualisiert die Liste der Projekte, die für den a
 				.append($('<option></option>') 
 			 	.attr('value', value.id)
 			 	.text(value.vorname+' '+value.nachname+' ('+value.benutzername+')'));
+			 	arrayOfUsers.push(value.benutzername); // Array noch intitialisieren
 			 });
 			$.each(data['benutzerom'], function (key, value) {
 		 		$('.listOfAllUsersExceptMe')// Fügt eine neue Option hinzu

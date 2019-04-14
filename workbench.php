@@ -22,7 +22,7 @@ $googleAPIkey = $_SESSION['googleAPIkey']; ?>
   <link rel="stylesheet" href="css/alertify.bootstrap.min.css">
   <link rel="stylesheet" href="css/bootstrap-colorpicker.min.css">
   <link rel="stylesheet" href="css/bootstrap-editable.css">
-  <link rel="stylesheet" href="https://cdn.datatables.net/v/bs4/dt-1.10.18/fh-3.1.4/r-2.2.2/sc-1.5.0/sl-1.2.6/datatables.min.css">
+  <link rel="stylesheet" href="css/datatables.min.css">
   <link rel="stylesheet" href="css/fontawesome.min.css">
   </head>
   <?php
@@ -39,6 +39,7 @@ $googleAPIkey = $_SESSION['googleAPIkey']; ?>
   <!-- Page specific javascripts-->
   <script src="js/plugins/datatables.min.js"></script>
   <script src="js/plugins/dataTables.cellEdit.js"></script>
+  <script src="js/plugins/alertify.min.js"></script> <!-- Script zur Anzeige von Popupbenachrichtigungen -->
   <script src="js/OSM.js"></script>
   <script src="js/users.js"></script>
   <script src="js/objects.js"></script>
@@ -51,6 +52,7 @@ $googleAPIkey = $_SESSION['googleAPIkey']; ?>
     OWMAPIkey=<?php echo json_encode($_SESSION['OWMAPIkey']) ?>;
     benutzer = []; //Initialisierung
     optionen = []; //Initialisierung
+    arrayOfUsers = []; // Initialisierung
     prj_id = 0; //Initialisierung
     maxRowID = 0; //Initialisierung
     messpunktNummer = 1; //Initialisierung
@@ -173,7 +175,6 @@ $googleAPIkey = $_SESSION['googleAPIkey']; ?>
   <script src = "js/helpers.js" defer></script> <!-- Script mit Hilfsfunktionen  -->
   <script src = "js/xmlwriter.js" defer></script> <!-- Script zum erzeugen einer kml-Datei -->
   <script src = "js/exportKml.js" defer></script> <!-- Script zum Export der Geometriedaten als kml-Datei -->
-  <script src = "js/plugins/alertify.min.js" defer></script> <!-- Script zur Anzeige von Popupbenachrichtigungen -->
   <script src = "js/geocoder.js" defer></script> <!-- Geocoding von Messpunkten -->
   <script src = "js/openweathermap.js" defer></script> <!-- Geocoding von Messpunkten -->
   </body>
