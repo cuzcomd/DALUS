@@ -265,50 +265,49 @@ function startDrawingManager(map){
 			        {
 				        var adresse = result;   
 			        }
-			        var markerContent =
-			        `<div class="text-center "id="messpunktLabel" style="width:80vw; max-width:450px"><b>${object.obj_label}</b> <i class="pull-right fa fa-pencil" style="color:#ccc;"></i></div><br>
+			        var markerContent =`
+			        <div class="text-center "id="messpunktLabel">
+				        <div class="input-group mb-3">
+						  <input type="text" class="form-control" value="${activeObject.obj_label}" onchange="updateLabel(${activeObject.obj_nummer}, this.value);" aria-label="Messpunktbezeichnung"></input>
+						  <div class="input-group-append">
+						    <span class="input-group-text"><i class="fa fa-pencil"></i></span>
+						  </div>
+						</div>
+			        </div><br>
 			        <div class="header row" style="width:80vw; max-width:450px">
 			        	<div class="col-12 col-sm-7">
 			        		<div class="input-group mb-3">
 			        			<div class="input-group-prepend">
 			        				<label class="input-group-text" for="markerMesstrupp"><i class="fa fa-car"></i></label>
 			        			</div>
-			        			<select id="markerMesstrupp" onchange="setMesstrupp(${object.obj_nummer}, this.value)" class="custom-select" aria-label="Messtrupp" aria-describedby="basic-addon1"></select>
+			        			<select id="markerMesstrupp" onchange="setMesstrupp(${activeObject.obj_nummer}, this.value)" class="custom-select" aria-label="Messtrupp" aria-describedby="basic-addon1"></select>
 			        		</div>
-				        	<div class="btn-group" role="group" aria-label="Optionen">
-								<button type="button" class="btn btn-default btn-danger btnInfoWindow" onclick="deleteObject();" ><i class="fa fa-trash-o"></i></button>
-								<div class="btn-group"><button type="button" class="btn btn-default dropdown-toggle" id="dropdownMenuButton__farbe" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-tint">&nbsp;</i></button>
-									<div class="dropdown-menu" aria-labelledby="dropdownMenuButton__farbe">
-					      				<a class="dropdown-item" onclick="changeColor(${activeObject.obj_nummer},1);" href="#"><span class="symbol symbol_white"></span> Vorgeplanter Messpunkt</a>
-					      				<a class="dropdown-item" onclick="changeColor(${activeObject.obj_nummer},2);" href="#"><span class="symbol symbol_green"></span> Kein Geruch wahrnehmbar</a>
-					      				<a class="dropdown-item" onclick="changeColor(${activeObject.obj_nummer},3);" href="#"><span class="symbol symbol_blue"></span> Geruch wahrnehmbar</a>
-					      				<a class="dropdown-item" onclick="changeColor(${activeObject.obj_nummer},4);" href="#"><span class="symbol symbol_yellow"></span> Messung unterhalb des Beurteilungswertes</a>
-					      				<a class="dropdown-item" onclick="changeColor(${activeObject.obj_nummer},5);" href="#"><span class="symbol symbol_red"></span> Messung oberhalb des Beurteilungswertes</a>
-	   								</div>
-	   							</div>
-	   						</div>
+
+			        		<div class="input-group mb-3">
+			        			<div class="input-group-prepend">
+			        				<label class="input-group-text" for="button__farbe"><i class="fa fa-tint"></i></label>
+			        			</div>
+			        			<select id="button__farbe" onchange="changeColor(${activeObject.obj_nummer},this.value);" class="custom-select" aria-label="Farbe" aria-describedby="basic-addon1">
+			        				<option value="1"><span class="symbol symbol_white"></span> Vorgeplanter Messpunkt</option>
+			        				<option value="2"><span class="symbol symbol_green"></span> Kein Geruch wahrnehmbar</option>
+			        				<option value="3"><span class="symbol symbol_blue"></span> Geruch wahrnehmbar</option>
+			        				<option value="4"><span class="symbol symbol_yellow"></span> Messung unterhalb des Beurteilungswertes</option>
+			        				<option value="5"><span class="symbol symbol_red"></span> Messung oberhalb des Beurteilungswertes</option>
+			        			</select>
+			        		</div>
 				        </div>
 				        <div class="col-12 col-sm-5">
 			        		<div class="col-1 fa fa-home" aria-hidden="true"></div><div class="col-10" >${adresse}</div><hr>
-			        		<div class="col-1 fa fa-map-marker" aria-hidden="true"></div><div class="col-10" >${object.obj_lat}, ${object.obj_lon}<br>
-			        		(${LLtoUSNG(object.obj_lat, object.obj_lon, 5)})</div>
+			        		<div class="col-1 fa fa-map-marker" aria-hidden="true"></div><div class="col-10" >${activeObject.obj_lat}, ${activeObject.obj_lon}<br>
+			        		(${LLtoUSNG(activeObject.obj_lat, activeObject.obj_lon, 5)})</div>
 			       		</div>
 			        </div><br>
-			        <hr> Geräte<br><form><div class="form-group"> <label for="messwert">Messwert [ppm]</label><input type="text" class="form-control" id="messwert" cols="50" value = "${object.obj_messwert}" onchange="updateMesswert(${object.obj_nummer}, this.value);"></div></form>
-			        <form><div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis(${object.obj_nummer},'marker', this.value);" rows="5">${object.obj_hinweis}</textarea></div></form>`;
+			        <hr> Geräte<br><form><div class="form-group"> <label for="messwert">Messwert [ppm]</label><input type="text" class="form-control" id="messwert" cols="50" value = "${activeObject.obj_messwert}" onchange="updateMesswert(${activeObject.obj_nummer}, this.value);"></div></form>
+			        <form><div class="form-group"> <label for="hinweis">Hinweise</label><textarea id="hinweis" class="form-control" onchange="updateHinweis(${activeObject.obj_nummer},'marker', this.value);" rows="5">${activeObject.obj_hinweis}</textarea></div></form>`;
 
 					infoWindow.setContent(markerContent);
 					updateMesstruppsMarker(); // Aktualisiert die auswählbaren Messtrupps
 					infoWindow.open(map,activeObject);
-					$('#messpunktLabel').editable({
-						type: 'text',
-						title: 'Bezeichnung',
-						placement: 'bottom',
-						mode: 'inline',
-						success: function(response, newValue) {
-							updateLabel(object.obj_nummer, newValue);
-						}
-					}); // Ende editable()
 			    }); // Ende reverseGeocode()
 			}); // Ende eventlistener
 			
@@ -330,8 +329,15 @@ function startDrawingManager(map){
 				        var adresse = result;
 					}
 
-					var markerContent =
-			        `<div class="text-center "id="messpunktLabel" style="width:80vw; max-width:450px"><b>${object.obj_label}</b> <i class="pull-right fa fa-pencil" style="color:#ccc;"></i></div><br>
+					var markerContent =`
+					<div class="text-center "id="messpunktLabel">
+				        <div class="input-group mb-3">
+						  <input type="text" class="form-control" value="${object.obj_label}" onchange="updateLabel(${object.obj_nummer}, this.value);" aria-label="Messpunktbezeichnung"></input>
+						  <div class="input-group-append">
+						    <span class="input-group-text"><i class="fa fa-pencil"></i></span>
+						  </div>
+						</div>
+			        </div><br>
 			        <div class="header row" style="width:80vw; max-width:450px">
 			        	<div class="col-12 col-sm-7">
 			        		<div class="input-group mb-3">
@@ -366,15 +372,6 @@ function startDrawingManager(map){
 					updateMesstruppsMarker(); // Aktualisiert die auswählbaren Messtrupps
 					infoWindow.setPosition(new google.maps.LatLng(activeObject.obj_lat , activeObject.obj_lon));
 					infoWindow.open(map,activeObject);
-					$('#messpunktLabel').editable({
-						type: 'text',
-						title: 'Bezeichnung',
-						placement: 'bottom',
-						mode: 'popup',
-						success: function(response, newValue) {
-							updateLabel(object.obj_nummer, newValue);
-						}
-					}); // Ende editable()
 				}); // Ende reverseGeocode()
 			}); // Ende Eventlistener
 
@@ -450,7 +447,7 @@ function deleteSelectedShape() {
 }
 
 function updateMesswert(ID, value){
-	var index = objectArray.findIndex(x => x.obj_nummer == ID);
+	var index = objectArray.findIndex(x => x.obj_nummer == ID && x.obj_typ == "marker");
 	objectArray[index].obj_messwert = value;
 }
 
@@ -460,7 +457,7 @@ function updateHinweis(ID, type, value){
 }
 
 function updateLabel(ID, value){
-	var index = objectArray.findIndex(x => x.obj_nummer == ID);
+	var index = objectArray.findIndex(x => x.obj_nummer == ID && x.obj_typ == "marker");
 	objectArray[index].obj_label = value;
 	objectArray[index].setLabel({text:value.toString(), fontWeight: "700"});
 }

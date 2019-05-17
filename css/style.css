@@ -43,10 +43,12 @@
 	display:none;
 }
 
-#messpunktLabel{
-	line-height:30px;
-	font-size:30px;
-	padding-bottom: 5px;
+#messpunktLabel input{
+	position:relative;
+	color:#eee;
+	background:var(--primary);
+	text-align:center;
+	border: 0;
 }
 
 #target {
@@ -315,10 +317,6 @@
 }
 
 @media (min-width: 768px){
-	.modalOptions{
-	    width: 95vw;
-	}
-
 	.navbar-toggle {
 	    display: inline-block;
 	}

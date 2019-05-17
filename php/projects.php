@@ -107,7 +107,7 @@ function loadProject(){ //noch zu prüfen,ob Sicherheit gegeben ist
 		$project_level = ($_SESSION['userid'] == $projekt->prj_owner) ? 'own' :'shared';
 
 		$stmt = $pdo->prepare("SELECT MAX(obj_nummer) as maxNummer FROM objects WHERE obj_prj_id = :prjID AND obj_typ = 'marker'");
-		$stmt->bindParam(':prjID', $projektID, PDO::PARAM_INT);
+		$stmt->bindParam(':prjID', $projekt->prj_id, PDO::PARAM_INT);
 		$stmt->execute();
 		$max = $stmt->fetch(PDO::FETCH_ASSOC);
 		$maxNumber = $max['maxNummer'];

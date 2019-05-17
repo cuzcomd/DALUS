@@ -1,6 +1,6 @@
 <div id="editProfile" class="tab-pane fade show active">
 	<form id ="editUserProfile" action='' method='POST' class='ajax_edit_user col-md-6' role='form'>
-        <div class="form-group">
+		<div class="form-group">
             <label for="username" class="control-label">Benutzername</label>
             <div class="input-group mb-3">
                 <input class="form-control" id="username" type="text" placeholder="Benutzername" name="username" required onchange="checkUserName(this.value)">
@@ -11,14 +11,14 @@
         </div>
 		<div class="form-group">
 			<label for="newPassword" class="control-label">Neues Passwort</label> 
-			<input type="password" id="newPassword" name="newPassword" class="form-control" placeholder="Neues Passwort">
+			<input type="password" id="newPassword" name="newPassword" class="form-control" placeholder="Neues Passwort" autocomplete="new-password">
 		</div>
         <div class="form-group">
             <label for="owmcity" class="control-label">Stadt</label> 
             <input class="form-control" id="owmcity" type="text" placeholder="Stadt" name="owmcity">
         </div>
 		<br>
-			<button type='submit' class='btn btn-primary' id="changeUserData"><span class='fa fa-check-square-o'></span> Änderung speichern</button>
+			<button type='submit' id="changeUserData" class='btn btn-primary'><span class='fa fa-check-square-o'></span> Änderung speichern</button>
 	</form>
 </div>
 

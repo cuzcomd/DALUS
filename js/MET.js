@@ -1,5 +1,6 @@
 function setCoord(){
 	$('#modalMET').modal('hide');
+	map.setOptions({draggableCursor:'crosshair'});
 	var metManListener = google.maps.event.addListener(map, 'click', function(e) {
 		new google.maps.Geocoder().geocode({'location': e.latLng}, function(results, status) {
 				if (status === google.maps.GeocoderStatus.OK) {
@@ -13,6 +14,7 @@ function setCoord(){
 					
 				}
 			}); //Ende reverse geocoder
+		map.setOptions({draggableCursor:''});
 		$('#modalMET').modal('show');
 		google.maps.event.removeListener(metManListener); //Entfernt den eventListener, damit die manuelle Auswahl nur einmal ausgeführt wird.
 });

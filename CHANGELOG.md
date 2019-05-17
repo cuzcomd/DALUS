@@ -1,10 +1,21 @@
 ## Changelog
 
-###2.0.1
+### 2.0.2
+* Feature: DALUS lässt sich jetzt per Installationsskript auf einem Server einrichten.
+* Code: Update von JavaScript-Bibliotheken auf die neuste Version
+* Deprecated: boostrap-editable wurde durch native Funktionen ersetzt
+* Style: Redesign der Infowindows
+* Style: Beim Auswählen des MET-Ursprungsortes wird jetzt ein Fadenkreuz angezeigt
+* Bug: Änderung des Messpunkttitels hat nicht immer den aktiven Messpunkt umbenannt
+* Bug: Tooltip bei manchen Formularfeldern im MET-Menü wurde falsch angezeigt
+* Bug: Die Anzahl der in einem Projekt gespeicherten Messpunkte wurde nich korrekt ermittelt
+* Usability: Formularfelder sind jetzt besser für Autocomplete Funktionen geeignet
+
+
+### 2.0.1 (01.03.2019)
 * Security: Einlesen von API-Keys über Datenbank, statt bisher hard coded
 * Bug: Ändern der Benutzerdaten hat zu einem Reload der Seite gehführt
 * Code: Restrukturierung der JavaScript-Bibliotheken und Modularisierung der php-Dateien
-
 
 ### 2.0.0 (03.12.2018)
 * Style: Komplettes Update auf Bootstrap 4

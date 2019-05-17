@@ -77,8 +77,15 @@ function drawObjects(theArray){
 			        {
 				        var adresse = result;   
 			        }
-			        var markerContent =
-			       `<div class="text-center "id="messpunktLabel" style="width:80vw; max-width:450px"><b>${object.obj_label}</b> <i class="pull-right fa fa-pencil" style="color:#ccc;"></i></div><br>
+			        var markerContent =`
+			        <div class="text-center "id="messpunktLabel">
+				        <div class="input-group mb-3">
+						  <input type="text" class="form-control" value="${object.obj_label}" onchange="updateLabel(${activeObject.obj_nummer}, this.value);" aria-label="Messpunktbezeichnung"></input>
+						  <div class="input-group-append">
+						    <span class="input-group-text"><i class="fa fa-pencil"></i></span>
+						  </div>
+						</div>
+			        </div><br>
 			        <div class="header row" style="width:80vw; max-width:450px">
 			        	<div class="col-12 col-sm-7">
 			        		<div class="input-group mb-3">
@@ -112,15 +119,6 @@ function drawObjects(theArray){
 					infoWindow.setContent(markerContent);
 					updateMesstruppsMarker(); // Aktualisiert die auswählbaren Messtrupps
 					infoWindow.open(map,activeObject);
-					$('#messpunktLabel').editable({
-						type: 'text',
-						title: 'Bezeichnung',
-						placement: 'bottom',
-						mode: 'popup',
-						success: function(response, newValue) {
-							updateLabel(object.obj_nummer, newValue);
-						}
-					}); // Ende editable()
 			    }); // Ende reverseGeocode()
 			}); // Ende des Eventlisteners
 
@@ -142,8 +140,15 @@ function drawObjects(theArray){
 				        var adresse = result;
 					}
 
-					var markerContent =
-			        `<div class="text-center "id="messpunktLabel" style="width:80vw; max-width:450px"><b>${object.obj_label}</b> <i class="pull-right fa fa-pencil" style="color:#ccc;"></i></div><br>
+					var markerContent =`
+			        <div class="text-center "id="messpunktLabel">
+				        <div class="input-group mb-3">
+						  <input type="text" class="form-control" value="${object.obj_label}" onchange="updateLabel(${activeObject.obj_nummer}, this.value);" aria-label="Messpunktbezeichnung"></input>
+						  <div class="input-group-append">
+						    <span class="input-group-text"><i class="fa fa-pencil"></i></span>
+						  </div>
+						</div>
+			        </div><br>
 			        <div class="header row" style="width:80vw; max-width:450px">
 			        	<div class="col-12 col-sm-7">
 			        		<div class="input-group mb-3">
@@ -178,15 +183,6 @@ function drawObjects(theArray){
 					updateMesstruppsMarker(); // Aktualisiert die auswählbaren Messtrupps
 					infoWindow.setPosition(new google.maps.LatLng(activeObject.obj_lat , activeObject.obj_lon));
 					infoWindow.open(map,activeObject);
-					$('#messpunktLabel').editable({
-						type: 'text',
-						title: 'Bezeichnung',
-						placement: 'bottom',
-						mode: 'popup',
-						success: function(response, newValue) {
-							updateLabel(object.obj_nummer, newValue);
-						}
-					}); // Ende editable()
 				}); // Ende reverseGeocode()
 			}); // Ende eventlistener
 
@@ -433,7 +429,7 @@ function changeColor(markerNummer, farbe){
 	var index = objectArray.findIndex(x => x.obj_nummer == activeObject.obj_nummer && x.obj_typ == activeObject.obj_typ);  //ermittelt Array-Index des aktuellen Markers
 	var oldSymbol = activeObject.getIcon();
 	switch(farbe){
-		case 1:
+		case "1":
 
 		activeObject.setIcon({
 			path: oldSymbol.path,
@@ -446,7 +442,7 @@ function changeColor(markerNummer, farbe){
 		objectArray[index].obj_farbe = "#FFFFFF";
 		break;
 
-		case 2:
+		case "2":
 		activeObject.setIcon({
 			path: oldSymbol.path,
 			scale: oldSymbol.scale,
@@ -458,7 +454,7 @@ function changeColor(markerNummer, farbe){
 		objectArray[index].obj_farbe = "#7BC790";
 		break;
 
-		case 3:
+		case "3":
 		activeObject.setIcon({
 			path: oldSymbol.path,
 			scale: oldSymbol.scale,
@@ -470,7 +466,7 @@ function changeColor(markerNummer, farbe){
 		objectArray[index].obj_farbe = "#7DA2C9";
 		break;
 
-		case 4:
+		case "4":
 		activeObject.setIcon({
 			path: oldSymbol.path,
 			scale: oldSymbol.scale,
@@ -482,7 +478,7 @@ function changeColor(markerNummer, farbe){
 		objectArray[index].obj_farbe = "#F0F484";
 		break;
 
-		case 5:
+		case "5":
 		activeObject.setIcon({
 			path: oldSymbol.path,
 			scale: oldSymbol.scale,

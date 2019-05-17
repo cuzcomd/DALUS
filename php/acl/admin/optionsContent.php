@@ -9,25 +9,25 @@
 						<div class="form-group">
 							<label for="newBenutzername" class="col-4 control-label">Benutzername:</label>
 							<div class="col-7">
-						    	<input type="text" class="form-control" id="newBenutzername" name="benutzername" maxlength="20" required>
+						    	<input type="text" class="form-control" id="newBenutzername" name="benutzername" autocomplete="username" maxlength="20" required>
 						    </div>
 						</div>
 						<div class="form-group">
 						    <label for="newVorname" class="col-4 control-label">Vorname:</label>
 						    <div class="col-7">
-						    	<input type="test" class="form-control" id="newVorname" name="vorname" maxlength="20" required>
+						    	<input type="test" class="form-control" id="newVorname" name="vorname" maxlength="20" autocomplete="given-name" required>
 						    </div>
 						</div>
 						<div class="form-group">
 							<label for="newNachname" class="col-4 control-label">Nachname:</label>
 							<div class="col-7">
-						    	<input type="text" class="form-control" id="newNachname" name="nachname" maxlength="20" required>
+						    	<input type="text" class="form-control" id="newNachname" name="nachname" maxlength="20" autocomplete="family-name" required>
 						    </div>
 						</div>
 						<div class="form-group">
 						    <label for="newPasswort" class="col-4 control-label">Passwort:</label>
 						    <div class="col-7">
-						    	<input type="password" class="form-control" id="newPasswort" name="passwort" required>
+						    	<input type="password" class="form-control" id="newPasswort" name="passwort" autocomplete="new-password" required>
 						    </div>
 						</div>
 					</div>

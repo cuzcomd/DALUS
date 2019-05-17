@@ -80,12 +80,12 @@ if(isset($_GET['login'])) { // Überprüft, ob das Loginformular abgeschickt wur
       </div>
 
       <div class="form-label-group">
-        <input type=text" id="inputName" class="form-control" name="benutzername" placeholder="Benutzername" required autofocus>
+        <input type="text" id="inputName" class="form-control" name="benutzername" placeholder="Benutzername" autocomplete="username" required autofocus>
         <label for="inputName">Benutzername</label>
       </div>
 
       <div class="form-label-group">
-        <input type="password" id="inputPassword" class="form-control" name="passwort" placeholder="Passwort" required>
+        <input type="password" id="inputPassword" class="form-control" name="passwort" placeholder="Passwort" autocomplete="current-password" required>
         <label for="inputPassword">Passwort</label>
       </div>
 

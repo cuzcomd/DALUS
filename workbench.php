@@ -1,5 +1,6 @@
 <?php require('php/session.php');
-$googleAPIkey = $_SESSION['googleAPIkey']; ?>
+  $googleAPIkey = $_SESSION['googleAPIkey'];
+?>
 <!DOCTYPE html>
 <html lang="de">
   <head>
@@ -16,13 +17,13 @@ $googleAPIkey = $_SESSION['googleAPIkey']; ?>
   <link rel="shortcut icon" href="./images/favicon/favicon.ico">
   <meta name="msapplication-config" content="images/favicon/browserconfig.xml">
   <!-- Main CSS-->
-  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/main.css"> <!-- Hauptstylesheet des vali-admin Templates (beinhaltet bootstrap.css) -->
+  <link rel="stylesheet" href="css/bootstrap.css"> <!-- Hauptstylesheet des vali-admin Templates (beinhaltet bootstrap.css) -->
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/alertify.min.css">
   <link rel="stylesheet" href="css/alertify.bootstrap.min.css">
   <link rel="stylesheet" href="css/bootstrap-colorpicker.min.css">
-  <link rel="stylesheet" href="css/bootstrap-editable.css">
-  <link rel="stylesheet" href="css/datatables.min.css">
+  <link rel="stylesheet" href="css/datatables.min.css"/>
   <link rel="stylesheet" href="css/fontawesome.min.css">
   </head>
   <?php
@@ -31,8 +32,7 @@ $googleAPIkey = $_SESSION['googleAPIkey']; ?>
   ?>
   <!-- Essential javascripts for application to work-->
   <script src="js/plugins/jquery.min.js"></script>
-  <script src="js/plugins/popper.min.js"></script>
-  <script src="js/plugins/bootstrap.min.js"></script>
+  <script src="js/plugins/bootstrap.bundle.min.js"></script>
   <script src="js/main.js"></script>
   <!-- The javascript plugin to display page loading on top-->
   <script src="js/plugins/pace.min.js"></script>
@@ -73,13 +73,13 @@ $googleAPIkey = $_SESSION['googleAPIkey']; ?>
     var selectedShape; //Initialisierung für aktuell markiertes Geometrieobjekt
 
     function initMap() {
-    alertify.set('notifier','position', 'bottom-center');
     loadOSMLayer(); // OSM Kartenbilder laden
     infoWindow = new google.maps.InfoWindow({}); //Globale Initialisierung des Infowindows
     startDrawingManager(map); //Google DrawingManager laden
     dataTables(); // Lädt die Optionen der datatables
     updateKataster('',dataTable); // Lädt die Messpunkte
     updateMesstrupps('',dataTable3); // Lädt die Messtrupps
+    alertify.set('notifier','position', 'bottom-center'); // Benachrichtigungen unten zentriert einblenden
 
     document.getElementById('calcMET').addEventListener('click', function() { // Beim Klick auf "Zeichnen" MET-Modell erzeugen
       generateMET(map);
@@ -167,7 +167,6 @@ $googleAPIkey = $_SESSION['googleAPIkey']; ?>
   <?php
   echo "<script src = 'https://maps.googleapis.com/maps/api/js?key=".$googleAPIkey."&libraries=geometry,drawing,places&callback=initMap' async defer></script>" 
   ?>
-  <script src = "js/plugins/bootstrap-editable.min.js"></script>  <!-- Script mit Funktionen zur direkten Bearbeitung des Inhalts von DOM-Elementen  -->
   <script src = "js/plugins/html2canvas.min.js" defer></script>  <!-- Script zum erzuegen eines Screenshots der google-Karte  -->
   <script src = "js/usng.min.js" defer></script> <!-- Script für Umwandlung von Geokoordinaten in UTM-Ref Koordinaten -->
   <script src = "js/MET.js" defer></script> <!-- Adresse des MET-Modells durch Eingabemaske oder manuelle Festlegung bestimmen -->

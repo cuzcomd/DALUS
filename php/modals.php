@@ -29,7 +29,7 @@
 				</div>
 				<div class="container-fluid">
 					<div class="row">
-						<div class="col"><a href="CHANGELOG.md" target="_blank" rel="noopener">Version: 2.0.1</a></div>
+						<div class="col"><a href="CHANGELOG.md" target="_blank" rel="noopener">Version: 2.0.2</a></div>
 						<div class="col"><a href="https://github.com/cuzcomd/DALUS" target="_blank" rel="noopener"><i class="fa fa-github" aria-hidden="true"></i> GitHub Repository</a></div>
 						<div class="col"><a href="mailto:kontakt@cuzcomd.de">kontakt@trott-md.de</a></div>
 					</div>
@@ -39,7 +39,7 @@
 	</div><!-- Ende modal-dialog -->
 </div> <!-- Ende modal fade -->
 <div class="modal fade" id="modalMET" tabindex="-1" role="dialog" aria-labelledby="MET Ausbreitungsmodell" aria-hidden="true">
-		<div class="modalMET modal-dialog" role="document">
+		<div class="modalMET modal-dialog modal-lg" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
 					<h4 class="modal-title">MET Ausbreitungsmodell</h4>
@@ -48,10 +48,10 @@
 				<div class="modal-body">
 					<div id="geocoder container">
 						<form id="input-form-met" class="form-horizontal" role="form">
-							<div class="form-group row" data-toggle="tooltip" title="Freisetzungsort">
+							<div class="form-group row">
 								<label class="control-label col-12 col-sm-3" for="addresse">Scha&shy;dens&shy;ort</label>
 								<div class="col-8 col-sm-6">
-									<div class="input-group">
+									<div class="input-group" data-toggle="tooltip" title="Freisetzungsort">
 										<div class="input-group-prepend">
 											<span class="input-group-text"><i class="fa fa-home"></i></span>
 										</div>
@@ -63,10 +63,10 @@
 								</div>
 							</div>
 	
-							<div class="form-group row" data-toggle="tooltip" title="Ausbreitungswinkel">
+							<div class="form-group row">
 								<label class="control-label col-12 col-sm-3" for="winkel">Aus&shy;brei&shy;tungs&shy;winkel</label>
 								<div class="col-8 col-sm-4">
-									<div class="input-group">
+									<div class="input-group" data-toggle="tooltip" title="Ausbreitungswinkel">
 										<div class="input-group-prepend">
 											<span class="input-group-text"><i class="fa fa-arrows-h"></i></span>
 										</div>
@@ -85,10 +85,10 @@
 									<button type="button" class="btn btn-default" id="setWinkel" data-toggle="tooltip" title="Ausbreitungswinkel bestimmen" onclick="$('#modal_winkel').modal('show');"><i class="fa fa-calculator"></i> Ermitteln</button>
 								</div>
 							</div>
-							<div class="form-group row" data-toggle="tooltip" title="Windrichtung">
+							<div class="form-group row">
 								<label class="control-label col-12 col-sm-3" for="windrichtung">Wind&shy;richtung</label>
 								<div class="col-8 col-sm-4">
-									<div class="input-group">
+									<div class="input-group" data-toggle="tooltip" title="Windrichtung">
 										<div class="input-group-prepend">
 											<span class="input-group-text"><i class="fa fa-location-arrow"></i></span>
 										</div>
@@ -100,10 +100,10 @@
 								</div>
 							</div>
 	
-							<div class="form-group row" data-toggle="tooltip" title="Gefährdung für Personen im Gebäude">
+							<div class="form-group row">
 								<label class="control-label col-12 col-sm-3" for="distanz 1">Gefährdung für Personen im Gebäude</label>
 								<div class="col-8 col-sm-4">
-									<div class="input-group">
+									<div class="input-group" data-toggle="tooltip" title="Gefährdung für Personen im Gebäude">
 										<div class="input-group-prepend">
 											<span class="input-group-text"><i class="fa fa-exclamation"></i> <i class="fa fa-home"></i></span>
 										</div>
@@ -115,10 +115,10 @@
 								</div>
 							</div>
 								
-							<div class="form-group row" data-toggle="tooltip" title="Gefährdung für Personen im Freien">
+							<div class="form-group row">
 								<label class="control-label col-12 col-sm-3" for="distanz 1">Gefährdung für Personen im Freien</label>
 								<div class="col-8 col-sm-4">
-									<div class="input-group">
+									<div class="input-group" data-toggle="tooltip" title="Gefährdung für Personen im Freien">
 										<div class="input-group-prepend">
 											<span class="input-group-text"><i class="fa fa-exclamation"></i> <i class="fa fa-street-view"></i></span>
 										</div>
@@ -140,7 +140,7 @@
 		</div><!-- Ende modal-dialog -->
 	</div><!-- Ende modalMET -->
 <div class="modal fade" id="modal_winkel" tabindex="-1" role="dialog" aria-labelledby="Winkel bestimmen">
-	<div class="modal-dialog" role="document">
+	<div class="modal-dialog  modal-lg" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 class="modal-title text-center">Ausbreitungsklasse bestimmen</h4>
@@ -235,7 +235,7 @@
 </div> <!-- Ende modal fade -->
 
 <div class="modal fade" id="modal_options" tabindex="-1" role="dialog" aria-labelledby="Optionen">
-	<div class="modalOptions modal-dialog" role="document">
+	<div class="modalOptions modal-dialog modal-xl" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 class="modal-title">Optionen </h4>
